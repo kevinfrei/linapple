@@ -3,8 +3,8 @@
 # TODO conform to
 # https://www.gnu.org/prep/standards/html_node/Standard-Targets.html
 
-PACKAGE     := linapple
-VERSION     := 2.3.0
+PACKAGE     := applino
+VERSION     := 0.0.1
 
 #Compiler and Linker
 CC          := g++
@@ -23,7 +23,7 @@ DATADIR     ?= share/$(PACKAGE)
 PKGDIR="pkg/$(PACKAGE)"
 
 #The Target Binary Program
-TARGET      := linapple
+TARGET      := applino
 
 #The Directories, Source, Includes, Objects, Binary and Resources
 SRCDIR      := src
@@ -84,8 +84,8 @@ endef
 export COMPILED
 
 # Calculate the total size of installed files
-#   /usr/local/bin/linapple
-#   /usr/local/etc/linapple.conf
+#   /usr/local/bin/applino
+#   /usr/local/etc/applino.conf
 #   /usr/local/share/Master.dsk
 size1 := $(shell du -s ./build/bin 2>&1 | cut -f 1)
 size2 := $(shell du -s ./build/etc/ 2>&1 | cut -f 1)
@@ -94,7 +94,7 @@ SIZE  := $(shell echo `expr $(size1) + $(size2) + $(size3) 2>&1` )
 
 # DEBIAN/conffiles
 define CONFFILES
-$(DESTDIR)/$(CONFIGDIR)/linapple.conf
+$(DESTDIR)/$(CONFIGDIR)/applino.conf
 $(DESTDIR)/$(DATADIR)/Master.dsk
 endef
 export CONFFILES
@@ -104,16 +104,16 @@ ARCH := all
 
 # DEBIAN/control
 define CONTROL
-Package: linapple
+Package: applino
 Priority: optional
 Section: system
 Installed-Size: $(SIZE)
-Maintainer: LinApple team <https://github.com/linappleii/linapple/issues>
+Maintainer: Kevin Frei <https://github.com/kevinfrei/linapple/issues>
 Architecture: $(ARCH)
 Version: $(VERSION)
 Depends: libzip-dev, libsdl1.2-dev, libsdl-image1.2-dev, zlib1g-dev, imagemagick
-Homepage: https://github.com/linappleii/linapple
-Description: A Linux emulator for Apple ][+, IIe and Enhanced //e with Mockingboard support
+Homepage: https://github.com/kevinfrei/linapple
+Description: An Arduino-hosted emulator for Apple ][+, IIe and Enhanced //e
 endef
 export CONTROL
 
@@ -134,9 +134,9 @@ remake: distclean all
 #Create XPM versions of images
 images: $(DSTIMGS) directories
 
-resources: directories images build/$(CONFIGDIR)/linapple.conf build/$(DATADIR)/Master.dsk
+resources: directories images build/$(CONFIGDIR)/applino.conf build/$(DATADIR)/Master.dsk
 
-build/$(CONFIGDIR)/linapple.conf: $(RESDIR)/linapple.conf
+build/$(CONFIGDIR)/applino.conf: $(RESDIR)/applino.conf
 	@cp $< $@
 
 build/$(DATADIR)/Master.dsk: $(RESDIR)/Master.dsk

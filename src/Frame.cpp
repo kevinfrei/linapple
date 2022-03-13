@@ -157,7 +157,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 {
   const int MAX_LINES = 25;
   const char *HelpStrings[MAX_LINES] = {"Welcome to LinApple - Apple][ emulator for Linux!",
-                                        "Conf file is linapple.conf in current directory by default",
+                                        "Conf file is applino.conf in current directory by default",
                                         "       F1 - Show help screen",
                                         "  Ctrl+F2 - Cold reboot (Power off and back on)",
                                         " Shift+F2 - Reload configuration file and cold reboot",
@@ -554,10 +554,10 @@ void FrameSaveBMP(void) {
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-truncation"
-  snprintf(bmpName, 20, "linapple%7d.bmp", i);
+  snprintf(bmpName, 20, "applino%7d.bmp", i);
   while (!stat(bmpName, &bufp)) { // Find first absent file
     i++;
-    snprintf(bmpName, 20, "linapple%7d.bmp", i);
+    snprintf(bmpName, 20, "applino%7d.bmp", i);
   }
 #pragma GCC diagnostic pop
 
@@ -661,9 +661,9 @@ void ProcessButtonClick(int button, int mod)
       }
       break;
 
-    case BTN_SETUP:  // setup is in conf file - linapple.conf.
+    case BTN_SETUP:  // setup is in conf file - applino.conf.
       // may be it should be implemented using SDL??? 0_0 --bb
-      // Now Shift-F8 save settings changed run-tme in linapple.conf
+      // Now Shift-F8 save settings changed run-tme in applino.conf
       // F8 - save current screen as a .bmp file
       // Currently these setting are just next:
       if (mod & KMOD_SHIFT) {

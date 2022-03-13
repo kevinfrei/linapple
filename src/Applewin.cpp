@@ -823,11 +823,11 @@ void LoadAllConfigurations(const char *userSpecifiedFilename)
 
   std::vector <std::string> sysConfigDirs(split(xdgConfigDirs, ":"));
 
-  // Support the old /etc/linapple/linapple.conf location.
+  // Support the old /etc/applino/applino.conf location.
   sysConfigDirs.push_back("/etc");
 
   for (std::vector<std::string>::reverse_iterator it = sysConfigDirs.rbegin(); it != sysConfigDirs.rend(); it++) {
-    std::string config = *it + "/linapple/linapple.conf";
+    std::string config = *it + "/applino/applino.conf";
     registry = fopen(config.c_str(), "r");
     if (!registry) {
       continue;
@@ -847,13 +847,13 @@ void LoadAllConfigurations(const char *userSpecifiedFilename)
   }
 
   std::vector <std::string> configFiles;
-  configFiles.push_back(xdgConfigDirs + "/linapple/linapple.conf");
+  configFiles.push_back(xdgConfigDirs + "/applino/applino.conf");
   if (home) {
     // Suppport old locations under HOME.
-    configFiles.push_back(std::string(home) + "/linapple/linapple.conf");
-    configFiles.push_back(std::string(home) + "/.linapple/linapple.conf");
+    configFiles.push_back(std::string(home) + "/applino/applino.conf");
+    configFiles.push_back(std::string(home) + "/.applino/applino.conf");
   }
-  configFiles.push_back(xdgConfigHome + "/linapple/linapple.conf");
+  configFiles.push_back(xdgConfigHome + "/applino/applino.conf");
 
   std::string lastSuccessfulUserConfig;
   for (std::vector<std::string>::reverse_iterator it = configFiles.rbegin(); it != configFiles.rend(); it++) {
@@ -874,7 +874,7 @@ void LoadAllConfigurations(const char *userSpecifiedFilename)
 
   // Note: there is NO REASON to update the system-wide configuration files in
   // code. Doing so could affect all other users. Instead, a super-user should
-  // edit the /etc/xdg/linapple/linapple.conf by hand.
+  // edit the /etc/xdg/applino/applino.conf by hand.
   if (lastSuccessfulUserConfig.length() > 0) {
 
     RegConfPath(lastSuccessfulUserConfig.c_str());
@@ -893,10 +893,10 @@ void LoadAllConfigurations(const char *userSpecifiedFilename)
 
   std::string userDir(home);
   mkdir(xdgConfigHome.c_str(), 0700);
-  mkdir((xdgConfigHome + "/linapple").c_str(), 0700);
+  mkdir((xdgConfigHome + "/applino").c_str(), 0700);
 
-  RegConfPath((xdgConfigHome + "/linapple/linapple.conf").c_str());
-  registry = fopen((xdgConfigHome + "/linapple/linapple.conf").c_str(), "w+");
+  RegConfPath((xdgConfigHome + "/applino/applino.conf").c_str());
+  registry = fopen((xdgConfigHome + "/applino/applino.conf").c_str(), "w+");
 }
 
 void RegisterExtensions()
@@ -906,7 +906,7 @@ void RegisterExtensions()
 
 void PrintHelp()
 {
-  printf("usage: linapple [options]\n"
+  printf("usage: applino [options]\n"
          "\n"
          "LinApple is an emulator for Apple ][, Apple ][+, Apple //e, and Enhanced Apple //e computers.\n"
          "\n"
@@ -1143,7 +1143,7 @@ int main(int argc, char *argv[])
 
   RiffFinishWriteFile();
   if (registry != NULL) {
-    fclose(registry); // close conf file (linapple.conf by default)
+    fclose(registry); // close conf file (applino.conf by default)
   }
 
   SDL_Quit();

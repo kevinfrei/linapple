@@ -145,11 +145,11 @@ int Asset_FindMasterDisk(char *path_out)
 
   // Define search paths in precedence order.
   strcpy(paths[0], ".");
-  strcpy(paths[1], "share/linapple"); // testing convenience
+  strcpy(paths[1], "share/applino"); // testing convenience
   strcpy(paths[2], SDL_getenv("HOME"));
-  strcat(paths[2], "/.local/share/linapple");
-  strcpy(paths[3], "/usr/local/share/linapple");
-  strcpy(paths[4], "/usr/share/linapple");
+  strcat(paths[2], "/.local/share/applino");
+  strcpy(paths[3], "/usr/local/share/applino");
+  strcpy(paths[4], "/usr/share/applino");
 
   for (auto p: paths) {
     sprintf(path, "%s/%s", p, ASSET_MASTER_DSK);

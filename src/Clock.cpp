@@ -96,7 +96,7 @@ unsigned char Clock_ROM[] =
 /*
 *
 * ROM code for a simplistic ProDOS-compatible clock card
-* for the Apple II emulator 'linapple'
+* for the Apple II emulator 'applino'
 *
 * (C) 2008 by LEE Sau Dan
 *
