@@ -105,13 +105,6 @@ enum AppMode_e {
 
 #define REGVALUE_SHOW_LEDS TEXT("Show Leds")
 
-// For FTP access
-#define REGVALUE_FTP_DIR TEXT("FTP Server")
-#define REGVALUE_FTP_HDD_DIR TEXT("FTP ServerHDD")
-
-#define REGVALUE_FTP_LOCAL_DIR TEXT("FTP Local Dir")
-#define REGVALUE_FTP_USERPASS TEXT("FTP UserPass")
-
 #define WM_USER_BENCHMARK  WM_USER+1
 #define WM_USER_RESTART    WM_USER+2
 #define WM_USER_SAVESTATE  WM_USER+3

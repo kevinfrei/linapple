@@ -772,12 +772,9 @@ void LoadConfiguration()
   }
 
   if (szFilename) {
-    //strcpy(g_sFTPUserPass, szFilename);
     free(szFilename);
     szFilename = NULL;
   }
-  // Print some debug strings
-  // printf("Ready login = %s\n", g_sFTPUserPass);
 }
 
 // Splits a string into a sequence of substrings each delimited by delimiter.
