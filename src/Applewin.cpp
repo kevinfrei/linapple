@@ -47,7 +47,6 @@ By Mark Ormond.
 #include <sys/time.h>
 #include <sys/param.h>
 #include <unistd.h>
-#include <curl/curl.h>
 #include <stdlib.h>
 
 #include <iostream>
@@ -117,7 +116,6 @@ CSuperSerialCard sg_SSC;
 CMouseInterface sg_Mouse;
 
 unsigned int g_Slot4 = CT_Mockingboard;  // CT_Mockingboard or CT_MouseInterface
-CURL *g_curl = NULL;  // global easy curl resourse
 
 #define DBG_CALC_FREQ 0
 #if DBG_CALC_FREQ
@@ -1050,16 +1048,6 @@ int main(int argc, char *argv[])
     return 1;
   } // init SDL subsystems, set icon
 
-  // CURL routines
-  curl_global_init(CURL_GLOBAL_DEFAULT);
-  g_curl = curl_easy_init();
-  if (!g_curl) {
-    printf("Could not initialize CURL easy interface");
-    return 1;
-  }
-  /* Set user name and password to access FTP server */
-  // curl_easy_setopt(g_curl, CURLOPT_USERPWD, g_sFTPUserPass);
-
   // Do one-time initialization
   MemPreInitialize();    // Call before any of the slot devices are initialized
   ImageInitialize();
@@ -1175,8 +1163,6 @@ int main(int argc, char *argv[])
   }
 
   SDL_Quit();
-  curl_easy_cleanup(g_curl);
-  curl_global_cleanup();
   Asset_Quit();
   LogDestroy();
   printf("Linapple: successfully exited!\n");

@@ -6,12 +6,8 @@
 #define FILE_SEPARATOR  TEXT('/')
 #endif
 
-#define FTP_SEPARATOR  TEXT('/')
-
 // let it be our second version!
 #define LINAPPLE_VERSION  2
-
-#include <curl/curl.h>
 
 extern char *g_pAppTitle;
 constexpr eApple2Type g_Apple2Type = A2TYPE_APPLE2PLUS; // EEHANCED;
@@ -32,8 +28,6 @@ extern char g_sCurrentDir[MAX_PATH];
 extern char g_sHDDDir[MAX_PATH];
 extern char g_sSaveStateDir[MAX_PATH];
 extern char g_sParallelPrinterFile[MAX_PATH];
-
-extern CURL *g_curl;
 
 extern bool g_bResetTiming;
 extern bool restart;

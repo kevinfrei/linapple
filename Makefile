@@ -48,10 +48,6 @@ SDL_CFLAGS = $(shell $(SDL_CONFIG) --cflags)
 SDL_LIBS = $(shell $(SDL_CONFIG) --libs)
 SDL_LIBS +=  $(shell pkg-config SDL_image --libs)
 
-CURL_CONFIG ?= curl-config
-CURL_CFLAGS = $(shell $(CURL_CONFIG) --cflags)
-CURL_LIBS = $(shell $(CURL_CONFIG) --libs)
-
 #By default, optimize the executable.
 CFLAGS := -Wall -flto -Os -ansi -c -std=c++11
 LFLAGS := -flto
@@ -71,11 +67,10 @@ endif
 
 CFLAGS += -DASSET_DIR=\"$(DATADIR)\" -DVERSIONSTRING=\"$(VERSION)\"
 CFLAGS += $(SDL_CFLAGS)
-CFLAGS += $(CURL_CFLAGS)
 # Do not complain about XPMs
 CFLAGS += -Wno-write-strings
 
-LIB    := $(SDL_LIBS) $(CURL_LIBS) -lz -lzip -pthread -lX11
+LIB    := $(SDL_LIBS) -lz -lzip -pthread -lX11
 INC    := -I$(INCDIR) -I/usr/local/include
 INCDEP := -I$(INCDIR)
 
@@ -116,7 +111,7 @@ Installed-Size: $(SIZE)
 Maintainer: LinApple team <https://github.com/linappleii/linapple/issues>
 Architecture: $(ARCH)
 Version: $(VERSION)
-Depends: libzip-dev, libsdl1.2-dev, libsdl-image1.2-dev, libcurl4-openssl-dev, zlib1g-dev, imagemagick
+Depends: libzip-dev, libsdl1.2-dev, libsdl-image1.2-dev, zlib1g-dev, imagemagick
 Homepage: https://github.com/linappleii/linapple
 Description: A Linux emulator for Apple ][+, IIe and Enhanced //e with Mockingboard support
 endef
