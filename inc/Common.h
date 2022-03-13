@@ -21,11 +21,9 @@ const unsigned int dwClksPerFrame = uCyclesPerLine * uLinesPerFrame; // 17030
 #endif
 
 // #define RAMWORKS // 8MB RamWorks III support
-// #define MOCKINGBOARD // Mockingboard support
 
 // Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample. Assume base freqs are 44.1KHz & 48KHz.
 const unsigned int SPKR_SAMPLE_RATE = 44100;  // that is for Apple][ speakers
-const unsigned int SAMPLE_RATE = 44100;  // that is for Phasor/Mockingboard?
 
 #if !defined(APPMODE_E_IS_DEFINED)
 enum AppMode_e {
@@ -76,7 +74,6 @@ enum AppMode_e {
 // Configuration
 #define REGVALUE_APPLE2_TYPE        "Apple2 Type"
 #define REGVALUE_SPKR_VOLUME        "Speaker Volume"
-#define REGVALUE_MB_VOLUME          "Mockingboard Volume"
 #define REGVALUE_SOUNDCARD_TYPE     "Soundcard Type"
 #define REGVALUE_KEYB_TYPE          "Keyboard Type"
 #define REGVALUE_KEYB_CHARSET_SWITCH "Keyboard Rocker Switch"
@@ -111,7 +108,7 @@ enum AppMode_e {
 #define WM_USER_LOADSTATE  WM_USER+4
 
 enum eSOUNDCARDTYPE {
-  SC_UNINIT = 0, SC_NONE, SC_MOCKINGBOARD, SC_PHASOR
+  SC_UNINIT = 0, SC_NONE
 };  // Apple soundcard type
 
 typedef unsigned char (*iofunction)(unsigned short nPC, unsigned short nAddr, unsigned char nWriteFlag, unsigned char nWriteValue, ULONG nCyclesLeft);

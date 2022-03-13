@@ -88,7 +88,6 @@ typedef struct {
   unsigned int dwEmulationSpeed;
   bool bEnhancedDiskSpeed;
   unsigned int dwJoystickType[2];
-  bool bMockingboardEnabled;
   unsigned int dwMonochromeColor;
   unsigned int dwSerialPort;
   unsigned int dwSoundType;  // Sound Emulation
@@ -117,7 +116,7 @@ typedef struct {
 enum SS_CARDTYPE {
   CT_Empty = 0, CT_Disk2,      // Apple Disk][
   CT_SSC,        // Apple Super Serial Card
-  CT_Mockingboard, CT_GenericPrinter, CT_GenericHDD,    // Hard disk
+  CT_GenericPrinter, CT_GenericHDD,    // Hard disk
   CT_GenericClock, CT_MouseInterface,
 };
 
@@ -164,31 +163,6 @@ typedef struct {
 } IWORD;
 
 typedef struct {
-  unsigned char ORB;        // $00 - Port B
-  unsigned char ORA;        // $01 - Port A (with handshaking)
-  unsigned char DDRB;        // $02 - Data Direction Register B
-  unsigned char DDRA;        // $03 - Data Direction Register A
-  //
-  // $04 - Read counter (L) / Write latch (L)
-  // $05 - Read / Write & initiate count (H)
-  // $06 - Read / Write & latch (L)
-  // $07 - Read / Write & latch (H)
-  // $08 - Read counter (L) / Write latch (L)
-  // $09 - Read counter (H) / Write latch (H)
-  IWORD TIMER1_COUNTER;
-  IWORD TIMER1_LATCH;
-  IWORD TIMER2_COUNTER;
-  IWORD TIMER2_LATCH;
-  //
-  unsigned char SERIAL_SHIFT;    // $0A
-  unsigned char ACR;        // $0B - Auxiliary Control Register
-  unsigned char PCR;        // $0C - Peripheral Control Register
-  unsigned char IFR;        // $0D - Interrupt Flag Register
-  unsigned char IER;        // $0E - Interrupt Enable Register
-  unsigned char ORA_NO_HS;      // $0F - Port A (without handshaking)
-} SY6522;
-
-typedef struct {
   unsigned char DurationPhonome;
   unsigned char Inflection;    // I10..I3
   unsigned char RateInflection;
@@ -199,31 +173,12 @@ typedef struct {
 } SSI263A;
 
 typedef struct {
-  SY6522 RegsSY6522;
-  unsigned char RegsAY8910[16];
-  SSI263A RegsSSI263;
-  unsigned char nAYCurrentRegister;
-  bool bTimer1IrqPending;
-  bool bTimer2IrqPending;
-  bool bSpeechIrqPending;
-} MB_Unit;
-
-const unsigned int MB_UNITS_PER_CARD = 2;
-
-typedef struct {
-  SS_CARD_HDR Hdr;
-  MB_Unit Unit[MB_UNITS_PER_CARD];
-} SS_CARD_MOCKINGBOARD;
-
-typedef struct {
   SS_FILE_HDR Hdr;
   SS_APPLE2_Unit Apple2Unit;
   //  SS_APPLEWIN_CONFIG AppleWinCfg;
   SS_CARD_EMPTY Empty1;        // Slot1
   SS_CARD_EMPTY Empty2;        // Slot2
   SS_CARD_EMPTY Empty3;        // Slot3
-  SS_CARD_MOCKINGBOARD Mockingboard1;  // Slot4
-  SS_CARD_MOCKINGBOARD Mockingboard2;  // Slot5
   SS_CARD_DISK2 Disk2;        // Slot6
   SS_CARD_EMPTY Empty7;        // Slot7
 } APPLEWIN_SNAPSHOT;

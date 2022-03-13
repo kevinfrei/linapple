@@ -115,7 +115,7 @@ bool g_bDisableDirectSound = false;  // direct sound, use SDL Sound, or SDL_mixe
 CSuperSerialCard sg_SSC;
 CMouseInterface sg_Mouse;
 
-unsigned int g_Slot4 = CT_Mockingboard;  // CT_Mockingboard or CT_MouseInterface
+unsigned int g_Slot4 = CT_Empty;
 
 #define DBG_CALC_FREQ 0
 #if DBG_CALC_FREQ
@@ -138,16 +138,14 @@ void ContinueExecution()
   bool bScrollLock_FullSpeed = g_bScrollLock_FullSpeed;
 
   g_bFullSpeed = ((g_dwSpeed == SPEED_MAX) || bScrollLock_FullSpeed || IsDebugSteppingAtFullSpeed() ||
-                  (DiskIsSpinning() && enhancedisk && !Spkr_IsActive() && !MB_IsActive()));
+                  (DiskIsSpinning() && enhancedisk && !Spkr_IsActive()));
 
   if (g_bFullSpeed) {
     // Don't call Spkr_Mute() - will get speaker clicks
-    MB_Mute();
     SysClk_StopTimer();
     g_nCpuCyclesFeedback = 0;  // For the case when this is a big -ve number
   } else {
     // Don't call Spkr_Demute()
-    MB_Demute();
     SysClk_StartTimerUsec(nExecutionPeriodUsec);
   }
 
@@ -246,7 +244,6 @@ void ContinueExecution()
       lastupdates[0] = anyupdates;
       anyupdates = 0;
     }
-    MB_EndOfVideoFrame();
   }
 
   if ((g_nAppMode == MODE_RUNNING && !g_bFullSpeed) || bModeStepping_WaitTimer)
@@ -327,7 +324,6 @@ void SetCurrentCLK6502()
 
   // Now re-init modules that are dependent on /g_fCurrentCLK6502/
   SpkrReinitialize();
-  MB_Reinitialize();
 }
 
 void EnterMessageLoop()
@@ -573,13 +569,7 @@ void LoadConfiguration()
       g_uMouseInSlot4 = dwTmp;
     }
   }
-  g_Slot4 = g_uMouseInSlot4 ? CT_MouseInterface : CT_Mockingboard;
-
-  if (registry) {
-    if (LOAD(TEXT(REGVALUE_SOUNDCARD_TYPE), &dwTmp)) {
-      MB_SetSoundcardType((eSOUNDCARDTYPE) dwTmp);
-    }
-  }
+  g_Slot4 = g_uMouseInSlot4 ? CT_MouseInterface: CT_Empty;
 
   if (registry) {
     if (LOAD(TEXT(REGVALUE_SAVE_STATE_ON_EXIT), &dwTmp)) {
@@ -1089,7 +1079,6 @@ int main(int argc, char *argv[])
       soundtype = SOUND_NONE;    // Direct Sound and Stuff
     }
 
-    MB_Initialize();  // Mocking board
     SpkrInitialize();  // Speakers - of Apple][ ...grrrrrrrrrrr, I love them!--bb
     JoyInitialize();
     MemInitialize();
@@ -1144,8 +1133,6 @@ int main(int argc, char *argv[])
     SpkrDestroy();
     VideoDestroy();
     MemDestroy();
-    MB_Destroy();
-    MB_Reset();
     sg_Mouse.Uninitialize(); // Maybe restarting due to switching slot-4 card from mouse to MB
     JoyShutDown();  // close opened (if any) joysticks
   } while (restart);

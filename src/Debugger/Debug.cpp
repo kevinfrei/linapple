@@ -3719,17 +3719,12 @@ bool MemoryDumpCheck (int nArgs, unsigned short * pAddress_ )
 
   pArg->eDevice = DEV_MEMORY;            // Default
 
-  if(strncmp(g_aArgs[1].sArg, "SY", 2) == 0)      // SY6522
+  if(strncmp(g_aArgs[1].sArg, "SY", 2) == 0)      // SY65-22
   {
-    nAddress = (g_aArgs[1].sArg[2] - '0') & 3;
-    pArg->eDevice = DEV_SY6522;
+/*    nAddress = (g_aArgs[1].sArg[2] - '0') & 3;
+    pArg->eDevice = DEV_SY65-22;
     bUpdate = true;
-  }
-  else if(strncmp(g_aArgs[1].sArg, "AY", 2) == 0)    // AY8910
-  {
-    nAddress  = (g_aArgs[1].sArg[2] - '0') & 3;
-    pArg->eDevice = DEV_AY8910;
-    bUpdate = true;
+    */
   }
 #ifdef SUPPORT_Z80_EMU
   else if(strcmp(g_aArgs[1].sArg, "*AF") == 0)

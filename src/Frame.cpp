@@ -727,7 +727,6 @@ void ProcessButtonClick(int button, int mod)
         if (!IS_APPLE2) {
           VideoResetState();
         }  // Switch Alternate char set off
-        MB_Reset();
         CpuReset();
       } else if (mod & KMOD_ALT) { // quick load state
         Snapshot_LoadState();
@@ -752,7 +751,6 @@ void ResetMachineState() {
   sg_SSC.CommReset();
   PrintReset();
   JoyReset();
-  MB_Reset();
   SpkrReset();
 }
 

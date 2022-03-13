@@ -124,7 +124,7 @@ static ULONG g_nCyclesExecuted;
 static signed long g_uInternalExecutedCycles;
 // TODO: Use IRQ_CHECK_TIMEOUT=128 when running at full-speed else with IRQ_CHECK_TIMEOUT=1
 // - What about when running benchmark?
-// GPH Dropped to IRQ_CHECK_TIMOUT=16 - Mockingboard-intensive applications sound
+// GPH Dropped to IRQ_CHECK_TIMOUT=16 - Mo-ckingboard-intensive applications sound
 // "jerky" at 128.  Does not show appreciable CPU impact in top CPU profiler.
 static const int IRQ_CHECK_TIMEOUT = 16;
 static signed int g_nIrqCheckTimeout = IRQ_CHECK_TIMEOUT;
@@ -844,9 +844,6 @@ static inline void IRQ(ULONG &uExecutedCycles, UINT16 &uExtraCycles, BOOL &flagc
 static inline void CheckInterruptSources(ULONG uExecutedCycles)
 {
   if (g_nIrqCheckTimeout < 0) {
-    #ifndef UPDATE_ALL_PER_CYCLE
-    MB_UpdateCycles(uExecutedCycles);
-    #endif
     sg_Mouse.SetVBlank(VideoGetVbl(uExecutedCycles));
     g_nIrqCheckTimeout = IRQ_CHECK_TIMEOUT;
   }
@@ -3526,9 +3523,6 @@ static DWORD Cpu6502(DWORD uTotalCycles)
 
 static DWORD InternalCpuExecute(DWORD uTotalCycles)
 {
-  #ifdef UPDATE_ALL_PER_CYCLE
-  MB_Update();
-  #endif
   if (IS_APPLE2 || (g_Apple2Type == A2TYPE_APPLE2E)) {
     return Cpu6502(uTotalCycles);  // Apple ][, ][+, //e
   } else {
@@ -3567,7 +3561,7 @@ void CpuCalcCycles(ULONG nExecutedCycles)
 // - 68.0,69.0MHz vs  66.7, 67.2MHz  (with check for VBL IRQ every opcode)
 // - 89.6,88.9MHz vs  87.2, 87.9MHz  (without check for VBL IRQ)
 // -                  75.9, 78.5MHz  (with check for VBL IRQ every 128 cycles)
-// -                 137.9,135.6MHz  (with check for VBL IRQ & MB_Update every 128 cycles)
+// -                 137.9,135.6MHz  (with check for VBL IRQ & M-B_Update every 128 cycles)
 
 #ifdef UPDATE_ALL_PER_CYCLE   // TODO: Measure perf increase by using this new method
 ULONG CpuGetCyclesThisFrame(ULONG)  // Old func using g_uInternalExecutedCycles
@@ -3592,17 +3586,11 @@ DWORD CpuExecute(DWORD uCycles)
   g_nCyclesSubmitted = uCycles;
   g_nCyclesExecuted = 0;
 
-  MB_StartOfCpuExecute();
-
   if (uCycles == 0) {  // Do single step
     uExecutedCycles = InternalCpuExecute(0);
   } else {        // Do multi-opcode emulation
     uExecutedCycles = InternalCpuExecute(uCycles);
   }
-
-  #ifndef UPDATE_ALL_PER_CYCLE
-  MB_UpdateCycles(uExecutedCycles);  // Update 6522s (NB. Do this before updating g_nCumulativeCycles below)
-  #endif
 
   UINT16 nRemainingCycles = uExecutedCycles - g_nCyclesExecuted;
   g_nCumulativeCycles += nRemainingCycles;

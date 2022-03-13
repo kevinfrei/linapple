@@ -28,7 +28,6 @@
 #include "Structs.h"
 
 #include "AppleWin.h"
-#include "AY8910.h"
 
 #include "CPU.h"
 
@@ -46,7 +45,6 @@
 #include "Keyboard.h"
 #include "Log.h"
 #include "Memory.h"
-#include "Mockingboard.h"
 #include "ParallelPrinter.h"
 #include "Registry.h"
 

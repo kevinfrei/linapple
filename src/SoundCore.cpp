@@ -167,8 +167,7 @@ bool SDLSoundDriverInit(unsigned wantedFreq, unsigned wantedSamples) {
   printf("bufferSize=%08x bufferIdxMask=%08x\n", bufferSize, bufferIdxMask);
 
   mix_buffer = new sample_buffer(bufferSize);  // buffer for Apple2 speakers
-  mock_buffer = new sample_buffer(bufferSize);  // buffer for Mockingboard
-
+  
   reInit();
   printf("SDL_MIX_MAXVOLUME=%d\n", SDL_MIX_MAXVOLUME);
   printf("Freq=%d,format=%d,channels=%d,silence=%d\n", audioSpec.freq, audioSpec.format, audioSpec.channels,
@@ -180,14 +179,12 @@ bool SDLSoundDriverInit(unsigned wantedFreq, unsigned wantedSamples) {
 
 void SDLSoundDriverUninit() {
   delete mix_buffer;
-  delete mock_buffer;
   SDL_CloseAudio();
 }
 
 
 void reInit() {
   mix_buffer->reinit();
-  mock_buffer->reinit();
 }
 
 void mute() {
@@ -219,9 +216,6 @@ void audioCallback(void *userdata, BYTE *strm, int len) {
     auto stream = reinterpret_cast<sample_buffer::sample_t*>(strm);
     const auto str_len = len / sizeof(sample_buffer::sample_t);
     mix_buffer->drain_to(stream, str_len);
-#ifdef MOCKINGBOARD
-    mock_buffer->mix_into(stream, str_len);
-#endif
   }
   SDL_UnlockAudio();
 }
@@ -298,10 +292,4 @@ void sample_buffer::upload(sample_t *src_buffer, size_t len) {
     std::copy_n(src_buffer+len1, len2, buffer.begin());
     write_index = len2;
   }
-}
-
-// Uploading sound data for Mockingboard buffer
-// GPH 01042015: buffer contains interleaved stereo data: left sample, right sample, left sample, etc...
-void DSUploadMockBuffer(short *buffer, unsigned len) {
-  mock_buffer->upload(buffer, len);
 }

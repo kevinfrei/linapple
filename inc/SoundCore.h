@@ -13,6 +13,4 @@ void SoundCore_SetFade(int how);  //
 
 void DSUploadBuffer(short *buffer, unsigned len);
 
-void DSUploadMockBuffer(short *buffer, unsigned len);  // Upload Mockingboard data
-
 extern bool g_bDSAvailable;

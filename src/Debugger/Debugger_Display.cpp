@@ -42,7 +42,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "Frame.h"
 //#include "LanguageCard.h"
 #include "Memory.h"
-#include "Mockingboard.h"
 //#include "NTSC.h"
 #include "Video.h"
 #include <SDL_image.h>
@@ -2118,11 +2117,6 @@ void DrawMemory ( int line, int iMemDump )
 	DEVICE_e     eDevice = pMD->eDevice;
 	MemoryView_e iView   = pMD->eView;
 
-	SS_CARD_MOCKINGBOARD SS_MB;
-
-	if ((eDevice == DEV_SY6522) || (eDevice == DEV_AY8910))
-		MB_GetSnapshot(&SS_MB, 4+(nAddr>>1));		// Slot4 or Slot5
-
 	RECT rect;
 	rect.left   = DISPLAY_MINIMEM_COLUMN;
 	rect.top    = (line * g_nFontHeight);
@@ -2142,15 +2136,6 @@ void DrawMemory ( int line, int iMemDump )
 	int iBackground = BG_INFO;
 
 #if DISPLAY_MEMORY_TITLE
-	if (eDevice == DEV_SY6522)
-	{
-		snprintf( sAddress, sizeof(sAddress), "SY#%d", nAddr );
-	}
-	else if(eDevice == DEV_AY8910)
-	{
-		snprintf( sAddress, sizeof(sAddress),"AY#%d", nAddr );
-	}
-	else
 	{
 		snprintf( sAddress, sizeof(sAddress),"%04X",(unsigned)nAddr);
 
@@ -2188,12 +2173,6 @@ void DrawMemory ( int line, int iMemDump )
 		nCols = MAX_MEM_VIEW_TXT;
 	}
 
-	if( (eDevice == DEV_SY6522) || (eDevice == DEV_AY8910) )
-	{
-		iAddress = 0;
-		nCols = 6;
-	}
-
 	rect.right = DISPLAY_WIDTH - 1;
 
 	DebuggerSetColorFG( DebuggerGetColor( FG_INFO_OPCODE ));
@@ -2223,24 +2202,6 @@ void DrawMemory ( int line, int iMemDump )
 //				sprintf( sText, "IO " );
 //			}
 //			else
-			if (eDevice == DEV_SY6522)
-			{
-				sprintf( sText, "%02X", (unsigned) ((unsigned char*)&SS_MB.Unit[nAddr & 1].RegsSY6522)[iAddress] );
-				if (iCol & 1)
-					DebuggerSetColorFG( DebuggerGetColor( iForeground ));
-				else
-					DebuggerSetColorFG( DebuggerGetColor( FG_INFO_ADDRESS ));
-			}
-			else
-			if (eDevice == DEV_AY8910)
-			{
-				sprintf( sText, "%02X", (unsigned)SS_MB.Unit[nAddr & 1].RegsAY8910[iAddress] );
-				if (iCol & 1)
-					DebuggerSetColorFG( DebuggerGetColor( iForeground ));
-				else
-					DebuggerSetColorFG( DebuggerGetColor( FG_INFO_ADDRESS ));
-			}
-			else
 			{
 				unsigned char nData = (unsigned)*(LPBYTE)(mem+iAddress);
 				sText[0] = 0;

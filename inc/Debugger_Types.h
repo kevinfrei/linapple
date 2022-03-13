@@ -1069,7 +1069,7 @@ const unsigned int _6502_MEM_LEN   = _6502_MEM_END + 1;
 
 
 enum DEVICE_e {
-  DEV_MEMORY, DEV_DISK2, DEV_SY6522, DEV_AY8910, NUM_DEVICES
+  DEV_MEMORY, DEV_DISK2, NUM_DEVICES
 };
 
 enum MemoryView_e {

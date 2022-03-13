@@ -99,7 +99,6 @@ void Snapshot_LoadState() {
     DiskReset();
     KeybReset();
     VideoResetState();
-    MB_Reset();
 
     CpuSetSnapshot(&pSS->Apple2Unit.CPU6502);
     sg_SSC.CommSetSnapshot(&pSS->Apple2Unit.Comms);
@@ -108,12 +107,6 @@ void Snapshot_LoadState() {
     SpkrSetSnapshot(&pSS->Apple2Unit.Speaker);
     VideoSetSnapshot(&pSS->Apple2Unit.Video);
     MemSetSnapshot(&pSS->Apple2Unit.Memory);
-
-    // Slot4: Mockingboard
-    MB_SetSnapshot(&pSS->Mockingboard1, 4);
-
-    // Slot5: Mockingboard
-    MB_SetSnapshot(&pSS->Mockingboard2, 5);
 
     // Slot6: Disk][
     DiskSetSnapshot(&pSS->Disk2, 6);
@@ -168,12 +161,6 @@ void Snapshot_SaveState() {
   pSS->Empty3.Hdr.UnitHdr.dwVersion = MAKE_VERSION(1, 0, 0, 0);
   pSS->Empty3.Hdr.dwSlot = 3;
   pSS->Empty3.Hdr.dwType = CT_Empty;
-
-  // Slot4: Mockingboard
-  MB_GetSnapshot(&pSS->Mockingboard1, 4);
-
-  // Slot5: Mockingboard
-  MB_GetSnapshot(&pSS->Mockingboard2, 5);
 
   // Slot6: Disk][
   DiskGetSnapshot(&pSS->Disk2, 6);
