@@ -14,8 +14,7 @@
 #include <curl/curl.h>
 
 extern char *g_pAppTitle;
-
-extern eApple2Type g_Apple2Type;
+constexpr eApple2Type g_Apple2Type = A2TYPE_APPLE2PLUS; // EEHANCED;
 
 extern unsigned int cumulativecycles;
 extern unsigned int cyclenum;
@@ -33,12 +32,6 @@ extern char g_sCurrentDir[MAX_PATH];
 extern char g_sHDDDir[MAX_PATH];
 extern char g_sSaveStateDir[MAX_PATH];
 extern char g_sParallelPrinterFile[MAX_PATH];
-
-// FTP vars
-extern char g_sFTPLocalDir[MAX_PATH]; // FTP Local Dir, see linapple.conf for details
-extern char g_sFTPServer[MAX_PATH]; // full path to default FTP server
-extern char g_sFTPServerHDD[MAX_PATH]; // full path to default FTP server
-extern char g_sFTPUserPass[512]; // full login line
 
 extern CURL *g_curl;
 

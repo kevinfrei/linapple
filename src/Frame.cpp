@@ -158,7 +158,6 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
   const int MAX_LINES = 25;
   const char *HelpStrings[MAX_LINES] = {"Welcome to LinApple - Apple][ emulator for Linux!",
                                         "Conf file is linapple.conf in current directory by default",
-                                        "Hugest archive of Apple][ stuff you can find at ftp.apple.asimov.net",
                                         "       F1 - Show help screen",
                                         "  Ctrl+F2 - Cold reboot (Power off and back on)",
                                         " Shift+F2 - Reload configuration file and cold reboot",
@@ -616,17 +615,9 @@ void ProcessButtonClick(int button, int mod)
       }
 
       if (mod & KMOD_SHIFT) {
-        if (mod & KMOD_ALT) {
-          HD_FTP_Select(button - BTN_DRIVE1);// select HDV image through FTP
-        } else {
           HD_Select(button - BTN_DRIVE1);
-        }  // select HDV image from local disk
       } else {
-        if (mod & KMOD_ALT) {
-          Disk_FTP_SelectImage(button - BTN_DRIVE1);//select through FTP
-        } else {
           DiskSelect(button - BTN_DRIVE1);
-        } // select image file for appropriate disk drive(#1 or #2)
       }
       break;
 

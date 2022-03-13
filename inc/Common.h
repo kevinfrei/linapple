@@ -20,13 +20,14 @@ const unsigned int dwClksPerFrame = uCyclesPerLine * uLinesPerFrame; // 17030
 #define MIN(a, b) (((a) < (b)) ? (a) : (b))
 #endif
 
-#define RAMWORKS // 8MB RamWorks III support
-#define MOCKINGBOARD // Mockingboard support
+// #define RAMWORKS // 8MB RamWorks III support
+// #define MOCKINGBOARD // Mockingboard support
 
 // Use a base freq so that DirectX (or sound h/w) doesn't have to up/down-sample. Assume base freqs are 44.1KHz & 48KHz.
 const unsigned int SPKR_SAMPLE_RATE = 44100;  // that is for Apple][ speakers
 const unsigned int SAMPLE_RATE = 44100;  // that is for Phasor/Mockingboard?
 
+#if !defined(APPMODE_E_IS_DEFINED)
 enum AppMode_e {
   MODE_LOGO = 0,
   MODE_PAUSED,
@@ -34,6 +35,8 @@ enum AppMode_e {
   MODE_DEBUG, // 6502 is paused
   MODE_STEPPING, // 6502 is running at full speed (Debugger breakpoints always active)
 };
+#define APPMODE_E_IS_DEFINED
+#endif
 
 #define SPEED_MIN         0
 #define SPEED_NORMAL      10

@@ -74,8 +74,6 @@ static char TITLE_APPLE_2E_ENHANCED_[] = TITLE_APPLE_2E_ENHANCED;
 
 char *g_pAppTitle = TITLE_APPLE_2E_ENHANCED_;
 
-eApple2Type g_Apple2Type = A2TYPE_APPLE2EEHANCED;
-
 bool behind = 0;
 unsigned int cumulativecycles = 0;      // Wraps after ~1hr 9mins
 unsigned int cyclenum = 0;
@@ -100,13 +98,6 @@ char g_sCurrentDir[MAX_PATH] = TEXT(""); // Also Starting Dir for Slot6 disk ima
 char g_sHDDDir[MAX_PATH] = TEXT(""); // starting dir for HDV (Apple][ HDD) images?? --bb
 char g_sSaveStateDir[MAX_PATH] = TEXT(""); // starting dir for states --bb
 char g_sParallelPrinterFile[MAX_PATH] = TEXT("Printer.txt");  // default file name for Parallel printer
-
-// FTP Variables
-char g_sFTPLocalDir[MAX_PATH] = TEXT(""); // FTP Local Dir, see linapple.conf for details
-char g_sFTPServer[MAX_PATH] = TEXT(""); // full path to default FTP server
-char g_sFTPServerHDD[MAX_PATH] = TEXT(""); // full path to default FTP server
-
-char g_sFTPUserPass[512] = TEXT("anonymous:mymail@hotmail.com"); // full login line
 
 bool g_bResetTiming = false;
 bool restart = 0;
@@ -439,26 +430,6 @@ void setAutoBoot()
 // Let us load main configuration from config file.  Y_Y  --bb
 void LoadConfiguration()
 {
-  if (registry) {
-    unsigned int dwComputerType = g_Apple2Type;
-    LOAD(TEXT("Computer Emulation"), &dwComputerType);
-
-    switch (dwComputerType) {
-      case 0:
-        g_Apple2Type = A2TYPE_APPLE2;
-        break;
-      case 1:
-        g_Apple2Type = A2TYPE_APPLE2PLUS;
-        break;
-      case 2:
-        g_Apple2Type = A2TYPE_APPLE2E;
-        break;
-      default:
-        g_Apple2Type = A2TYPE_APPLE2EEHANCED;
-        break;
-    }
-  }
-
   // determine Apple type and set appropriate caption -- should be in (F9)switching modes?
   switch (g_Apple2Type) {
     case A2TYPE_APPLE2:
@@ -777,8 +748,8 @@ void LoadConfiguration()
 
   if (strlen(g_sHDDDir) == 0 || g_sHDDDir[0] != '/') {
     char *tmp = getenv("HOME"); /* we don't have HOME?  ^_^  0_0  $_$  */
-    if (tmp == NULL) {
-      strcpy(g_sHDDDir, "/");  //begin from the root, then
+    if (tmp == NULL) 
+{      strcpy(g_sHDDDir, "/");  //begin from the root, then
     } else {
       strcpy(g_sHDDDir, tmp);
     }
@@ -802,48 +773,13 @@ void LoadConfiguration()
     }
   }
 
-  // Read and fill FTP variables - server, local dir, user name and password
-  if (registry) {
-    RegLoadString(TEXT("Preferences"), REGVALUE_FTP_DIR, 1, &szFilename, MAX_PATH);
-  }
-
   if (szFilename) {
-    strcpy(g_sFTPServer, szFilename);
-    free(szFilename);
-    szFilename = NULL;
-  }
-
-  if (registry) {
-    RegLoadString(TEXT("Preferences"), REGVALUE_FTP_HDD_DIR, 1, &szFilename, MAX_PATH);
-  }
-
-  if (szFilename) {
-    strcpy(g_sFTPServerHDD, szFilename);
-    free(szFilename);
-    szFilename = NULL;
-  }
-
-  if (registry) {
-    RegLoadString(TEXT("Preferences"), REGVALUE_FTP_LOCAL_DIR, 1, &szFilename, MAX_PATH);
-  }
-
-  if (szFilename) {
-    strcpy(g_sFTPLocalDir, szFilename);
-    free(szFilename);
-    szFilename = NULL;
-  }
-
-  if (registry) {
-    RegLoadString(TEXT("Preferences"), REGVALUE_FTP_USERPASS, 1, &szFilename, 512);
-  }
-
-  if (szFilename) {
-    strcpy(g_sFTPUserPass, szFilename);
+    //strcpy(g_sFTPUserPass, szFilename);
     free(szFilename);
     szFilename = NULL;
   }
   // Print some debug strings
-  printf("Ready login = %s\n", g_sFTPUserPass);
+  // printf("Ready login = %s\n", g_sFTPUserPass);
 }
 
 // Splits a string into a sequence of substrings each delimited by delimiter.
@@ -1122,7 +1058,7 @@ int main(int argc, char *argv[])
     return 1;
   }
   /* Set user name and password to access FTP server */
-  curl_easy_setopt(g_curl, CURLOPT_USERPWD, g_sFTPUserPass);
+  // curl_easy_setopt(g_curl, CURLOPT_USERPWD, g_sFTPUserPass);
 
   // Do one-time initialization
   MemPreInitialize();    // Call before any of the slot devices are initialized

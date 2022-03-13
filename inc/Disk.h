@@ -39,8 +39,6 @@ void DiskSetProtect(const int iDrive, const bool bWriteProtect);
 
 void DiskSelect(int);
 
-void Disk_FTP_SelectImage(int);
-
 void DiskUpdatePosition(unsigned int);
 
 bool DiskDriveSwap();

@@ -80,12 +80,12 @@ MemoryInitPattern_e g_eMemoryInitPattern = MIP_FF_FF_00_00;
 unsigned int      g_uMaxExPages  = 1; // user requested ram pages
 static unsigned int   g_uActiveBank = 0;        // 0 = aux 64K for: //e extended 80 Col card, or //c
 static LPBYTE  RWpages[128];  // pointers to RW memory banks
-#endif
 
 unsigned int GetRamWorksActiveBank(void)
 {
   return g_uActiveBank;
 }
+#endif
 
 unsigned char IO_Annunciator(unsigned short programcounter, unsigned short address, unsigned char write, unsigned char value, ULONG nCycles);
 

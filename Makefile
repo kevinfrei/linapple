@@ -53,7 +53,8 @@ CURL_CFLAGS = $(shell $(CURL_CONFIG) --cflags)
 CURL_LIBS = $(shell $(CURL_CONFIG) --libs)
 
 #By default, optimize the executable.
-CFLAGS := -Wall -O3 -ansi -c -std=c++11
+CFLAGS := -Wall -flto -Os -ansi -c -std=c++11
+LFLAGS := -flto
 
 ifdef PROFILING
 CFLAGS := -Wall -O0 -pg -ggdb -ansi -c
