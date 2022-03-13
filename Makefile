@@ -159,6 +159,9 @@ distclean: clean
 	@find . -type f -iname '*~' -exec rm -f {} \;
 	@$(RM) $(TARGET)-$(VERSION).deb
 
+# Missing dependency...
+$(BUILDDIR)/asset.$(OBJEXT): $(BUILDDIR)/splash.$(XPMEXT)
+
 #Pull in dependency info for *existing* .o files
 -include $(OBJECTS:.$(OBJEXT)=.$(DEPEXT))
 
