@@ -33,7 +33,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "stdafx.h"
 #include "asset.h"
 #include "wwrapper.h"
-#include <pthread.h>
+// #include <pthread.h>
 #include <thread>
 #include <chrono>
 #include <unistd.h>
@@ -203,7 +203,7 @@ unsigned int g_uVideoMode = VF_TEXT;
 unsigned int g_uDebugVideoMode = VF_TEXT;
 static unsigned int vidmode_latched = VF_TEXT; // Latch vals @ time of refresh req.
 unsigned int g_videotype = VT_COLOR_STANDARD;
-unsigned int g_singlethreaded = 0;
+// unsigned int g_singlethreaded = 0;
 
 static bool g_bTextFlashState = false;
 static bool g_bTextFlashFlag = false;
@@ -231,11 +231,11 @@ void DrawTextSource(SDL_Surface *dc);
 
 bool VideoInitWorker();
 
-pthread_t video_worker_thread_;
+// pthread_t video_worker_thread_;
 static volatile bool video_worker_active_ = false;
 static volatile bool video_worker_terminate_ = false;
 static volatile bool video_worker_refresh_ = false;
-pthread_mutex_t video_draw_mutex;
+// pthread_mutex_t video_draw_mutex;
 std::condition_variable video_cv;
 
 static char display_pipeline_[0x2000*4 + 0x400*4];
@@ -352,7 +352,7 @@ void CreateIdentityPalette() {
 }
 
 void CreateDIBSections() {
-  pthread_mutex_lock(&video_draw_mutex);
+  // pthread_mutex_lock(&video_draw_mutex);
 
   CopyMemory(g_pSourceHeader, framebufferinfo, 256 * sizeof(SDL_Color));
 
@@ -456,7 +456,7 @@ void CreateDIBSections() {
     SDL_UnlockSurface(g_hSourceBitmap);
   }
 
-  pthread_mutex_unlock(&video_draw_mutex);
+  // pthread_mutex_unlock(&video_draw_mutex);
 }
 
 void DrawDHiResSource() {
@@ -1578,13 +1578,13 @@ void VideoChooseColor() {
 
 void VideoDestroy() {
   // GPH Multithreaded
-  {
-    void *result;
-    video_worker_terminate_ = true;
-    if (video_worker_active_)
-      pthread_join(video_worker_thread_,&result);
-    video_worker_active_ = false;
-  }
+  // {
+    // void *result;
+    // video_worker_terminate_ = true;
+    // if (video_worker_active_)
+      // pthread_join(video_worker_thread_,&result);
+    // video_worker_active_ = false;
+  // }
   // END GPH
 
   // Just free our SDL surfaces and free vidlastmem
@@ -1679,9 +1679,9 @@ void VideoInitialize() {
   VideoResetState();
 
   // GPH Experiment with multicore video
-  if (!g_singlethreaded) {
-    VideoInitWorker();
-  }
+  // if (!g_singlethreaded) {
+    // VideoInitWorker();
+  // }
   // END GPH
 }
 
@@ -1690,11 +1690,11 @@ void VideoInitialize() {
 auto video_next_scheduled_update_ = std::chrono::system_clock::now();
 void VideoSetNextScheduledUpdate()
 {
-  if (!g_singlethreaded) {
+  // if (!g_singlethreaded) {
     //video_next_scheduled_update_ += std::chrono::microseconds(1000); //6666);
-    video_next_scheduled_update_ = std::chrono::system_clock::now();
-    std::this_thread::yield();
-  }
+    // video_next_scheduled_update_ = std::chrono::system_clock::now();
+    // std::this_thread::yield();
+  // }
 }
 
 // VideoWorkerThread
@@ -1722,16 +1722,16 @@ void *VideoWorkerThread(void *params)
 bool VideoInitWorker()
 {
   video_worker_active_ = true;
-  int error = pthread_create(
-        &video_worker_thread_,
-        NULL,
-        &VideoWorkerThread,
-        NULL);
-  if (error) {
+  // int error = pthread_create(
+        // &video_worker_thread_,
+        // NULL,
+        // &VideoWorkerThread,
+    //  NULL);
+  if (true) {
 
     // If failed to start, revert to singlethreaded
     std::cerr << "FAILED to start video worker; reverting to single-threaded video updating..." << std::endl;
-    g_singlethreaded = false;
+    // g_singlethreaded = false;
     video_worker_active_ = false;
   }
   return true;
@@ -1748,7 +1748,7 @@ void VideoRedrawScreen() {
 void VideoPerformRefresh() {
 
   // Claim until video refresh is complete
-  pthread_mutex_lock(&video_draw_mutex);
+  // pthread_mutex_lock(&video_draw_mutex);
 
   // latch video mode permutation and read the latch
   displaypage2_latched = displaypage2;
@@ -1759,7 +1759,7 @@ void VideoPerformRefresh() {
     if (redrawfull==0)
     {
         // Allow Disk Choose screen, help, etc
-        pthread_mutex_unlock(&video_draw_mutex);
+        // pthread_mutex_unlock(&video_draw_mutex);
         return;
     }
     if (g_uDebugVideoMode > 0)
@@ -1786,7 +1786,7 @@ void VideoPerformRefresh() {
     frm_locked = 1; // the frame bitmap is locked
   }
 
-  if (g_singlethreaded) {
+  if (true) { // g_singlethreaded) {
     // This is the old, standard behavior -- just read the Apple II display data
     // directly
     g_pHiresBank1 = MemGetAuxPtr(0x2000 << displaypage2_latched);
@@ -1798,15 +1798,15 @@ void VideoPerformRefresh() {
     // This is a one-level pipelining
     // That way, the 6502 CPU emulation can go on its merry way without
     // causing display glitches as emulation runs concurrently with screen drawing
-    memcpy(display_pipeline_       ,MemGetAuxPtr ( 0x2000 << displaypage2_latched), 0x2000);
-    memcpy(display_pipeline_+0x2000,MemGetMainPtr( 0x2000 << displaypage2_latched), 0x2000);
-    memcpy(display_pipeline_+0x4000,MemGetAuxPtr ( 0x0400 << displaypage2_latched), 0x0400);
-    memcpy(display_pipeline_+0x4400,MemGetMainPtr( 0x0400 << displaypage2_latched), 0x0400);
+    // memcpy(display_pipeline_       ,MemGetAuxPtr ( 0x2000 << displaypage2_latched), 0x2000);
+    // memcpy(display_pipeline_+0x2000,MemGetMainPtr( 0x2000 << displaypage2_latched), 0x2000);
+    // memcpy(display_pipeline_+0x4000,MemGetAuxPtr ( 0x0400 << displaypage2_latched), 0x0400);
+    // memcpy(display_pipeline_+0x4400,MemGetMainPtr( 0x0400 << displaypage2_latched), 0x0400);
 
-    g_pHiresBank1 = (LPBYTE) display_pipeline_;
-    g_pHiresBank0 = (LPBYTE) display_pipeline_ + 0x2000;
-    g_pTextBank1 =  (LPBYTE) display_pipeline_ + 0x4000;
-    g_pTextBank0 =  (LPBYTE) display_pipeline_ + 0x4400;
+    // g_pHiresBank1 = (LPBYTE) display_pipeline_;
+    // g_pHiresBank0 = (LPBYTE) display_pipeline_ + 0x2000;
+    // g_pTextBank1 =  (LPBYTE) display_pipeline_ + 0x4000;
+    // g_pTextBank0 =  (LPBYTE) display_pipeline_ + 0x4400;
   }
   // Check each cell for changed bytes.  redraw pixels for the changed bytes
   // in the frame buffer. Mark cells in which redrawing has taken place as dirty.
@@ -1896,7 +1896,7 @@ void VideoPerformRefresh() {
   hasrefreshed = 1;
 
   // Allow Disk Choose screen, help, etc
-  pthread_mutex_unlock(&video_draw_mutex);
+  // pthread_mutex_unlock(&video_draw_mutex);
 }
 
 void VideoReinitialize() {

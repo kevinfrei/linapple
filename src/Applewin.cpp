@@ -203,11 +203,11 @@ void ContinueExecution()
 
   // Determine whether the screen was updated, the disk was spinning,
   // or the keyboard I/O ports were being excessively queried this clocktick
-  if (g_singlethreaded) {
+  if (true) { // g_singlethreaded) {
     VideoCheckPage(0);
   }
   bool screenupdated = VideoHasRefreshed();
-  screenupdated |= (!g_singlethreaded);
+  // screenupdated |= (!g_singlethreaded);
   bool systemidle = 0;
 
   if (g_dwCyclesThisFrame >= dwClksPerFrame) {
@@ -220,7 +220,7 @@ void ContinueExecution()
       static bool lastupdates[2] = {0, 0};
 
       anyupdates |= screenupdated;
-      bool update_clause = ((!anyupdates) && (!lastupdates[0]) && (!lastupdates[1])) || (!g_singlethreaded);
+      bool update_clause = ((!anyupdates) && (!lastupdates[0]) && (!lastupdates[1])); // || (!g_singlethreaded);
       if (update_clause && VideoApparentlyDirty()) {
         VideoCheckPage(1);
         static unsigned int lasttime = 0;
@@ -228,11 +228,11 @@ void ContinueExecution()
         if ((!g_bFullSpeed) || (currtime - lasttime >= (unsigned int)((graphicsmode || !systemidle) ? 100 : 25))) {
           if (!g_bBudgetVideo || (currtime - lasttime >= 200)) {   // update every 12 frames
             VideoRefreshScreen();
-            if (!g_singlethreaded) {
+            // if (!g_singlethreaded) {
               // This tells the video to schedule a frame update now.
               // It will run in another thread, another core.
-              VideoSetNextScheduledUpdate();
-            }
+              // VideoSetNextScheduledUpdate();
+            // }
 
             lasttime = currtime;
           }
@@ -548,7 +548,7 @@ void LoadConfiguration()
     LOAD(TEXT("Emulation Speed"), &g_dwSpeed);
     LOAD(TEXT("Enhance Disk Speed"), (unsigned int * ) & enhancedisk);
     LOAD(TEXT("Video Emulation"), &g_videotype);
-    LOAD(TEXT("Singlethreaded"), &g_singlethreaded);
+    // LOAD(TEXT("Singlethreaded"), &g_singlethreaded);
   }
 
   unsigned int dwTmp = 0;  // temp var

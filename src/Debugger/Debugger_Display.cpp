@@ -274,7 +274,7 @@ void StretchBltMemToFrameDC(void)
 {
 	SDL_Rect drect, srect;
 
-	pthread_mutex_lock(&video_draw_mutex);
+	// pthread_mutex_lock(&video_draw_mutex);
 
 	drect.x = drect.y = srect.x = srect.y = 0;
 	drect.w = screen->w;
@@ -287,7 +287,7 @@ void StretchBltMemToFrameDC(void)
 
 	SDL_Flip(screen);
 
-	pthread_mutex_unlock(&video_draw_mutex);
+	// pthread_mutex_unlock(&video_draw_mutex);
 }
 
 // Font: Apple Text

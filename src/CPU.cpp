@@ -95,7 +95,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <assert.h>
 
 // for CRITICAL_SECTION handling
-#include <pthread.h>
+// #include <pthread.h>
 
 #define   AF_SIGN       0x80
 #define   AF_OVERFLOW   0x40
@@ -135,8 +135,8 @@ static signed int g_nIrqCheckTimeout = IRQ_CHECK_TIMEOUT;
 // - eg by r/w to device's register or a machine reset
 
 static bool g_bCritSectionValid = false;  // Deleting CritialSection when not valid causes crash on Win98
-//static CRITICAL_SECTION g_CriticalSection;  // To guard /g_bmIRQ/ & /g_bmNMI/
-pthread_mutex_t g_CriticalSection = PTHREAD_MUTEX_INITIALIZER;
+// static CRITICAL_SECTION g_CriticalSection;  // To guard /g_bmIRQ/ & /g_bmNMI/
+// pthread_mutex_t g_CriticalSection = PTHREAD_MUTEX_INITIALIZER;
 static volatile UINT32 g_bmIRQ = 0;
 static volatile UINT32 g_bmNMI = 0;
 static volatile bool g_bNmiFlank = false; // Positive going flank on NMI line
@@ -3644,78 +3644,36 @@ void CpuSetupBenchmark()
 
 void CpuIrqReset()
 {
-  _ASSERT(g_bCritSectionValid);
-  if (g_bCritSectionValid) {
-    pthread_mutex_lock(&g_CriticalSection);
-  }
   g_bmIRQ = 0;
-  if (g_bCritSectionValid) {
-    pthread_mutex_unlock(&g_CriticalSection);
-  }
 }
 
 void CpuIrqAssert(eIRQSRC Device)
 {
-  _ASSERT(g_bCritSectionValid);
-  if (g_bCritSectionValid) {
-    pthread_mutex_lock(&g_CriticalSection);
-  }
   g_bmIRQ |= 1 << Device;
-  if (g_bCritSectionValid) {
-    pthread_mutex_unlock(&g_CriticalSection);
-  }
 }
 
 void CpuIrqDeassert(eIRQSRC Device)
 {
-  _ASSERT(g_bCritSectionValid);
-  if (g_bCritSectionValid) {
-    pthread_mutex_lock(&g_CriticalSection);
-  }
   g_bmIRQ &= ~(1 << Device);
-  if (g_bCritSectionValid) {
-    pthread_mutex_unlock(&g_CriticalSection);
-  }
 }
 
 void CpuNmiReset()
 {
-  _ASSERT(g_bCritSectionValid);
-  if (g_bCritSectionValid) {
-    pthread_mutex_lock(&g_CriticalSection);
-  }
   g_bmNMI = 0;
   g_bNmiFlank = false;
-  if (g_bCritSectionValid) {
-    pthread_mutex_unlock(&g_CriticalSection);
-  }
 }
 
 void CpuNmiAssert(eIRQSRC Device)
 {
-  _ASSERT(g_bCritSectionValid);
-  if (g_bCritSectionValid) {
-    pthread_mutex_lock(&g_CriticalSection);
-  }
   if (g_bmNMI == 0) { // NMI line is just becoming active
     g_bNmiFlank = true;
   }
   g_bmNMI |= 1 << Device;
-  if (g_bCritSectionValid) {
-    pthread_mutex_unlock(&g_CriticalSection);
-  }
 }
 
 void CpuNmiDeassert(eIRQSRC Device)
 {
-  _ASSERT(g_bCritSectionValid);
-  if (g_bCritSectionValid) {
-    pthread_mutex_lock(&g_CriticalSection);
-  }
   g_bmNMI &= ~(1 << Device);
-  if (g_bCritSectionValid) {
-    pthread_mutex_unlock(&g_CriticalSection);
-  }
 }
 
 void CpuReset()

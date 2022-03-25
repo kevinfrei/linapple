@@ -126,8 +126,8 @@ extern bool graphicsmode;
 extern unsigned int monochrome;
 extern unsigned int g_videotype;
 extern unsigned int g_uVideoMode;
-extern unsigned int g_singlethreaded;
-extern pthread_mutex_t video_draw_mutex; // drawing mutex for writing to SDL surface
+// extern unsigned int g_singlethreaded;
+// extern pthread_mutex_t video_draw_mutex; // drawing mutex for writing to SDL surface
 
 // Surfaces for drawing
 extern SDL_Surface *g_hLogoBitmap; // our Linux logo!

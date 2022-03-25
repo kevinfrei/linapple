@@ -30,7 +30,7 @@
 #include "Video.h" // for contention avoidance w/video thread
 #include "DiskChoose.h"
 #include <errno.h>
-#include <pthread.h>
+// #include <pthread.h>
 
 #include <iostream>
 #include <vector>
@@ -210,7 +210,7 @@ bool ChooseImageDialog(int sx, int sy, const string& dir, int slot, file_list_ge
     }
 
     // Wait for video refresh and claim ownership
-    pthread_mutex_lock(&video_draw_mutex);
+    // pthread_mutex_lock(&video_draw_mutex);
 
     SDL_Surface *tempSurface = NULL;
     if (!g_WindowResized) {
@@ -250,7 +250,7 @@ bool ChooseImageDialog(int sx, int sy, const string& dir, int slot, file_list_ge
     font_print_centered(sx / 2, 30 * facy, "Failure. Press any key!", screen, 1.4 * facx, 1.1 * facy);
     SDL_Flip(screen);  // show the screen
 
-    pthread_mutex_unlock(&video_draw_mutex);
+    // pthread_mutex_unlock(&video_draw_mutex);
     SDL_Delay(KEY_DELAY);  // wait some time to be not too fast
     // Wait for keypress
     SDL_Event event;  // event
@@ -337,7 +337,7 @@ bool ChooseImageDialog(int sx, int sy, const string& dir, int slot, file_list_ge
 
 
       // Relinquish video ownership
-      pthread_mutex_unlock(&video_draw_mutex);
+      // pthread_mutex_unlock(&video_draw_mutex);
 
 
       SDL_Delay(KEY_DELAY);  // wait some time to be not too fast
