@@ -40,9 +40,9 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #endif
 
 // for DiskUnGzip
-#include <zlib.h>
+// #include <zlib.h>
 // for DiskUnZip
-#include <zip.h>
+// #include <zip.h>
 
 char Disk2_rom[] = "\xA2\x20\xA0\x00\xA2\x03\x86\x3C\x8A\x0A\x24\x3C\xF0\x10\x05\x3C"
                    "\x49\xFF\x29\x7E\xB0\x08\x4A\xD0\xFB\x98\x9D\x56\x03\xC8\xE8\x10"
@@ -355,8 +355,8 @@ void DiskDestroy()
 {
   RemoveDisk(0);
   RemoveDisk(1);
-  unlink("drive0.dsk");  // delete temporary un-gzipped (unzipped) images
-  unlink("drive1.dsk");
+  // unlink("drive0.dsk");  // delete temporary un-gzipped (unzipped) images
+  // unlink("drive1.dsk");
 }
 
 static unsigned char DiskEnable(unsigned short, unsigned short address, unsigned char, unsigned char, ULONG)
@@ -413,6 +413,7 @@ void DiskInitialize()
 }
 
 // Unzip .gz file to drive0.dsk or drive1.dsk (set in fname) into current directory
+#if 0
 bool DiskUnGzip(char *gzname, char *fname)
 {
   #define GZBUF  4096
@@ -470,21 +471,23 @@ bool DiskUnZip(char *gzname, char *fname)
   zip_close(arch);
   return true;
 }
+#endif
 
 int DiskInsert(int drive, LPCTSTR imageFileName, bool writeProtected, bool createIfNecessary)
 {
   Disk_t *fptr = &g_aFloppyDisk[drive];
   char s_title[MAX_DISK_IMAGE_NAME + 32];
   char *tmp = (char *) imageFileName;
-  char tempDisk[12];
 
   if (fptr->imagehandle) {
     RemoveDisk(drive);
   }
   ZeroMemory(fptr, sizeof(Disk_t));
 
+#if 0
   // Let us deal with .gz files
   int lf = strlen(imageFileName);
+  char tempDisk[12];
   if (lf > 3 && imageFileName[lf - 1] == 'z' && imageFileName[lf - 2] == 'g' && imageFileName[lf - 3] == '.') {
     snprintf(tempDisk, 12, "drive%d.dsk", drive);
     if (DiskUnGzip((char *) imageFileName, tempDisk)) {
@@ -501,7 +504,7 @@ int DiskInsert(int drive, LPCTSTR imageFileName, bool writeProtected, bool creat
       tmp = tempDisk;
     }
   }
-
+#endif
   fptr->writeProtected = writeProtected;
   int error = ImageOpen(tmp, &fptr->imagehandle, &fptr->writeProtected, createIfNecessary);
   if (error == IMAGE_ERROR_NONE) {
