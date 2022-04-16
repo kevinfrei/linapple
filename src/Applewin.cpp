@@ -40,7 +40,6 @@ By Mark Ormond.
 #include <vector>
 #include <X11/Xlib.h>
 #include "Log.h"
-#include "MouseInterface.h"
 
 // for time logging
 #include <time.h>
@@ -111,9 +110,6 @@ unsigned int g_dwCyclesThisFrame = 0;
 
 FILE *g_fh = NULL; // file for logging, let's use stderr instead?
 bool g_bDisableDirectSound = false;  // direct sound, use SDL Sound, or SDL_mixer???
-
-// CSuperSerialCard sg_SSC;
-CMouseInterface sg_Mouse;
 
 unsigned int g_Slot4 = CT_Empty;
 
@@ -1129,12 +1125,10 @@ int main(int argc, char *argv[])
       HD_Cleanup();
     }
     PrintDestroy();
-    // sg_SSC.CommDestroy();
     CpuDestroy();
     SpkrDestroy();
     VideoDestroy();
     MemDestroy();
-    sg_Mouse.Uninitialize(); // Maybe restarting due to switching slot-4 card from mouse to MB
     JoyShutDown();  // close opened (if any) joysticks
   } while (restart);
 

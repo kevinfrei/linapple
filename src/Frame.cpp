@@ -40,7 +40,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #include "stdafx.h"
 #include "asset.h"
-#include "MouseInterface.h"
 
 #define ENABLE_MENU 0
 
@@ -275,7 +274,6 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
   int mysym = e->key.keysym.sym; // keycode
   int mymod = e->key.keysym.mod; // some special keys flags
   int myscancode = e->key.keysym.scancode; // some special keys flags
-  int x, y; // used for mouse cursor position
 
   switch (e->type) {//type of SDL event
     case SDL_VIDEORESIZE:
@@ -409,77 +407,6 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
       } else {  // Need to know what "extended" means, and what's so special about SDLK_UP?
         if (myscancode) { // GPH: Checking scan codes tells us if a key was REALLY released.
           JoyProcessKey(mysym, (mysym >= SDLK_UP && mysym <= SDLK_LEFT), false, 0);
-        }
-      }
-      break;
-
-    case SDL_MOUSEBUTTONDOWN:
-      if (e->button.button == SDL_BUTTON_LEFT) {
-        if (buttondown == -1) {
-          x = e->button.x;
-          y = e->button.y;
-          if (g_nAppMode == MODE_DEBUG)
-            DebuggerMouseClick(x, y);
-          else
-          if (usingcursor) {
-            KeybUpdateCtrlShiftStatus(); // if either of ALT, SHIFT or CTRL is pressed
-            if (g_bShiftKey | g_bCtrlKey) {
-              SetUsingCursor(0); // release mouse cursor for user
-            } else {
-              if (sg_Mouse.Active()) {
-                sg_Mouse.SetButton(BUTTON0, BUTTON_DOWN);
-              } else {
-                JoySetButton(BUTTON0, BUTTON_DOWN);
-              }
-            }
-          } // we do not use mouse
-          else
-          if ((((g_nAppMode == MODE_RUNNING) || (g_nAppMode == MODE_STEPPING))) ||
-              (sg_Mouse.Active())) {
-            SetUsingCursor(1); // capture cursor
-          }
-        }
-      } // If left mouse button down
-      else if (e->button.button == SDL_BUTTON_RIGHT) {
-        if (usingcursor) {
-          if (sg_Mouse.Active()) {
-            sg_Mouse.SetButton(BUTTON1, BUTTON_DOWN);
-          } else {
-            JoySetButton(BUTTON1, BUTTON_DOWN);
-          }
-        }
-      }
-
-      break;
-
-    case SDL_MOUSEBUTTONUP:
-      if (e->button.button == SDL_BUTTON_LEFT) {
-        if (usingcursor) {
-          if (sg_Mouse.Active()) {
-            sg_Mouse.SetButton(BUTTON0, BUTTON_UP);
-          } else {
-            JoySetButton(BUTTON0, BUTTON_UP);
-          }
-        }
-      } else if (e->button.button == SDL_BUTTON_RIGHT) {
-        if (usingcursor) {
-          if (sg_Mouse.Active()) {
-            sg_Mouse.SetButton(BUTTON1, BUTTON_UP);
-          } else {
-            JoySetButton(BUTTON1, BUTTON_UP);
-          }
-        }
-      }
-      break;
-
-    case SDL_MOUSEMOTION:
-      x = e->motion.x; // Get relative coordinates of mouse cursor
-      y = e->motion.y;
-      if (usingcursor) {
-        if (sg_Mouse.Active()) {
-          sg_Mouse.SetPosition(x, VIEWPORTCX - 4, y, VIEWPORTCY - 4);
-        } else {
-          JoySetPosition(x, VIEWPORTCX - 4, y, VIEWPORTCY - 4);
         }
       }
       break;
