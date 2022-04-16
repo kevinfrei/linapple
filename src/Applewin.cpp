@@ -133,7 +133,7 @@ void ContinueExecution()
 
   bool bScrollLock_FullSpeed = g_bScrollLock_FullSpeed;
 
-  g_bFullSpeed = ((g_dwSpeed == SPEED_MAX) || bScrollLock_FullSpeed || IsDebugSteppingAtFullSpeed() ||
+  g_bFullSpeed = ((g_dwSpeed == SPEED_MAX) || bScrollLock_FullSpeed || /* IsDebugSteppingAtFullSpeed() || */
                   (DiskIsSpinning() && enhancedisk && !Spkr_IsActive()));
 
   if (g_bFullSpeed) {
@@ -168,7 +168,7 @@ void ContinueExecution()
   unsigned int uSpkrActualCyclesExecuted = uActualCyclesExecuted;
 
   bool bModeStepping_WaitTimer = false;
-  if (g_nAppMode == MODE_STEPPING && !IsDebugSteppingAtFullSpeed())
+  if (g_nAppMode == MODE_STEPPING /* && !IsDebugSteppingAtFullSpeed() */)
   {
     g_uModeStepping_Cycles += uActualCyclesExecuted;
     if (g_uModeStepping_Cycles >= uCyclesToExecuteWithFeedback)
@@ -346,11 +346,11 @@ void EnterMessageLoop()
             && event.key.keysym.sym == SDLK_F4;
           FrameDispatchMessage(&event);
         } else if (g_nAppMode == MODE_STEPPING) {
-          DebugContinueStepping();
+          // DebugContinueStepping();
         } else {
           ContinueExecution();
           if (g_nAppMode != MODE_DEBUG) {
-            if ((g_bFullSpeed)||(IsDebugSteppingAtFullSpeed())) {
+            if ((g_bFullSpeed)/*||(IsDebugSteppingAtFullSpeed())*/) {
               ContinueExecution();
             }
           }
@@ -358,7 +358,7 @@ void EnterMessageLoop()
       }
     } else {
       if (g_nAppMode == MODE_DEBUG) {
-        DebuggerUpdate();
+        // DebuggerUpdate();
       } else if (g_nAppMode == MODE_LOGO || g_nAppMode == MODE_PAUSED) {
         SDL_Delay(100); // Stop process hogging CPU
       }
@@ -1048,7 +1048,7 @@ int main(int argc, char *argv[])
       Clock_Insert(clockslot);
     }
     VideoInitialize();
-    DebugInitialize();
+    // DebugInitialize();
     Snapshot_Startup();    // Do this after everything has been init'ed
 
     if (szSnapshotFile) {
@@ -1081,7 +1081,7 @@ int main(int argc, char *argv[])
     }
 
     Snapshot_Shutdown();
-    DebugDestroy();
+    // DebugDestroy();
     if (!restart) {
       DiskDestroy();
       ImageDestroy();

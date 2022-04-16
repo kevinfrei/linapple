@@ -1,5 +1,10 @@
 #pragma once
 
+#include <map>
+#include <vector>
+
+using namespace std;
+
 // Addressing
 
 enum {

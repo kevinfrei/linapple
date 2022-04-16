@@ -98,9 +98,11 @@ void DrawFrameWindow()
   // DRAW THE CONTENTS OF THE EMULATED SCREEN
   if (g_nAppMode == MODE_LOGO) {
     VideoDisplayLogo();
-  } else if (g_nAppMode == MODE_DEBUG) {
+  }
+  /* else if (g_nAppMode == MODE_DEBUG) {
     DebugDisplay(1);
-  } else {
+  }*/
+   else {
     VideoRedrawScreen(); // normal state - running emulator?
   }
 }
@@ -350,7 +352,7 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
             SoundCore_SetFade(FADE_IN);  // fade in sound?***************
             break;
           case MODE_STEPPING:
-            DebuggerInputConsoleChar(DEBUG_EXIT_KEY);
+            // DebuggerInputConsoleChar(DEBUG_EXIT_KEY);
             break;
           case MODE_LOGO:
           case MODE_DEBUG:
@@ -365,7 +367,7 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
       } else if (mysym == SDLK_SCROLLOCK) {
         g_bScrollLock_FullSpeed = !g_bScrollLock_FullSpeed; // turn on/off full speed?
       } else if ((g_nAppMode == MODE_RUNNING) || (g_nAppMode == MODE_LOGO) || (g_nAppMode == MODE_STEPPING)) {
-        g_bDebuggerEatKey = false;
+        // g_bDebuggerEatKey = false;
         // Note about Alt Gr (Right-Alt):
         // . WM_KEYDOWN[Left-Control], then:
         // . WM_KEYDOWN[Right-Alt]
@@ -390,7 +392,7 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
           KeybUpdateCtrlShiftStatus();
           mysym = KeybDecodeKey(mysym);
         }
-        DebuggerProcessKey(mysym);
+        // DebuggerProcessKey(mysym);
       }
       break;
 
@@ -512,7 +514,7 @@ void ProcessButtonClick(int button, int mod)
           ResetMachineState();
         }
         if ((g_nAppMode == MODE_DEBUG) || (g_nAppMode == MODE_STEPPING)) {
-          DebugEnd();
+          // DebugEnd();
         }
         g_nAppMode = MODE_RUNNING;
         DrawStatusArea(DRAW_TITLE);
@@ -574,7 +576,7 @@ void ProcessButtonClick(int button, int mod)
     case BTN_DEBUG:  // F7 - debug mode - not implemented yet? Please, see README about it. --bb
       if (g_nAppMode != MODE_DEBUG)
       {
-        DebugBegin();
+        // DebugBegin();
         SetUsingCursor(0);
       }
       else
@@ -616,8 +618,8 @@ void ProcessButtonClick(int button, int mod)
         {
           if (g_nAppMode == MODE_DEBUG)
           {
-            unsigned int debugVideoMode;
-            if (DebugGetVideoMode(&debugVideoMode)) {
+            // unsigned int debugVideoMode;
+            if (false) { // DebugGetVideoMode(&debugVideoMode)) {
               VideoRefreshScreen();
             }
           }

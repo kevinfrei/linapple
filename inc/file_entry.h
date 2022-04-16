@@ -3,7 +3,6 @@
 #include <stdint.h>
 #include <string>
 
-
 struct file_entry_t {
   std::string name;
   enum { UP, DIR, FILE } type;
@@ -54,7 +53,7 @@ private:
         suffix = "G";
       }
 
-      return type_size_cache = to_string(size) + suffix;
+      return type_size_cache = std::to_string(size) + suffix;
     }
 
     default:

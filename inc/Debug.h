@@ -10,6 +10,8 @@ using namespace std;
 #include "Debugger_Types.h"
 #include "Util_MemoryTextFile.h"
 
+#if 0
+
 // Globals
 extern bool g_bDebuggerEatKey;
 
@@ -184,3 +186,4 @@ void VerifyDebuggerCommandTable();
 bool IsDebugSteppingAtFullSpeed(void);
 
 bool DebugGetVideoMode(unsigned int* pVideoMode);
+#endif

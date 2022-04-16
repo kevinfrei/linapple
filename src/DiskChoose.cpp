@@ -32,8 +32,11 @@
 #include <errno.h>
 // #include <pthread.h>
 
+#include <algorithm>
 #include <iostream>
 #include <vector>
+
+using namespace std;
 
 // how many file names we are able to see at once!
 #define FILES_IN_SCREEN    21
