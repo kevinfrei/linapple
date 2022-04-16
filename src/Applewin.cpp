@@ -112,7 +112,7 @@ unsigned int g_dwCyclesThisFrame = 0;
 FILE *g_fh = NULL; // file for logging, let's use stderr instead?
 bool g_bDisableDirectSound = false;  // direct sound, use SDL Sound, or SDL_mixer???
 
-CSuperSerialCard sg_SSC;
+// CSuperSerialCard sg_SSC;
 CMouseInterface sg_Mouse;
 
 unsigned int g_Slot4 = CT_Empty;
@@ -190,7 +190,7 @@ void ContinueExecution()
   if (g_nAppMode == MODE_RUNNING || bModeStepping_WaitTimer)
     SpkrUpdate(uSpkrActualCyclesExecuted);
 
-  sg_SSC.CommUpdate(cyclenum);
+  // sg_SSC.CommUpdate(cyclenum);
   PrintUpdate(cyclenum);
 
   const unsigned int CLKS_PER_MS = (unsigned int) g_fCurrentCLK6502 / 1000;
@@ -537,12 +537,13 @@ void LoadConfiguration()
   if (registry) {
     LOAD(TEXT("Sound Emulation"), &soundtype);
   }
+  /*
   unsigned int dwSerialPort;
   if (registry) {
     LOAD(TEXT("Serial Port"), &dwSerialPort);
   }
   sg_SSC.SetSerialPort(dwSerialPort);
-
+  */
   if (registry) {
     LOAD(TEXT("Emulation Speed"), &g_dwSpeed);
     LOAD(TEXT("Enhance Disk Speed"), (unsigned int * ) & enhancedisk);
@@ -1128,7 +1129,7 @@ int main(int argc, char *argv[])
       HD_Cleanup();
     }
     PrintDestroy();
-    sg_SSC.CommDestroy();
+    // sg_SSC.CommDestroy();
     CpuDestroy();
     SpkrDestroy();
     VideoDestroy();

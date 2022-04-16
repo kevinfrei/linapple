@@ -41,7 +41,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 
 #include "stdafx.h"
-#include "MouseInterface.h"
+// #include "MouseInterface.h"
 
 #include <iostream>
 
@@ -676,10 +676,10 @@ bool JoySetEmulationType(unsigned int newType, int nJoystickNumber) {
       return 0;
     }
   } else if ((joyinfo[newType].device == DEVICE_MOUSE) && (joyinfo[joytype[nJoystickNumber]].device != DEVICE_MOUSE)) {
-    if (sg_Mouse.Active()) {
-      fprintf(stderr, "Mouse interface card is enabled - unable to use mouse for joystick emulation.\n");
-      return 0;
-    }
+    // if (sg_Mouse.Active()) {
+      // fprintf(stderr, "Mouse interface card is enabled - unable to use mouse for joystick emulation.\n");
+      // return 0;
+    // }
     printf("To release mouse cursor, press Ctrl + left mouse button.\n");
   }
   joytype[nJoystickNumber] = newType;

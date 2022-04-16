@@ -29,7 +29,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Adaptation for SDL and POSIX (l) by beom beotiger, Nov-Dec 2007 */
 
 #include "stdafx.h"
-#include "MouseInterface.h"
+// #include "MouseInterface.h"
 #include "resource.h"
 #include "wwrapper.h"
 #include <assert.h>
@@ -1044,9 +1044,9 @@ int MemInitialize() // returns -1 if any error during initialization
   RegisterIoHandler(uSlot, MemSetPaging, MemSetPaging, NULL, NULL, NULL, NULL);
 
   PrintLoadRom(pCxRomPeripheral, 1);        // $C100 : Parallel printer f/w
-  sg_SSC.CommInitialize(pCxRomPeripheral, 2);    // $C200 : SSC
-  if (g_Slot4 == CT_MouseInterface)
-    sg_Mouse.Initialize(pCxRomPeripheral, 4);  // $C400 : Mouse f/w
+  // sg_SSC.CommInitialize(pCxRomPeripheral, 2);    // $C200 : SSC
+  // if (g_Slot4 == CT_MouseInterface)
+    // sg_Mouse.Initialize(pCxRomPeripheral, 4);  // $C400 : Mouse f/w
   DiskLoadRom(pCxRomPeripheral, 6);        // $C600 : Disk][ f/w
   HD_Load_Rom(pCxRomPeripheral, 7);        // $C700 : HDD f/w
 
