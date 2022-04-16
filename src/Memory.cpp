@@ -253,19 +253,19 @@ static unsigned char IORead_C06x(unsigned short pc, unsigned short addr, unsigne
     case 0x0:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x1:
-      return JoyReadButton(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x2:
-      return JoyReadButton(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x3:
-      return JoyReadButton(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x4:
-      return JoyReadPosition(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x5:
-      return JoyReadPosition(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x6:
-      return JoyReadPosition(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x7:
-      return JoyReadPosition(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x8:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x9:
@@ -294,7 +294,7 @@ static unsigned char IOWrite_C06x(unsigned short pc, unsigned short addr, unsign
 static unsigned char IORead_C07x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
   switch (addr & 0xf) {
     case 0x0:
-      return JoyResetPosition(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x1:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x2:
@@ -333,7 +333,7 @@ static unsigned char IORead_C07x(unsigned short pc, unsigned short addr, unsigne
 static unsigned char IOWrite_C07x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
   switch (addr & 0xf) {
     case 0x0:
-      return JoyResetPosition(pc, addr, bWrite, d, nCyclesLeft);
+      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     #ifdef RAMWORKS
     case 0x1:  return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);  // extended memory card set page
     case 0x2:  return IO_Null(pc, addr, bWrite, d, nCyclesLeft);

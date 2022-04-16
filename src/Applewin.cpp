@@ -161,7 +161,6 @@ void ContinueExecution()
   cyclenum = uActualCyclesExecuted;
 
   DiskUpdatePosition(uActualCyclesExecuted);
-  JoyUpdatePosition();
   // the next call does not present in current Applewin as on March 2012??
   VideoUpdateVbl(g_dwCyclesThisFrame);
   //
@@ -351,12 +350,6 @@ void EnterMessageLoop()
         } else {
           ContinueExecution();
           if (g_nAppMode != MODE_DEBUG) {
-            if (joyexitenable) {
-              CheckJoyExit();
-              if (joyquitevent) {
-                return;
-              }
-            }
             if ((g_bFullSpeed)||(IsDebugSteppingAtFullSpeed())) {
               ContinueExecution();
             }
@@ -438,34 +431,6 @@ void LoadConfiguration()
       break;
   }
   printf("Selected machine type: %s\n", g_pAppTitle);
-
-  if (registry) {
-    LOAD(TEXT("Joystick 0"), &joytype[0]);
-    LOAD(TEXT("Joystick 1"), &joytype[1]);
-    LOAD(TEXT("Joy0Index"), &joy1index);
-    LOAD(TEXT("Joy1Index"), &joy2index);
-
-    LOAD(TEXT("Joy0Button1"), &joy1button1);
-    LOAD(TEXT("Joy0Button2"), &joy1button2);
-    LOAD(TEXT("Joy1Button1"), &joy2button1);
-
-    LOAD(TEXT("Joy0Axis0"), &joy1axis0);
-    LOAD(TEXT("Joy0Axis1"), &joy1axis1);
-    LOAD(TEXT("Joy1Axis0"), &joy2axis0);
-    LOAD(TEXT("Joy1Axis1"), &joy2axis1);
-    LOAD(TEXT("JoyExitEnable"), &joyexitenable);
-    LOAD(TEXT("JoyExitButton0"), &joyexitbutton0);
-    LOAD(TEXT("JoyExitButton1"), &joyexitbutton1);
-  }
-
-  if (joytype[0] == 1) {
-    printf("Joystick 1 Index # = %i, Name = %s \nButton 1 = %i, Button 2 = %i \nAxis 0 = %i,Axis 1 = %i\n", joy1index,
-           SDL_JoystickName(joy1index), joy1button1, joy1button2, joy1axis0, joy1axis1);
-  }
-  if (joytype[1] == 1) {
-    printf("Joystick 2 Index # = %i, Name = %s \nButton 1 = %i \nAxis 0 = %i,Axis 1 = %i\n", joy2index,
-           SDL_JoystickName(joy2index), joy2button1, joy2axis0, joy2axis1);
-  }
 
   // default: use keyboard language according to environment
   {
@@ -1077,7 +1042,6 @@ int main(int argc, char *argv[])
     }
 
     SpkrInitialize();  // Speakers - of Apple][ ...grrrrrrrrrrr, I love them!--bb
-    JoyInitialize();
     MemInitialize();
     HD_SetEnabled(hddenabled);
     if (clockslot) {
@@ -1098,7 +1062,6 @@ int main(int argc, char *argv[])
       setAutoBoot();
     }
 
-    JoyReset();
     SetUsingCursor(0);
 
     // trying fullscreen
@@ -1129,7 +1092,6 @@ int main(int argc, char *argv[])
     SpkrDestroy();
     VideoDestroy();
     MemDestroy();
-    JoyShutDown();  // close opened (if any) joysticks
   } while (restart);
 
   // Release COM

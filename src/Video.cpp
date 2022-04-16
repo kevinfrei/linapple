@@ -238,8 +238,6 @@ static volatile bool video_worker_refresh_ = false;
 // pthread_mutex_t video_draw_mutex;
 std::condition_variable video_cv;
 
-static char display_pipeline_[0x2000*4 + 0x400*4];
-
 
 void CopySource(int destx, int desty, int xsize, int ysize, int sourcex, int sourcey) {
   LPBYTE currdestptr = frameoffsettable[desty] + destx;
@@ -1472,7 +1470,6 @@ void VideoBenchmark() {
         unsigned int executedcycles = CpuExecute(103);
         cycles -= executedcycles;
         DiskUpdatePosition(executedcycles);
-        JoyUpdatePosition();
         VideoUpdateVbl(0);
       }
     }

@@ -369,14 +369,12 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
         // Note about Alt Gr (Right-Alt):
         // . WM_KEYDOWN[Left-Control], then:
         // . WM_KEYDOWN[Right-Alt]
-        bool autorep = 0; //previous key was pressed? 30bit of lparam
-        bool extended = (mysym >= SDLK_UP); // 24bit of lparam - is an extended key, what is it???
         if (mymod & KMOD_RCTRL)     // GPH: Update trim?
         {
-          JoyUpdateTrimViaKey(mysym);
+          // JoyUpdateTrimViaKey(mysym);
         } else {
           // Regular joystick movement
-          if ((!JoyProcessKey(mysym, extended, true, autorep)) && (g_nAppMode != MODE_LOGO)) {
+          if (/*(!JoyProcessKey(mysym, extended, true, autorep)) && */(g_nAppMode != MODE_LOGO)) {
             KeybQueueKeypress(mysym, NOT_ASCII);
           }
         }
@@ -406,7 +404,7 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
         KeybToggleCapsLock();
       } else {  // Need to know what "extended" means, and what's so special about SDLK_UP?
         if (myscancode) { // GPH: Checking scan codes tells us if a key was REALLY released.
-          JoyProcessKey(mysym, (mysym >= SDLK_UP && mysym <= SDLK_LEFT), false, 0);
+          // JoyProcessKey(mysym, (mysym >= SDLK_UP && mysym <= SDLK_LEFT), false, 0);
         }
       }
       break;
@@ -529,7 +527,6 @@ void ProcessButtonClick(int button, int mod)
 
     case BTN_DRIVE1:
     case BTN_DRIVE2:
-      JoyReset();
       if (mod & KMOD_CTRL) {
         if (mod & KMOD_SHIFT) {
           printf("HDD  Eject Drive #%d\n", (button - BTN_DRIVE1) + 1);
@@ -571,7 +568,6 @@ void ProcessButtonClick(int button, int mod)
           fullscreen = 1;
           SetFullScreenMode();
         }
-        JoyReset();   // GPH: Sometimes lose ability to use buttons after switch
       }
       break;
 
@@ -677,7 +673,6 @@ void ResetMachineState() {
   VideoResetState();
   // sg_SSC.CommReset();
   PrintReset();
-  JoyReset();
   SpkrReset();
 }
 

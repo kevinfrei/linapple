@@ -101,8 +101,6 @@ void Snapshot_LoadState() {
     VideoResetState();
 
     CpuSetSnapshot(&pSS->Apple2Unit.CPU6502);
-    // sg_SSC.CommSetSnapshot(&pSS->Apple2Unit.Comms);
-    JoySetSnapshot(&pSS->Apple2Unit.Joystick);
     KeybSetSnapshot(&pSS->Apple2Unit.Keyboard);
     SpkrSetSnapshot(&pSS->Apple2Unit.Speaker);
     VideoSetSnapshot(&pSS->Apple2Unit.Video);
@@ -137,8 +135,6 @@ void Snapshot_SaveState() {
   pSS->Apple2Unit.UnitHdr.dwVersion = MAKE_VERSION(1, 0, 0, 0);
 
   CpuGetSnapshot(&pSS->Apple2Unit.CPU6502);
-  // sg_SSC.CommGetSnapshot(&pSS->Apple2Unit.Comms);
-  JoyGetSnapshot(&pSS->Apple2Unit.Joystick);
   KeybGetSnapshot(&pSS->Apple2Unit.Keyboard);
   SpkrGetSnapshot(&pSS->Apple2Unit.Speaker);
   VideoGetSnapshot(&pSS->Apple2Unit.Video);
