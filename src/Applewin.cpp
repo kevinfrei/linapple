@@ -38,7 +38,7 @@ By Mark Ormond.
 #include <cassert>
 #include <string>
 #include <vector>
-#include <X11/Xlib.h>
+// #include <X11/Xlib.h>
 #include "Log.h"
 
 // for time logging
@@ -81,7 +81,6 @@ bool g_bFullSpeed = false;
 bool hddenabled = false;
 unsigned int clockslot;
 static bool g_bBudgetVideo = false;
-static bool g_uMouseInSlot4 = false;  // not any mouse in slot4??--bb
 
 AppMode_e g_nAppMode = MODE_LOGO;
 
@@ -185,7 +184,6 @@ void ContinueExecution()
   if (g_nAppMode == MODE_RUNNING || bModeStepping_WaitTimer)
     SpkrUpdate(uSpkrActualCyclesExecuted);
 
-  // sg_SSC.CommUpdate(cyclenum);
   PrintUpdate(cyclenum);
 
   const unsigned int CLKS_PER_MS = (unsigned int) g_fCurrentCLK6502 / 1000;
@@ -202,7 +200,6 @@ void ContinueExecution()
     VideoCheckPage(0);
   }
   bool screenupdated = VideoHasRefreshed();
-  // screenupdated |= (!g_singlethreaded);
   bool systemidle = 0;
 
   if (g_dwCyclesThisFrame >= dwClksPerFrame) {
@@ -223,12 +220,6 @@ void ContinueExecution()
         if ((!g_bFullSpeed) || (currtime - lasttime >= (unsigned int)((graphicsmode || !systemidle) ? 100 : 25))) {
           if (!g_bBudgetVideo || (currtime - lasttime >= 200)) {   // update every 12 frames
             VideoRefreshScreen();
-            // if (!g_singlethreaded) {
-              // This tells the video to schedule a frame update now.
-              // It will run in another thread, another core.
-              // VideoSetNextScheduledUpdate();
-            // }
-
             lasttime = currtime;
           }
         }
@@ -245,7 +236,7 @@ void ContinueExecution()
   {
     SysClk_WaitTimer();
 
-    #if DBG_CALC_FREQ
+#if DBG_CALC_FREQ
     if(g_nPerfFreq)
     {
       int nTime1 = GetTickCount(); //no QueryPerformanceCounter and alike
@@ -261,7 +252,7 @@ void ContinueExecution()
       g_fMeanPeriod /= (double)MAX_CNT;
       g_fMeanFreq = 1.0 / g_fMeanPeriod;
     }
-    #endif
+#endif
   }
 }
 
@@ -498,18 +489,10 @@ void LoadConfiguration()
   if (registry) {
     LOAD(TEXT("Sound Emulation"), &soundtype);
   }
-  /*
-  unsigned int dwSerialPort;
-  if (registry) {
-    LOAD(TEXT("Serial Port"), &dwSerialPort);
-  }
-  sg_SSC.SetSerialPort(dwSerialPort);
-  */
   if (registry) {
     LOAD(TEXT("Emulation Speed"), &g_dwSpeed);
     LOAD(TEXT("Enhance Disk Speed"), (unsigned int * ) & enhancedisk);
     LOAD(TEXT("Video Emulation"), &g_videotype);
-    // LOAD(TEXT("Singlethreaded"), &g_singlethreaded);
   }
 
   unsigned int dwTmp = 0;  // temp var
@@ -526,12 +509,7 @@ void LoadConfiguration()
 
   SetCurrentCLK6502();  // set up real speed
 
-  if (registry) {
-    if (LOAD(TEXT(REGVALUE_MOUSE_IN_SLOT4), &dwTmp)) {
-      g_uMouseInSlot4 = dwTmp;
-    }
-  }
-  g_Slot4 = g_uMouseInSlot4 ? CT_MouseInterface: CT_Empty;
+  g_Slot4 = CT_Empty;
 
   if (registry) {
     if (LOAD(TEXT(REGVALUE_SAVE_STATE_ON_EXIT), &dwTmp)) {
@@ -908,7 +886,7 @@ int main(int argc, char *argv[])
                                      {"state",    required_argument, 0, 0},
                                      {0,          0,                 0, 0}};
 
-  XInitThreads();
+  // XInitThreads();
 
   while ((opt = getopt_long(argc, argv, "1:2:abfhlr:", longopts, &optind)) != -1) {
     switch (opt) {

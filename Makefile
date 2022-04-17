@@ -70,8 +70,8 @@ CFLAGS += $(SDL_CFLAGS)
 # Do not complain about XPMs
 CFLAGS += -Wno-write-strings
 
-LIB    := $(SDL_LIBS) -lX11
-# -lz -lzip
+LIB    := $(SDL_LIBS)
+# -lX11 -lz -lzip
 INC    := -I$(INCDIR) -I/usr/local/include
 INCDEP := -I$(INCDIR)
 

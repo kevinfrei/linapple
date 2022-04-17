@@ -1,13 +1,3 @@
-//#define WIN32_LEAN_AND_MEAN
-
-// Mouse Wheel is not supported on Win95.
-// If we didn't care about supporting Win95 (compile/run-time errors)
-// we would just define the minmimum windows version to support.
-// #define _WIN32_WINDOWS  0x0401
-#ifndef WM_MOUSEWHEEL
-#define WM_MOUSEWHEEL 0x020A
-#endif
-
 #include <math.h>
 #include <stdio.h>
 #include <stdlib.h>
@@ -46,7 +36,6 @@
 
 #include "Riff.h"
 #include "SaveState.h"
-// #include "SerialComms.h"
 #include "SoundCore.h"  //- will do later
 #include "Speaker.h"
 
