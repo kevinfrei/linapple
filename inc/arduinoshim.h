@@ -14,6 +14,9 @@ std::string
 to_string(uintmax_t sz);
 }  // namespace ard
 
+using Uint8 = uint8_t;
+using Uint32 = uint32_t;
+
 namespace SDL {
 enum SDL_EVENTS { QUIT, KEYDOWN, KEYUP, USEREVENT, VIDEORESIZE, ACTIVEEVENT };
 typedef uint32_t SurfaceType;
@@ -30,7 +33,7 @@ struct Color {
 };
 
 struct Surface {
-    uint32_t h, w;
+    int h, w;
     struct Format {
         uint8_t BitsPerPixel;
         struct Palette {
@@ -40,6 +43,7 @@ struct Surface {
         Palette *palette;
     };
     Format *format;
+    uint8_t *pixels;
 };
 
 struct Event {
@@ -123,10 +127,24 @@ uint32_t
 Init(uint32_t what);
 uint8_t *
 GetKeyState(char *);
+void
+FreeSurface(Surface *);
+bool
+MUSTLOCK(Surface *);
+void
+LockSurface(Surface *);
+void
+UnlockSurface(Surface *);
+int
+SoftStretchMy(Surface *src, Rect *srcrect, Surface *dst, Rect *dstrect);
+int
+SoftStretch(Surface *src, Rect *srcrect, Surface *dst, Rect *dstrect);
+int
+SoftStretchOr(Surface *src, Rect *srcrect, Surface *dst, Rect *dstrect);
+int
+SoftStretchMono8(Surface *src, Rect *srcrect, Surface *dst, Rect *dstrect, Uint8 fgbrush, Uint8 bgbrush);
+void UpdateRect(Surface *scrn, int x, int y, int w, int h);
 }  // namespace SDL
-
-using Uint8 = uint8_t;
-using Uint32 = uint32_t;
 
 constexpr uint16_t KMOD_LCTRL = 0x80;
 constexpr uint16_t KMOD_RCTRL = 0x08;
@@ -161,6 +179,8 @@ constexpr uint16_t SDLK_KP_MULTIPLY = 0x83;
 constexpr uint16_t SDLK_CAPSLOCK = 0x90;
 constexpr uint16_t SDLK_SCROLLOCK = 0x91;
 constexpr uint16_t SDLK_PAUSE = 0x92;
+
+SDL::Surface *IMG_ReadXPMFromArray(const char **);
 
 #define DECLSPEC
 #define SDLCALL

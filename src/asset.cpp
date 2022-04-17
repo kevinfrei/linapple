@@ -19,8 +19,6 @@
 */
 
 #include <sys/param.h>
-#include <SDL.h>
-#include <SDL_image.h>
 
 #include "asset.h"
 #include "stdafx.h"  // for Disk.h DiskInsert()
@@ -138,7 +136,7 @@ int Asset_FindMasterDisk(char *path_out)
   const int count = 5;
   char *paths[count];
   char path[MAX_PATH+1];
-  
+
   // Allocate.
   for (int i=0; i<count; i++)
     paths[i] = (char *)SDL_malloc(sizeof(char[PATH_MAX+1]));
