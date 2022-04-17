@@ -38,8 +38,8 @@
 /* Perform a stretch blit between two surfaces of the same format.
    NOTE:  This function is not safe to call from multiple threads!
 */
-
-int SDL_SoftStretchMy(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect);
+namespace SDL {
+int SoftStretchMy(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect);
 
 
 /*  SDL_SoftStretchOr  - the same as SDL::SoftStretch, but ORed with destination
@@ -48,10 +48,10 @@ int SDL_SoftStretchMy(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, 
 /* Perform a stretch blit between two surfaces of the same format.
    NOTE:  This function is not safe to call from multiple threads!
 */
-int SDL_SoftStretchOr(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect);
+int SoftStretchOr(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect);
 
-int SDL_SoftStretchMono8(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect, Uint8 fgbrush, Uint8 bgbrush);
-
+int SoftStretchMono8(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect, Uint8 fgbrush, Uint8 bgbrush);
+}
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
 // PPC values:

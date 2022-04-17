@@ -57,35 +57,19 @@ void SysClk_UninitTimer() {
 
 
 inline Uint32 uSecSinceStart() {
-  struct timeval latest;
-  static struct timeval start;
+  Uint32 usec;
   static bool first = true;
 
   if (first) {
-    gettimeofday(&start, NULL);
+    usec = micros();
     first = false;
     return 0;
   }
-
-  gettimeofday(&latest, NULL);
-  if (latest.tv_sec == start.tv_sec) {
-    return latest.tv_usec - start.tv_usec;
-  }
-  return (1000000000 - start.tv_usec) + latest.tv_usec + (latest.tv_sec - (start.tv_sec + 1)) * 1000000000;
+  return micros() - usec;
 }
 
 inline void nsleep(unsigned long us) {
   delayMicroseconds(us);
-/*
-  struct timespec req = {0};
-  time_t sec = (int) (us / 1000000);
-  us = us - (sec * 1000000);
-  req.tv_sec = sec;
-  req.tv_nsec = us;
-  while (nanosleep(&req, &req) == -1) {
-    continue;
-  }
-  */
 }
 
 void SysClk_WaitTimer() {

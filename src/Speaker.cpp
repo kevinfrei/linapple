@@ -222,6 +222,8 @@ void Spkr_DSUninit() {
   digitalWrite(SPEAKER_PIN, LOW);
 }
 
+void SpkrDestroy() {}
+
 void Spkr_FlipSpeaker(){
   if (!muted) {
     digitalWrite(SPEAKER_PIN, low ? HIGH : LOW);

@@ -93,6 +93,6 @@ GetBasePath(void);
  *
  * \sa SDL_GetBasePath
  */
-char *GetPrefPath(const char *org, const char *app);
+// char *GetPrefPath(const char *org, const char *app);
 }
 #endif

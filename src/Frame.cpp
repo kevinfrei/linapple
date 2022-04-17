@@ -31,12 +31,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* And KREZ */
 
 #include <iostream>
-// for stat in FrameSaveBMP function
 #include <sys/stat.h>
-// for usleep
-#include <unistd.h>
-// for embedded XPMs
-// #include <SDL_image.h>
+
 #include "arduinoshim.h"
 
 #include "stdafx.h"
@@ -243,7 +239,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
   scrr.x = int(460 * facx);
   scrr.y = int(270 * facy);
   scrr.w = scrr.h = int(100 * facy);
-  SDL_SoftStretchOr(tempSurface, &logo, screen, &scrr);
+  SDL::SoftStretchOr(tempSurface, &logo, screen, &scrr);
 
   SDL::Flip(screen); // Show the screen
   SDL::Delay(1000); // Wait 1 second to be not too fast
@@ -253,7 +249,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 
   event.type = SDL::QUIT;
   while (event.type != SDL::KEYDOWN) { // Wait for ESC-key pressed
-    usleep(100);
+    delayMicroseconds(100);
     SDL::PollEvent(&event);
   }
 

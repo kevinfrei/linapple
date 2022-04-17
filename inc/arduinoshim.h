@@ -174,8 +174,9 @@ size_t
 strlen(const char *);
 char *
 GetBasePath(void);
-char *
+/*char *
 GetPrefPath(const char *org, const char *app);
+*/
 int
 snprintf(char *buf, size_t sz, const char *str, ...);
 void GetClipRect(Surface *, Rect *);

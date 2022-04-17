@@ -38,19 +38,13 @@ By Mark Ormond.
 #include <cassert>
 #include <string>
 #include <vector>
-// #include <X11/Xlib.h>
 #include "Log.h"
 
-// for time logging
-#include <time.h>
-#include <sys/time.h>
 #include <sys/param.h>
-#include <unistd.h>
 #include <stdlib.h>
 
 #include <iostream>
 #include <sys/types.h>
-#include <sys/stat.h>
 #include <fcntl.h>
 #include <getopt.h>
 
@@ -373,7 +367,7 @@ bool ValidateDirectory(char *dir)
       }
     }
   }
-  printf(" ---> %s is dir? %d\n", dir, ret);
+  LogOutput(" ---> %s is dir? %d\n", dir, ret);
   return ret;
 }
 
@@ -421,7 +415,7 @@ void LoadConfiguration()
     default:
       break;
   }
-  printf("Selected machine type: %s\n", g_pAppTitle);
+  LogOutput("Selected machine type: %s\n", g_pAppTitle);
 
   // default: use keyboard language according to environment
   {
@@ -461,20 +455,20 @@ void LoadConfiguration()
       }
     }
 
-    printf("Selected keyboard type: ");
+    LogOutput("Selected keyboard type: ");
     switch(g_KeyboardLanguage)
     {
       case English_UK:
-        printf("UK\n");
+        LogOutput("UK\n");
         break;
       case French_FR:
-        printf("French\n");
+        LogOutput("French\n");
         break;
       case German_DE:
-        printf("German\n");
+        LogOutput("German\n");
         break;
       default:
-        printf("US\n");
+        LogOutput("US\n");
         break;
     }
 
@@ -482,7 +476,7 @@ void LoadConfiguration()
     if (LOAD(TEXT(REGVALUE_KEYB_CHARSET_SWITCH), &ToggleSwitch)) {
       // select initial value of the keyboard character set toggle switch
       g_KeyboardRockerSwitch = (ToggleSwitch>=1);
-      printf("Keyboard rocker switch: %s\n", (g_KeyboardRockerSwitch) ? "local charset" : "standard/US charset");
+      LogOutput("Keyboard rocker switch: %s\n", (g_KeyboardRockerSwitch) ? "local charset" : "standard/US charset");
     }
   }
 
@@ -846,7 +840,7 @@ void RegisterExtensions()
 
 void PrintHelp()
 {
-  printf("usage: applino [options]\n"
+  LogOutput("usage: applino [options]\n"
          "\n"
          "LinApple is an emulator for Apple ][, Apple ][+, Apple //e, and Enhanced Apple //e computers.\n"
          "\n"
@@ -943,14 +937,14 @@ int main(int argc, char *argv[])
         } else if (!strcmp(optname, "state")) {
           szSnapshotFile = optarg;
         } else {
-          printf("Unknown option '%s'.\n\n", optname);
+          LogOutput("Unknown option '%s'.\n\n", optname);
           PrintHelp();
           return 255;
         }
         break;
 
       default:
-        printf("Unknown option '%s'.\n\n", optarg);
+        LogOutput("Unknown option '%s'.\n\n", optarg);
         PrintHelp();
         return 255;
     }
@@ -1078,8 +1072,8 @@ int main(int argc, char *argv[])
 
   SDL::Quit();
   Asset_Quit();
+  LogOutput("Linapple: successfully exited!\n");
   LogDestroy();
-  printf("Linapple: successfully exited!\n");
   return 0;
 }
 

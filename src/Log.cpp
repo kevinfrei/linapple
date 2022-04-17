@@ -27,10 +27,10 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  */
 
 #include "stdafx.h"
-#include <string.h>
-#include <sys/time.h>
 
 void LogInitialize() {
+  g_fh = nullptr;
+  /*
   g_fh = fopen("AppleWin.log", "a+t");  // Open log file (append & text g_nAppMode)
   // Start of Unix(tm) specific code
   struct timeval tv;
@@ -41,9 +41,11 @@ void LogInitialize() {
   strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", ptm);
   // end of Unix(tm) specific code
   fprintf(g_fh, "*** Logging started: %s\n", time_str);
+  */
 }
 
 void LogOutput(LPCTSTR format, ...) {
+/*
   if (!g_fh) {
     return;
   }
@@ -55,12 +57,15 @@ void LogOutput(LPCTSTR format, ...) {
 
   vsnprintf(output, sizeof(output) - 1, format, args);
   fprintf(g_fh, "%s", output);
+  */
 }
 
 void LogDestroy() {
+  /*
   if (g_fh) {
     fprintf(g_fh, "*** Logging ended\n\n");
     fclose(g_fh);
   }
+  */
 }
 
