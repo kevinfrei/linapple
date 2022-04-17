@@ -15,6 +15,7 @@ to_string(uintmax_t sz);
 }  // namespace ard
 
 using Uint8 = uint8_t;
+using Uint16 = uint16_t;
 using Uint32 = uint32_t;
 
 namespace SDL {
@@ -27,15 +28,19 @@ constexpr uint32_t DISABLE = 0x1234dead;
 constexpr uint32_t ENABLE = 0x4321beef;
 constexpr uint32_t GRAB_ON = 0x18476284;
 constexpr uint32_t GRAB_OFF = 0x18567295;
-
+// constexpr uint32_t BIG_ENDIAN = 0x1badf00d;
+// constexpr uint32_t LITTLE_ENDIAN = 0xabadcafe;
+constexpr uint32_t BYTEORDER = LITTLE_ENDIAN;
 struct Color {
     uint8_t r, g, b;
 };
 
 struct Surface {
     int h, w;
+    int pitch;
     struct Format {
         uint8_t BitsPerPixel;
+        uint8_t BytesPerPixel;
         struct Palette {
             uint32_t ncolors;
             Color *colors;
@@ -68,7 +73,7 @@ struct Event {
     User user;
 };
 struct Rect {
-    uint32_t x, y, w, h;
+    int x, y, w, h;
 };
 bool
 PollEvent(Event *evt);
@@ -112,8 +117,12 @@ void
 SaveBMP(Surface *, const char *name);
 void
 putenv(const char *);
+char *
+getenv(const char *);
 const char *
 GetError();
+void
+SetError(const char *, ...);
 constexpr uint32_t DEFAULT_REPEAT_DELAY = 250;
 constexpr uint32_t DEFAULT_REPEAT_INTERVAL = 75;
 void
@@ -131,7 +140,7 @@ void
 FreeSurface(Surface *);
 bool
 MUSTLOCK(Surface *);
-void
+int
 LockSurface(Surface *);
 void
 UnlockSurface(Surface *);
@@ -143,7 +152,33 @@ int
 SoftStretchOr(Surface *src, Rect *srcrect, Surface *dst, Rect *dstrect);
 int
 SoftStretchMono8(Surface *src, Rect *srcrect, Surface *dst, Rect *dstrect, Uint8 fgbrush, Uint8 bgbrush);
-void UpdateRect(Surface *scrn, int x, int y, int w, int h);
+void
+UpdateRect(Surface *scrn, int x, int y, int w, int h);
+void
+free(void *);
+void *
+calloc(size_t num, size_t sz);
+void *
+malloc(size_t sz);
+void *
+realloc(void *, size_t sz);
+void
+OutOfMemory();
+Surface *
+LoadBMP(const char *path);
+char *
+strdup(const char *);
+char *
+strrchr(const char *, char);
+size_t
+strlen(const char *);
+char *
+GetBasePath(void);
+char *
+GetPrefPath(const char *org, const char *app);
+int
+snprintf(char *buf, size_t sz, const char *str, ...);
+void GetClipRect(Surface *, Rect *);
 }  // namespace SDL
 
 constexpr uint16_t KMOD_LCTRL = 0x80;
@@ -180,7 +215,8 @@ constexpr uint16_t SDLK_CAPSLOCK = 0x90;
 constexpr uint16_t SDLK_SCROLLOCK = 0x91;
 constexpr uint16_t SDLK_PAUSE = 0x92;
 
-SDL::Surface *IMG_ReadXPMFromArray(const char **);
+SDL::Surface *
+IMG_ReadXPMFromArray(const char **);
 
 #define DECLSPEC
 #define SDLCALL

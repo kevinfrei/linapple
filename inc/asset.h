@@ -20,6 +20,8 @@
 #ifndef __asset_h
 #define __asset_h
 
+#include "arduinoshim.h"
+
 typedef struct {
   SDL::Surface *icon;
   SDL::Surface *font;

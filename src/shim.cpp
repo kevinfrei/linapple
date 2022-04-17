@@ -36,13 +36,13 @@
 #include <limits.h>
 #include <fcntl.h>
 
+#include "arduinoshim.h"
+
 #if defined(__FREEBSD__) || defined(__OPENBSD__)
 #include <sys/sysctl.h>
 #endif
 
-#include "SDL.h"
-
-#define SDL_InvalidParamError(param)    SDL_SetError("Parameter '%s' is invalid", (param))
+#define SDL_InvalidParamError(param)    SDL::SetError("Parameter '%s' is invalid", (param))
 
 /* QNX's /proc/self/exefile is a text file and not a symlink. */
 #if !defined(__QNXNTO__)
@@ -53,9 +53,9 @@ static char *readSymLink(const char *path) {
   ssize_t rc = -1;
 
   while (1) {
-    char *ptr = (char *) SDL_realloc(retval, (size_t) len);
+    char *ptr = (char *) SDL::realloc(retval, (size_t) len);
     if (ptr == NULL) {
-      SDL_OutOfMemory();
+      SDL::OutOfMemory();
       break;
     }
 
@@ -72,13 +72,13 @@ static char *readSymLink(const char *path) {
     len *= 2;  /* grow buffer, try again. */
   }
 
-  SDL_free(retval);
+  SDL::free(retval);
   return NULL;
 }
 
 #endif
-
-char *SDL_GetBasePath(void)
+namespace SDL {
+char *GetBasePath(void)
 {
   char *retval = NULL;
 
@@ -86,10 +86,10 @@ char *SDL_GetBasePath(void)
   char fullpath[PATH_MAX];
   size_t buflen = sizeof (fullpath);
   const int mib[] = { CTL_KERN, KERN_PROC, KERN_PROC_PATHNAME, -1 };
-  if (sysctl(mib, SDL_arraysize(mib), fullpath, &buflen, NULL, 0) != -1) {
-      retval = SDL_strdup(fullpath);
+  if (sysctl(mib, SDL::arraysize(mib), fullpath, &buflen, NULL, 0) != -1) {
+      retval = SDL::strdup(fullpath);
       if (!retval) {
-          SDL_OutOfMemory();
+          SDL::OutOfMemory();
           return NULL;
       }
   }
@@ -99,25 +99,25 @@ char *SDL_GetBasePath(void)
   size_t len;
   const int mib[] = { CTL_KERN, KERN_PROC_ARGS, getpid(), KERN_PROC_ARGV };
   if (sysctl(mib, 4, NULL, &len, NULL, 0) != -1) {
-      retvalargs = SDL_malloc(len);
+      retvalargs = SDL::malloc(len);
       if (!retvalargs) {
-          SDL_OutOfMemory();
+          SDL::OutOfMemory();
           return NULL;
       }
       sysctl(mib, 4, retvalargs, &len, NULL, 0);
-      retval = SDL_malloc(PATH_MAX + 1);
+      retval = SDL::malloc(PATH_MAX + 1);
       if (retval)
           realpath(retvalargs[0], retval);
 
-      SDL_free(retvalargs);
+      SDL::free(retvalargs);
   }
   #endif
   #if defined(__SOLARIS__)
   const char *path = getexecname();
   if ((path != NULL) && (path[0] == '/')) { /* must be absolute path... */
-      retval = SDL_strdup(path);
+      retval = SDL::strdup(path);
       if (!retval) {
-          SDL_OutOfMemory();
+          SDL::OutOfMemory();
           return NULL;
       }
   }
@@ -133,13 +133,13 @@ char *SDL_GetBasePath(void)
     #elif defined(__NETBSD__)
     retval = readSymLink("/proc/curproc/exe");
     #elif defined(__QNXNTO__)
-    retval = SDL_LoadFile("/proc/self/exefile", NULL);
+    retval = SDL::LoadFile("/proc/self/exefile", NULL);
     #else
     retval = readSymLink("/proc/self/exe");  /* linux. */
     if (retval == NULL) {
       /* older kernels don't have /proc/self ... try PID version... */
       char path[64];
-      const int rc = (int) SDL_snprintf(path, sizeof(path), "/proc/%llu/exe", (unsigned long long) getpid());
+      const int rc = (int) SDL::snprintf(path, sizeof(path), "/proc/%llu/exe", (unsigned long long) getpid());
       if ((rc > 0) && ((unsigned) rc < sizeof(path))) {
         retval = readSymLink(path);
       }
@@ -151,18 +151,18 @@ char *SDL_GetBasePath(void)
       or troll through $PATH looking for it, too. */
 
   if (retval != NULL) { /* chop off filename. */
-    char *ptr = SDL_strrchr(retval, '/');
+    char *ptr = SDL::strrchr(retval, '/');
     if (ptr != NULL) {
       *(ptr + 1) = '\0';
     } else {  /* shouldn't happen, but just in case... */
-      SDL_free(retval);
+      SDL::free(retval);
       retval = NULL;
     }
   }
 
   if (retval != NULL) {
     /* try to shrink buffer... */
-    char *ptr = (char *) SDL_realloc(retval, strlen(retval) + 1);
+    char *ptr = (char *) SDL::realloc(retval, strlen(retval) + 1);
     if (ptr != NULL)
       retval = ptr;  /* oh well if it failed. */
   }
@@ -170,7 +170,7 @@ char *SDL_GetBasePath(void)
   return retval;
 }
 
-char *SDL_GetPrefPath(const char *org, const char *app)
+char *GetPrefPath(const char *org, const char *app)
 {
   /*
    * We use XDG's base directory spec, even if you're not on Linux.
@@ -179,7 +179,7 @@ char *SDL_GetPrefPath(const char *org, const char *app)
    *
    * http://standards.freedesktop.org/basedir-spec/basedir-spec-latest.html
    */
-  const char *envr = SDL_getenv("XDG_DATA_HOME");
+  const char *envr = SDL::getenv("XDG_DATA_HOME");
   const char *append;
   char *retval = NULL;
   char *ptr = NULL;
@@ -195,10 +195,10 @@ char *SDL_GetPrefPath(const char *org, const char *app)
 
   if (!envr) {
     /* You end up with "$HOME/.local/share/Game Name 2" */
-    envr = SDL_getenv("HOME");
+    envr = SDL::getenv("HOME");
     if (!envr) {
       /* we could take heroic measures with /etc/passwd, but oh well. */
-      SDL_SetError("neither XDG_DATA_HOME nor HOME environment is set");
+      SDL::SetError("neither XDG_DATA_HOME nor HOME environment is set");
       return NULL;
     }
     append = "/.local/share/";
@@ -206,22 +206,22 @@ char *SDL_GetPrefPath(const char *org, const char *app)
     append = "/";
   }
 
-  len = SDL_strlen(envr);
+  len = SDL::strlen(envr);
   if (envr[len - 1] == '/') {
     append += 1;
   }
 
-  len += SDL_strlen(append) + SDL_strlen(org) + SDL_strlen(app) + 3;
-  retval = (char *) SDL_malloc(len);
+  len += SDL::strlen(append) + SDL::strlen(org) + SDL::strlen(app) + 3;
+  retval = (char *) SDL::malloc(len);
   if (!retval) {
-    SDL_OutOfMemory();
+    SDL::OutOfMemory();
     return NULL;
   }
 
   if (*org) {
-    SDL_snprintf(retval, len, "%s%s%s/%s/", envr, append, org, app);
+    SDL::snprintf(retval, len, "%s%s%s/%s/", envr, append, org, app);
   } else {
-    SDL_snprintf(retval, len, "%s%s%s/", envr, append, app);
+    SDL::snprintf(retval, len, "%s%s%s/", envr, append, app);
   }
 
   for (ptr = retval + 1; *ptr; ptr++) {
@@ -234,10 +234,11 @@ char *SDL_GetPrefPath(const char *org, const char *app)
   }
   if (mkdir(retval, 0700) != 0 && errno != EEXIST) {
     error:
-    SDL_SetError("Couldn't create directory '%s': '%s'", retval, strerror(errno));
-    SDL_free(retval);
+    SDL::SetError("Couldn't create directory '%s': '%s'", retval, strerror(errno));
+    SDL::free(retval);
     return NULL;
   }
 
   return retval;
+}
 }

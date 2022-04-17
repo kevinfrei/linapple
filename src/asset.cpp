@@ -22,11 +22,11 @@
 
 #include "asset.h"
 #include "stdafx.h"  // for Disk.h DiskInsert()
-#include "shim.h"  // SDL_GetBasePath()
+#include "shim.h"  // SDL::GetBasePath()
 
 #include "../res/font.xpm"
 #include "../res/icon.xpm"
-#include "../build/obj/splash.xpm"
+#include "../res/splash.xpm"
 
 #define ASSET_MASTER_DSK     "Master.dsk"
 
@@ -39,20 +39,22 @@ static char system_assets[] = "./";
 #endif
 static char *system_exedir = NULL;
 
-SDL_Surface *Asset_LoadBMP(const char *filename)
+constexpr size_t PATH_MAX=240;
+
+SDL::Surface *Asset_LoadBMP(const char *filename)
 {
-  SDL_Surface *surf;
-  char *path = (char *) SDL_malloc(sizeof(char[PATH_MAX]));
+  SDL::Surface *surf;
+  char *path = (char *) SDL::malloc(sizeof(char[PATH_MAX]));
   if (NULL == path) {
-    fprintf(stderr, "Asset_LoadBMP: Allocating path: %s\n", SDL_GetError());
+    fprintf(stderr, "Asset_LoadBMP: Allocating path: %s\n", SDL::GetError());
     return NULL;
   }
 
   snprintf(path, PATH_MAX, "%s%s", system_assets, filename);
-  surf = SDL_LoadBMP(path);
+  surf = SDL::LoadBMP(path);
   if (NULL == surf) {
     snprintf(path, PATH_MAX, "%s%s", system_exedir, filename);
-    surf = SDL_LoadBMP(path);
+    surf = SDL::LoadBMP(path);
   }
 
   if (NULL != surf) {
@@ -61,21 +63,21 @@ SDL_Surface *Asset_LoadBMP(const char *filename)
     fprintf(stderr, "Asset_LoadBMP: Couldn't load %s in either %s or %s!\n", filename, system_assets, system_exedir);
   }
 
-  SDL_free(path);
+  SDL::free(path);
   return surf;
 }
 
 bool Asset_Init(void)
 {
-  system_exedir = SDL_GetBasePath();
+  system_exedir = SDL::GetBasePath();
   if (NULL == system_exedir) {
-    fprintf(stderr, "Asset_Init: Warning: SDL_GetBasePath() returned NULL, using \"./\"\n");
-    system_exedir = SDL_strdup("./");
+    fprintf(stderr, "Asset_Init: Warning: SDL::GetBasePath() returned NULL, using \"./\"\n");
+    system_exedir = SDL::strdup("./");
   }
 
-  assets = (assets_t *) SDL_calloc(1, sizeof(assets_t));
+  assets = (assets_t *) SDL::calloc(1, sizeof(assets_t));
   if (NULL == assets) {
-    fprintf(stderr, "Asset_Init: Allocating assets: %s\n", SDL_GetError());
+    fprintf(stderr, "Asset_Init: Allocating assets: %s\n", SDL::GetError());
     return false;
   }
 
@@ -101,26 +103,26 @@ void Asset_Quit(void)
 {
   if (NULL != assets) {
     if (NULL != assets->icon) {
-      SDL_FreeSurface(assets->icon);
+      SDL::FreeSurface(assets->icon);
       assets->icon = NULL;
     }
 
     if (NULL != assets->font) {
-      SDL_FreeSurface(assets->font);
+      SDL::FreeSurface(assets->font);
       assets->font = NULL;
     }
 
     if (NULL != assets->splash) {
-      SDL_FreeSurface(assets->splash);
+      SDL::FreeSurface(assets->splash);
       assets->splash = NULL;
     }
 
     if (NULL != system_exedir) {
-      SDL_free(system_exedir);
+      SDL::free(system_exedir);
       system_exedir = NULL;
     }
 
-    SDL_free(assets);
+    SDL::free(assets);
   }
 }
 
@@ -139,12 +141,12 @@ int Asset_FindMasterDisk(char *path_out)
 
   // Allocate.
   for (int i=0; i<count; i++)
-    paths[i] = (char *)SDL_malloc(sizeof(char[PATH_MAX+1]));
+    paths[i] = (char *)SDL::malloc(sizeof(char[PATH_MAX+1]));
 
   // Define search paths in precedence order.
   strcpy(paths[0], ".");
   strcpy(paths[1], "share/applino"); // testing convenience
-  strcpy(paths[2], SDL_getenv("HOME"));
+  strcpy(paths[2], SDL::getenv("HOME"));
   strcat(paths[2], "/.local/share/applino");
   strcpy(paths[3], "/usr/local/share/applino");
   strcpy(paths[4], "/usr/share/applino");
@@ -174,23 +176,23 @@ int Asset_FindMasterDisk(char *path_out)
 
   // Deallocate.
   for (auto i=0; i<count; i++)
-    SDL_free(paths[i]);
+    SDL::free(paths[i]);
 
   return err;
 }
 
 int Asset_InsertMasterDisk(void)
 {
-  char *path = (char *) SDL_malloc(sizeof(char[PATH_MAX+1]));
+  char *path = (char *) SDL::malloc(sizeof(char[PATH_MAX+1]));
 
   int err = Asset_FindMasterDisk(path);
   if (err) {
-    SDL_free(path);
+    SDL::free(path);
     return 255;
   }
 
   int rc = DiskInsert(0, path, 0, 0);
 
-  SDL_free(path);
+  SDL::free(path);
   return rc;
 }

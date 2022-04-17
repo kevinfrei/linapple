@@ -33,8 +33,6 @@
 */
 
 // For embedded XPMs.
-#include <SDL::image.h>
-
 #include "stdafx.h"
 #include "asset.h"
 
@@ -579,7 +577,7 @@ void putpixel(SDL::Surface *surface, int x, int y, Uint32 pixel) {
       break;
 
     case 3:
-      if (SDL::BYTEORDER == SDL::BIG_ENDIAN) {
+      if (SDL::BYTEORDER == BIG_ENDIAN) {
         p[0] = (pixel >> 16) & 0xff;
         p[1] = (pixel >> 8) & 0xff;
         p[2] = pixel & 0xff;
