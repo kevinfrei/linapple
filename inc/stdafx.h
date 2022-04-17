@@ -38,7 +38,6 @@
 
 #include "Riff.h"
 #include "SaveState.h"
-#include "SoundCore.h"  //- will do later
 #include "Speaker.h"
 
 #include "stretch.h"

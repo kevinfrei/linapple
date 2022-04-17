@@ -31,8 +31,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // Timers like functions for Windows and Posix
 
 // for usleep()
-#include <unistd.h>
 #include "stdafx.h"
+#include "Arduino.h"
 #include "Timer.h"
 
 #ifndef _WIN32
@@ -44,7 +44,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // for Assertion
 #include <assert.h>
 // for usleep()
-#include <unistd.h>
 
 #ifndef _WIN32
 static unsigned int g_dwUsecPeriod = 0;
@@ -76,6 +75,8 @@ inline Uint32 uSecSinceStart() {
 }
 
 inline void nsleep(unsigned long us) {
+  delayMicroseconds(us);
+/*
   struct timespec req = {0};
   time_t sec = (int) (us / 1000000);
   us = us - (sec * 1000000);
@@ -84,6 +85,7 @@ inline void nsleep(unsigned long us) {
   while (nanosleep(&req, &req) == -1) {
     continue;
   }
+  */
 }
 
 void SysClk_WaitTimer() {

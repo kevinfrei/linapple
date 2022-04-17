@@ -1015,10 +1015,6 @@ int main(int argc, char *argv[])
 
     FrameCreateWindow();
 
-    if (!DSInit()) {
-      soundtype = SOUND_NONE;    // Direct Sound and Stuff
-    }
-
     SpkrInitialize();  // Speakers - of Apple][ ...grrrrrrrrrrr, I love them!--bb
     MemInitialize();
     HD_SetEnabled(hddenabled);
@@ -1073,7 +1069,6 @@ int main(int argc, char *argv[])
   } while (restart);
 
   // Release COM
-  DSUninit();
   SysClk_UninitTimer();
 
   RiffFinishWriteFile();

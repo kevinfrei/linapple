@@ -346,11 +346,11 @@ void FrameDispatchMessage(SDL::Event *e) {// process given SDL event
         switch (g_nAppMode) {
           case MODE_RUNNING: // go in pause
             g_nAppMode = MODE_PAUSED;
-            SoundCore_SetFade(FADE_OUT); // fade out sound?**************
+            // SoundCore_SetFade(FADE_OUT); // fade out sound?**************
             break;
           case MODE_PAUSED: // go to the normal mode?
             g_nAppMode = MODE_RUNNING;
-            SoundCore_SetFade(FADE_IN);  // fade in sound?***************
+            // SoundCore_SetFade(FADE_IN);  // fade in sound?***************
             break;
           case MODE_STEPPING:
             // DebuggerInputConsoleChar(DEBUG_EXIT_KEY);
@@ -418,6 +418,9 @@ void FrameDispatchMessage(SDL::Event *e) {// process given SDL event
       }
       break;
 
+    default:
+    // TODO: Make sure we don't need to do anything else
+    break;
   }
 }
 
@@ -500,7 +503,7 @@ void ProcessButtonClick(int button, int mod)
   // mod - what modifiers been set (like CTRL, ALT etc.)
   SDL::Event qe;  // for Quitting and Reset
 
-  SoundCore_SetFade(FADE_OUT); // sound/music off?
+  // SoundCore_SetFade(FADE_OUT); // sound/music off?
 
   switch (button) {
     case BTN_HELP:
@@ -662,9 +665,9 @@ void ProcessButtonClick(int button, int mod)
       break;
   }
 
-  if ((g_nAppMode != MODE_DEBUG) && (g_nAppMode != MODE_PAUSED)) {
-    SoundCore_SetFade(FADE_IN);
-  }
+  // if ((g_nAppMode != MODE_DEBUG) && (g_nAppMode != MODE_PAUSED)) {
+  //   SoundCore_SetFade(FADE_IN);
+  // }
 }
 
 void ResetMachineState() {

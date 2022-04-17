@@ -29,7 +29,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* Adaptation for SDL and POSIX (l) by beom beotiger, Nov-Dec 2007 */
 
 #include <iostream>
-#include <SDL_image.h>
 #include "stdafx.h"
 #include "asset.h"
 #include "wwrapper.h"
@@ -41,11 +40,11 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <condition_variable>
 
 // include character set bitmaps
-#include "../build/obj/charset40.xpm" // US/default
-#include "../build/obj/charset40_IIplus.xpm"
-#include "../build/obj/charset40_british.xpm"
-#include "../build/obj/charset40_french.xpm"
-#include "../build/obj/charset40_german.xpm"
+#include "../res/charset40.xpm" // US/default
+#include "../res/charset40_IIplus.xpm"
+#include "../res/charset40_british.xpm"
+#include "../res/charset40_french.xpm"
+#include "../res/charset40_german.xpm"
 
 /* reference: technote tn-iigs-063 "Master Color Values"
 
@@ -110,7 +109,7 @@ const int SRCOFFS_TOTAL = (SRCOFFS_DHIRES + 2560);
   dstrect.y = DST_Y; \
   dstrect.w = DST_W; \
   dstrect.h = DST_H; \
-  SDL_SoftStretch(SRC, &srcrect, DST, &dstrect);\
+  SDL::SoftStretch(SRC, &srcrect, DST, &dstrect);\
 }
 
 #define  SOFTSTRECH_MONO(SRC, SRC_X, SRC_Y, SRC_W, SRC_H, DST, DST_X, DST_Y, DST_W, DST_H) \
@@ -123,7 +122,7 @@ const int SRCOFFS_TOTAL = (SRCOFFS_DHIRES + 2560);
   dstrect.y = DST_Y; \
   dstrect.w = DST_W; \
   dstrect.h = DST_H; \
-  SDL_SoftStretchMono8(SRC, &srcrect, DST, &dstrect, hBrush, 0);\
+  SDL::SoftStretchMono8(SRC, &srcrect, DST, &dstrect, hBrush, 0);\
 }
 
 #define  SETSOURCEPIXEL(x, y, c)  g_aSourceStartofLine[(y)][(x)] = (c)
@@ -155,27 +154,27 @@ typedef bool (*UpdateFunc_t)(int, int, int, int, int);
 static unsigned char celldirty[40][32];
 static unsigned int customcolors[NUM_COLOR_PALETTE];  // MONOCHROME is last custom color
 
-SDL_Surface *g_hDeviceBitmap;
+SDL::Surface *g_hDeviceBitmap;
 static LPBYTE framebufferbits;
-SDL_Color framebufferinfo[256];
+SDL::Color framebufferinfo[256];
 
 const int MAX_FRAME_Y = 384; // 192 Apple scan lines * 2x host scanline = 384
 static LPBYTE frameoffsettable[384];
 static LPBYTE g_pHiresBank1;
 static LPBYTE g_pHiresBank0;
 
-SDL_Surface *g_hLogoBitmap = NULL;
-SDL_Surface *charset40 = NULL;    // Apple charset40 bitmap
+SDL::Surface *g_hLogoBitmap = NULL;
+SDL::Surface *charset40 = NULL;    // Apple charset40 bitmap
 int g_MultiLanguageCharset = false; // true when charset supports a second language variant
 
-SDL_Surface *g_hStatusSurface = NULL;  // status panel
+SDL::Surface *g_hStatusSurface = NULL;  // status panel
 int g_iStatusCycle = 0;    // cycler for status panel showing
 
-SDL_Surface *g_origscreen = NULL;
-SDL_Surface *g_hSourceBitmap = NULL;
+SDL::Surface *g_origscreen = NULL;
+SDL::Surface *g_hSourceBitmap = NULL;
 
 static LPBYTE g_pSourcePixels;
-SDL_Color g_pSourceHeader[256];
+SDL::Color g_pSourceHeader[256];
 const int MAX_SOURCE_Y = 512*2; // double size: second half of bitmap may contain a complete copy with an alternate language
 static LPBYTE g_aSourceStartofLine[MAX_SOURCE_Y];
 static LPBYTE g_pTextBank1; // Aux
@@ -224,8 +223,8 @@ void DrawLoResSource();
 void DrawMonoDHiResSource();
 void DrawMonoHiResSource();
 void DrawMonoLoResSource();
-void DrawMonoTextSource(SDL_Surface *dc); // yes, we have just SDL_Surface either for DeviceContext, or bitmap
-void DrawTextSource(SDL_Surface *dc);
+void DrawMonoTextSource(SDL::Surface *dc); // yes, we have just SDL::Surface either for DeviceContext, or bitmap
+void DrawTextSource(SDL::Surface *dc);
 
 // Multithreaded
 
@@ -286,7 +285,7 @@ void CreateFrameOffsetTable(LPBYTE addr, int/*int*/ pitch) {
 }
 
 void CreateIdentityPalette() {
-  ZeroMemory(framebufferinfo, 256 * sizeof(SDL_Color)); // must be cleared???
+  ZeroMemory(framebufferinfo, 256 * sizeof(SDL::Color)); // must be cleared???
   // SET FRAME BUFFER TABLE ENTRIES TO CUSTOM COLORS
   SETFRAMECOLOR(DEEP_RED, 0xD0, 0x00, 0x30);
   SETFRAMECOLOR(LIGHT_BLUE, 0x60, 0xA0, 0xFF);
@@ -352,41 +351,41 @@ void CreateIdentityPalette() {
 void CreateDIBSections() {
   // pthread_mutex_lock(&video_draw_mutex);
 
-  CopyMemory(g_pSourceHeader, framebufferinfo, 256 * sizeof(SDL_Color));
+  CopyMemory(g_pSourceHeader, framebufferinfo, 256 * sizeof(SDL::Color));
 
   // CREATE THE FRAME BUFFER DIB SECTION
   if (g_hDeviceBitmap) {
-    SDL_FreeSurface(g_hDeviceBitmap);
+    SDL::FreeSurface(g_hDeviceBitmap);
   }
-  g_hDeviceBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE, 560, 384, 8, 0, 0, 0, 0);
+  g_hDeviceBitmap = SDL::CreateRGBSurface(SDL::SWSURFACE, 560, 384, 8, 0, 0, 0, 0);
 
   if (g_origscreen) {
-    SDL_FreeSurface(g_origscreen);
+    SDL::FreeSurface(g_origscreen);
   }
-  g_origscreen = SDL_CreateRGBSurface(SDL_SWSURFACE, g_ScreenWidth, g_ScreenHeight, 8, 0, 0, 0, 0);
+  g_origscreen = SDL::CreateRGBSurface(SDL::SWSURFACE, g_ScreenWidth, g_ScreenHeight, 8, 0, 0, 0, 0);
 
   if (g_hDeviceBitmap == NULL) {
     fprintf(stderr, "g_hDeviceBitmap was not created!\n");
   }
   framebufferbits = (LPBYTE) g_hDeviceBitmap->pixels;
-  SDL_SetColors(g_hDeviceBitmap, g_pSourceHeader, 0, 256);
-  SDL_SetColors(g_origscreen, g_pSourceHeader, 0, 256);
+  SDL::SetColors(g_hDeviceBitmap, g_pSourceHeader, 0, 256);
+  SDL::SetColors(g_origscreen, g_pSourceHeader, 0, 256);
 
   if (g_hStatusSurface) {
-    SDL_FreeSurface(g_hStatusSurface);
+    SDL::FreeSurface(g_hStatusSurface);
   }
-  g_hStatusSurface = SDL_CreateRGBSurface(SDL_SWSURFACE, STATUS_PANEL_W, STATUS_PANEL_H, SCREEN_BPP, 0, 0, 0, 0);
-  SDL_SetColors(g_hStatusSurface, screen->format->palette->colors, 0, 256);
+  g_hStatusSurface = SDL::CreateRGBSurface(SDL::SWSURFACE, STATUS_PANEL_W, STATUS_PANEL_H, SCREEN_BPP, 0, 0, 0, 0);
+  SDL::SetColors(g_hStatusSurface, screen->format->palette->colors, 0, 256);
 
   /* Create status panel background */
-  SDL_Rect srect;
-  Uint32 mybluez = SDL_MapRGB(screen->format, 10, 10, 255);  // bluez color, know that?
-  Uint32 myyell = SDL_MapRGB(screen->format, 255, 255, 0);  // yellow color?
+  SDL::Rect srect;
+  Uint32 mybluez = SDL::MapRGB(screen->format, 10, 10, 255);  // bluez color, know that?
+  Uint32 myyell = SDL::MapRGB(screen->format, 255, 255, 0);  // yellow color?
 
   srect.x = srect.y = 0;
   srect.w = STATUS_PANEL_W;
   srect.h = STATUS_PANEL_H;
-  SDL_FillRect(g_hStatusSurface, &srect, mybluez);  // fill status panel
+  SDL::FillRect(g_hStatusSurface, &srect, mybluez);  // fill status panel
   rectangle(g_hStatusSurface, 0, 0, STATUS_PANEL_W - 1, STATUS_PANEL_H - 1, myyell);
   rectangle(g_hStatusSurface, 2, 2, STATUS_PANEL_W - 5, STATUS_PANEL_H - 5, myyell);
   if (font_sfc == NULL)
@@ -398,15 +397,15 @@ void CreateDIBSections() {
   }
   // CREATE THE SOURCE IMAGE DIB SECTION
   if (g_hSourceBitmap) {
-    SDL_FreeSurface(g_hSourceBitmap);
+    SDL::FreeSurface(g_hSourceBitmap);
   }
-  g_hSourceBitmap = SDL_CreateRGBSurface(SDL_SWSURFACE, SRCOFFS_TOTAL, MAX_SOURCE_Y, 8, 0, 0, 0, 0);
+  g_hSourceBitmap = SDL::CreateRGBSurface(SDL::SWSURFACE, SRCOFFS_TOTAL, MAX_SOURCE_Y, 8, 0, 0, 0, 0);
   if (g_hSourceBitmap == NULL) {
     fprintf(stderr, "g_hSourceBitmap was not created!\n");
   }
 
   g_pSourcePixels = (LPBYTE) g_hSourceBitmap->pixels;
-  SDL_SetColors(g_hSourceBitmap, framebufferinfo, 0, 256);
+  SDL::SetColors(g_hSourceBitmap, framebufferinfo, 0, 256);
 
   // CREATE THE OFFSET TABLE FOR EACH SCAN LINE IN THE SOURCE IMAGE
   for (int y = 0; y < MAX_SOURCE_Y; y++) {
@@ -423,8 +422,8 @@ void CreateDIBSections() {
       (g_videotype != VT_MONO_WHITE)) {
     DrawTextSource(g_hSourceBitmap);
 
-    if (SDL_MUSTLOCK(g_hSourceBitmap)) {
-      SDL_LockSurface(g_hSourceBitmap);
+    if (SDL::MUSTLOCK(g_hSourceBitmap)) {
+      SDL::LockSurface(g_hSourceBitmap);
       locked = 1; // the source bitmap is locked
     }
 
@@ -437,8 +436,8 @@ void CreateDIBSections() {
     DrawDHiResSource();
   } else {
     DrawMonoTextSource(g_hSourceBitmap);
-    if (SDL_MUSTLOCK(g_hSourceBitmap)) {
-      SDL_LockSurface(g_hSourceBitmap);
+    if (SDL::MUSTLOCK(g_hSourceBitmap)) {
+      SDL::LockSurface(g_hSourceBitmap);
       locked = 1; // the source bitmap is locked
     }
 
@@ -448,10 +447,10 @@ void CreateDIBSections() {
   }
 
   // debugging: show the complete bitmap
-  // SDL_SaveBMP(g_hSourceBitmap, "debug/g_hSourceBitmap.bmp");
+  // SDL::SaveBMP(g_hSourceBitmap, "debug/g_hSourceBitmap.bmp");
 
   if (locked) {
-    SDL_UnlockSurface(g_hSourceBitmap);
+    SDL::UnlockSurface(g_hSourceBitmap);
   }
 
   // pthread_mutex_unlock(&video_draw_mutex);
@@ -831,7 +830,7 @@ void DrawMonoLoResSource() {
       }
 }
 
-void DrawMonoTextSource(SDL_Surface *hDstDC) {
+void DrawMonoTextSource(SDL::Surface *hDstDC) {
   if (charset40 == NULL) {
     return;
   }
@@ -850,7 +849,7 @@ void DrawMonoTextSource(SDL_Surface *hDstDC) {
       hBrush = MONOCHROME_CUSTOM;
       break;
   }
-  SDL_Rect srcrect, dstrect;
+  SDL::Rect srcrect, dstrect;
 
   if ((g_Apple2Type == A2TYPE_APPLE2)||
       (g_Apple2Type == A2TYPE_APPLE2PLUS))
@@ -892,14 +891,14 @@ void DrawMonoTextSource(SDL_Surface *hDstDC) {
   }
 }
 
-void DrawTextSource(SDL_Surface *dc) {
+void DrawTextSource(SDL::Surface *dc) {
   //  HDC     memdc  = CreateCompatibleDC(dc);
   //  HBITMAP bitmap = LoadBitmap(g_hInstance,TEXT("CHARSET40"));
   //  SelectObject(memdc,bitmap);
   if (charset40 == NULL) {
     return;
   }
-  SDL_Rect srcrect, dstrect;
+  SDL::Rect srcrect, dstrect;
 
   if ((g_Apple2Type == A2TYPE_APPLE2)||
         (g_Apple2Type == A2TYPE_APPLE2PLUS))
@@ -1260,8 +1259,8 @@ bool UpdateDLoResCell(int x, int y, int xpixel, int ypixel, int offset) {
   return false;
 }
 
-SDL_Surface* LoadCharset() {
-  SDL_Surface *tmp = NULL;
+SDL::Surface* LoadCharset() {
+  SDL::Surface *tmp = NULL;
 
   if ((g_Apple2Type == A2TYPE_APPLE2)||
       (g_Apple2Type == A2TYPE_APPLE2PLUS))
@@ -1292,8 +1291,8 @@ SDL_Surface* LoadCharset() {
   if (tmp)
   {
     // convert format
-    SDL_Surface *result = SDL_DisplayFormat(tmp);
-    SDL_FreeSurface(tmp);
+    SDL::Surface *result = SDL::DisplayFormat(tmp);
+    SDL::FreeSurface(tmp);
 
     /* correct character set bitmaps should be 128x128 (single language) or
      * 256x128 for the Euro-ROMs with alternative language */
@@ -1352,7 +1351,7 @@ bool VideoApparentlyDirty() {
 }
 
 void VideoBenchmark() {
-  SDL_Delay(1500);  // wait for 1.5 sec before running benchmark
+  SDL::Delay(1500);  // wait for 1.5 sec before running benchmark
 
   // Prepare two different frame buffers, each of which have half of the
   // bytes set to 0X14 and the other half set to 0XAA
@@ -1488,7 +1487,7 @@ void VideoBenchmark() {
   printf("Pure CPU MHz:\t%u.%u%s\n\n", (unsigned) (totalmhz10 / 10), (unsigned) (totalmhz10 % 10),
          (LPCTSTR)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")));
   printf("EXPECTED AVERAGE VIDEO GAME PERFORMANCE:\t%u FPS\n\n", (unsigned) realisticfps);
-  SDL_Delay(1500);
+  SDL::Delay(1500);
 }
 
 unsigned char VideoCheckMode(unsigned short, unsigned short address, unsigned char, unsigned char, ULONG nCyclesLeft) {
@@ -1590,46 +1589,46 @@ void VideoDestroy() {
   vidlastmem = NULL;
   // DESTROY FRAME BUFFER
   if (g_hDeviceBitmap) {
-    SDL_FreeSurface(g_hDeviceBitmap);
+    SDL::FreeSurface(g_hDeviceBitmap);
   }
   g_hDeviceBitmap = NULL;
 
   if (g_origscreen) {
-    SDL_FreeSurface(g_origscreen);
+    SDL::FreeSurface(g_origscreen);
   }
   g_origscreen = NULL;
 
   if (g_hStatusSurface) {
-    SDL_FreeSurface(g_hStatusSurface);
+    SDL::FreeSurface(g_hStatusSurface);
   }
   g_hStatusSurface = NULL;
 
   // DESTROY SOURCE IMAGE
   if (g_hSourceBitmap) {
-    SDL_FreeSurface(g_hSourceBitmap);
+    SDL::FreeSurface(g_hSourceBitmap);
   }
   g_hSourceBitmap = NULL;
 
   // DESTROY LOGO
   if (g_hLogoBitmap) {
-    SDL_FreeSurface(g_hLogoBitmap);
+    SDL::FreeSurface(g_hLogoBitmap);
   }
   g_hLogoBitmap = NULL;
 
   if (charset40) {
-    SDL_FreeSurface(charset40);
+    SDL::FreeSurface(charset40);
   }
   charset40 = NULL;
 }
 
 void VideoDisplayLogo() {
-  SDL_Rect drect, srect;
+  SDL::Rect drect, srect;
 
   if (!g_hLogoBitmap) {
     return; // nothing to display?
   }
   if (screen->format->palette && g_hLogoBitmap->format->palette) {
-    SDL_SetColors(screen, g_hLogoBitmap->format->palette->colors, 0, g_hLogoBitmap->format->palette->ncolors);
+    SDL::SetColors(screen, g_hLogoBitmap->format->palette->colors, 0, g_hLogoBitmap->format->palette->ncolors);
   }
 
   drect.x = drect.y = srect.x = srect.y = 0;
@@ -1638,9 +1637,9 @@ void VideoDisplayLogo() {
   srect.w = g_hLogoBitmap->w;
   srect.h = g_hLogoBitmap->h;
 
-  SDL_SoftStretch(g_hLogoBitmap, &srect, screen, &drect);
-  SDL_SoftStretch(g_hLogoBitmap, &srect, g_origscreen, &drect);
-  SDL_Flip(screen);
+  SDL::SoftStretch(g_hLogoBitmap, &srect, screen, &drect);
+  SDL::SoftStretch(g_hLogoBitmap, &srect, g_origscreen, &drect);
+  SDL::Flip(screen);
 }
 
 bool VideoHasRefreshed() {
@@ -1655,7 +1654,7 @@ void VideoInitialize() {
   ZeroMemory(vidlastmem, 0x10000);
 
   // LOAD THE splash screen
-  g_hLogoBitmap = SDL_DisplayFormat(assets->splash);
+  g_hLogoBitmap = SDL::DisplayFormat(assets->splash);
 
   // LOAD APPLE CHARSET40
   if (!charset40)
@@ -1773,13 +1772,13 @@ void VideoPerformRefresh() {
   CreateFrameOffsetTable(addr, pitch);
 
   int src_locked = 0;
-  if (SDL_MUSTLOCK(g_hSourceBitmap)) {
-    SDL_LockSurface(g_hSourceBitmap);
+  if (SDL::MUSTLOCK(g_hSourceBitmap)) {
+    SDL::LockSurface(g_hSourceBitmap);
     src_locked = 1; // the source bitmap is locked
   }
   int frm_locked = 0;
-  if (SDL_MUSTLOCK(g_hDeviceBitmap)) {
-    SDL_LockSurface(g_hDeviceBitmap);
+  if (SDL::MUSTLOCK(g_hDeviceBitmap)) {
+    SDL::LockSurface(g_hDeviceBitmap);
     frm_locked = 1; // the frame bitmap is locked
   }
 
@@ -1849,15 +1848,15 @@ void VideoPerformRefresh() {
   }
 
   if (frm_locked) {
-    SDL_UnlockSurface(g_hDeviceBitmap);
+    SDL::UnlockSurface(g_hDeviceBitmap);
   }
   if (src_locked) {
-    SDL_UnlockSurface(g_hSourceBitmap);
+    SDL::UnlockSurface(g_hSourceBitmap);
   }
   // Clear this flag after TEXT screen has been updated
   g_bTextFlashFlag = false;
 
-  SDL_Rect srect;
+  SDL::Rect srect;
   srect.x = screen->w - STATUS_PANEL_W - 5;
   srect.y = screen->h - STATUS_PANEL_H - 5;
 
@@ -1873,20 +1872,20 @@ void VideoPerformRefresh() {
   if (anydirty) {
     // Draw up entire Apple 2 screen
     if (!g_WindowResized) {
-      SDL_BlitSurface(g_hDeviceBitmap, NULL, screen, NULL);
+      SDL::BlitSurface(g_hDeviceBitmap, NULL, screen, NULL);
     } else {
-      SDL_SoftStretch(g_hDeviceBitmap, &origRect, g_origscreen, &newRect);
-      SDL_BlitSurface(g_origscreen, NULL, screen, NULL);
+      SDL::SoftStretch(g_hDeviceBitmap, &origRect, g_origscreen, &newRect);
+      SDL::BlitSurface(g_origscreen, NULL, screen, NULL);
     }
     if (bStatusShow && g_ShowLeds) {
-      SDL_BlitSurface(g_hStatusSurface, NULL, screen, &srect);
+      SDL::BlitSurface(g_hStatusSurface, NULL, screen, &srect);
     }
-    SDL_Flip(screen);  // flip SDL buffers
+    SDL::Flip(screen);  // flip SDL buffers
   } else if (bStatusShow) {
     if (g_ShowLeds) {
-      SDL_BlitSurface(g_hStatusSurface, NULL, screen, &srect);
+      SDL::BlitSurface(g_hStatusSurface, NULL, screen, &srect);
     }
-    SDL_UpdateRect(screen, srect.x, srect.y, STATUS_PANEL_W, STATUS_PANEL_H);
+    SDL::UpdateRect(screen, srect.x, srect.y, STATUS_PANEL_W, STATUS_PANEL_H);
   }
   SetLastDrawnImage();
   redrawfull = 0;
