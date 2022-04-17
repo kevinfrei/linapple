@@ -100,7 +100,7 @@ bool KeybGetShiftStatus() {
 
 void KeybUpdateCtrlShiftStatus() {
   Uint8 *keys;
-  keys = SDL_GetKeyState(NULL);
+  keys = SDL::GetKeyState(NULL);
 
   g_bShiftKey = (keys[SDLK_LSHIFT] | keys[SDLK_RSHIFT]); // 0x8000 KF_UP   SHIFT
   g_bCtrlKey = (keys[SDLK_LCTRL] | keys[SDLK_RCTRL]);  // CTRL
@@ -198,6 +198,7 @@ int KeybDecodeKeyUK(int key)
   return KeybDecodeKeyUS(key);
 }
 
+#if ARDUINO_LATER
 // decode keys for German keyboard to Apple characters
 int KeybDecodeKeyDE(int key)
 {
@@ -464,6 +465,8 @@ int KeybDecodeKey(int key)
   return key;
 }
 
+#endif
+
 void KeybQueueKeypress(int key, bool bASCII)
 {
   // language dependent keyboard mappings
@@ -598,7 +601,7 @@ unsigned char KeybReadFlag(unsigned short, unsigned short, unsigned char, unsign
   keyboardqueries++;
 
   Uint8 *keys;
-  keys = SDL_GetKeyState(NULL);
+  keys = SDL::GetKeyState(NULL);
   #ifdef KEY_OLD
   keywaiting = 0;
   return keycode | (keys[lastvirtkey] ? 0x80 : 0);

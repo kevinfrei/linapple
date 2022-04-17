@@ -111,6 +111,7 @@ constexpr uint32_t SRCCOLORKEY = 0x184abcd;
 void SetColorKey(Surface *, uint32_t srce, uint32_t mapRGBresult);
 constexpr uint32_t INIT_EVERYTHING = 0x4284bead;
 uint32_t Init(uint32_t what);
+uint8_t *GetKeyState(char *);
 }  // namespace SDL
 
 using Uint8 = uint8_t;
@@ -126,6 +127,18 @@ constexpr uint16_t KMOD_LSHIFT = 0x10;
 constexpr uint16_t KMOD_RSHIFT = 0x01;
 constexpr uint16_t KMOD_CAPS = 0x100;
 
+constexpr uint16_t SDLK_LSHIFT = 0x60;
+constexpr uint16_t SDLK_RSHIFT = 0x61;
+constexpr uint16_t SDLK_LCTRL = 0x62;
+constexpr uint16_t SDLK_RCTRL = 0x63;
+constexpr uint16_t SDLK_LALT = 0x64;
+constexpr uint16_t SDLK_RALT = 0x65;
+constexpr uint16_t SDLK_RETURN = 0x66;
+constexpr uint16_t SDLK_LEFT = 0x67;
+constexpr uint16_t SDLK_UP = 0x68;
+constexpr uint16_t SDLK_RIGHT = 0x69;
+constexpr uint16_t SDLK_DOWN = 0x6a;
+constexpr uint16_t SDLK_DELETE = 0x6b;
 constexpr uint16_t SDLK_F1 = 0xF1;
 constexpr uint16_t SDLK_F4 = 0xF4;
 constexpr uint16_t SDLK_F12 = 0xFC;

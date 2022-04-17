@@ -35,7 +35,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include <assert.h>
 
 // for mlock - munlock
-#include <sys/mman.h>
+// #include <sys/mman.h>
 
 // For _6502_MEM_END
 #include "Debugger_Types.h"
@@ -823,7 +823,7 @@ void MemDestroy() {
   VirtualFree(memmain, 0, MEM_RELEASE);
   VirtualFree(memdirty, 0, MEM_RELEASE);
   VirtualFree(memrom, 0, MEM_RELEASE);
-  munlock(memimage, _6502_MEM_END + 1); /* POSIX: unlock memory from swapping */
+  // munlock(memimage, _6502_MEM_END + 1); /* POSIX: unlock memory from swapping */
   VirtualFree(memimage, 0, MEM_RELEASE);
 
   VirtualFree(pCxRomInternal, 0, MEM_RELEASE);
@@ -974,7 +974,7 @@ int MemInitialize() // returns -1 if any error during initialization
   memimage = (LPBYTE) VirtualAlloc(NULL, _6502_MEM_END + 1, MEM_COMMIT, PAGE_READWRITE);
 
   /* POSIX : lock memory from swapping */
-  mlock(memimage, _6502_MEM_END + 1);
+  // mlock(memimage, _6502_MEM_END + 1);
 
   pCxRomInternal = (LPBYTE) VirtualAlloc(NULL, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
   pCxRomPeripheral = (LPBYTE) VirtualAlloc(NULL, CxRomSize, MEM_COMMIT, PAGE_READWRITE);

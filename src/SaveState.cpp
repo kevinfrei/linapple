@@ -54,9 +54,10 @@ void Snapshot_LoadState() {
   APPLEWIN_SNAPSHOT *pSS = (APPLEWIN_SNAPSHOT * )
   new char[sizeof(APPLEWIN_SNAPSHOT)];
 
-  try {
+  bool fail = true;
+  do {
     if (pSS == NULL)
-      throw (0);
+      break;
 
     memset(pSS, 0, sizeof(APPLEWIN_SNAPSHOT));
     HANDLE hFile = (FILE *) fopen(g_szSaveStateFilename, "rb");
@@ -64,7 +65,7 @@ void Snapshot_LoadState() {
     if (hFile == INVALID_HANDLE_VALUE) {
       strcpy(szMessage, "File not found: ");
       strcpy(szMessage + strlen(szMessage), g_szSaveStateFilename);
-      throw (0);
+      break;
     }
 
     unsigned int dwBytesRead;
@@ -75,18 +76,18 @@ void Snapshot_LoadState() {
     if (!bRes || (dwBytesRead != sizeof(APPLEWIN_SNAPSHOT))) {
       // File size wrong: probably because of version mismatch or corrupt file
       strcpy(szMessage, "File size mismatch");
-      throw (0);
+      break;
     }
 
     if (pSS->Hdr.dwTag != (unsigned int) AW_SS_TAG) {
       strcpy(szMessage, "File corrupt");
-      throw (0);
+      break;
     }
 
     /* Let it be any version, never mind it! ^_^ */
     if (pSS->Hdr.dwVersion != MAKE_VERSION(1, 0, 0, 1)) {
       strcpy(szMessage, "Version mismatch");
-      throw (0);
+      break;
     }
 
     // Reset all sub-systems
@@ -110,7 +111,9 @@ void Snapshot_LoadState() {
     DiskSetSnapshot(&pSS->Disk2, 6);
 
     // Hmmm. And SLOT 7 (HDD1 and HDD2)? Where are they??? -- beom beotiger ^_^
-  } catch (int) {
+    fail = false;
+  } while (false);
+  if (fail) {
     fprintf(stderr, "%s\n", szMessage); // instead of wndzoooe messagebox let's use powerful stderr
   }
 
