@@ -235,7 +235,7 @@ static volatile bool video_worker_active_ = false;
 static volatile bool video_worker_terminate_ = false;
 static volatile bool video_worker_refresh_ = false;
 // pthread_mutex_t video_draw_mutex;
-std::condition_variable video_cv;
+// std::condition_variable video_cv;
 
 
 void CopySource(int destx, int desty, int xsize, int ysize, int sourcex, int sourcey) {
@@ -1693,6 +1693,7 @@ void VideoSetNextScheduledUpdate()
   // }
 }
 
+#if 0
 // VideoWorkerThread
 // Simple polling thread that calls the refresh function
 // when necessary.
@@ -1712,6 +1713,7 @@ void *VideoWorkerThread(void *params)
   }
   return NULL;
 }
+#endif
 
 // VideoIniteWorker
 // Initializes worker thread for video updates

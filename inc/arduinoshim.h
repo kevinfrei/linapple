@@ -25,14 +25,17 @@ constexpr uint32_t ENABLE = 0x4321beef;
 constexpr uint32_t GRAB_ON = 0x18476284;
 constexpr uint32_t GRAB_OFF = 0x18567295;
 
+struct Color {
+    uint8_t r, g, b;
+};
+
 struct Surface {
     uint32_t h, w;
     struct Format {
         uint8_t BitsPerPixel;
         struct Palette {
             uint32_t ncolors;
-            struct Colors {};
-            Colors *colors;
+            Color *colors;
         };
         Palette *palette;
     };
@@ -56,7 +59,7 @@ struct Event {
     };
     Active active;
     struct User {
-      uint32_t code;
+        uint32_t code;
     };
     User user;
 };
@@ -77,14 +80,15 @@ void
 WM_ToggleFullScreen(Surface *);
 void WM_GrabInput(uint32_t);
 // Not sure about the second arg type just yet...
-void WM_SetIcon(Surface *, char *);
+void
+WM_SetIcon(Surface *, char *);
 void ShowCursor(uint32_t);
 void
 Quit();
 uint32_t
 MapRGB(Surface::Format *fmt, uint8_t r, uint8_t g, uint8_t b);
 void
-SetColors(Surface *, Surface::Format::Palette::Colors *c, uint32_t lo, uint32_t hi);
+SetColors(Surface *, Color *c, uint32_t lo, uint32_t hi);
 void
 FillRect(Surface *s, Rect *r, uint32_t color);
 // TODO: Not sure about the other 4 pixels
@@ -100,18 +104,25 @@ Flip(Surface *);
 Surface *
 SetVideoMode(uint32_t w, uint32_t h, uint8_t bpp, SurfaceType st);
 
-void SaveBMP(Surface *, const char *name);
-void putenv(const char *);
-const char *GetError();
-constexpr uint32_t DEFAULT_REPEAT_DELAY=250;
-constexpr uint32_t DEFAULT_REPEAT_INTERVAL=75;
-void EnableKeyRepeat(uint32_t delay, uint32_t interval);
+void
+SaveBMP(Surface *, const char *name);
+void
+putenv(const char *);
+const char *
+GetError();
+constexpr uint32_t DEFAULT_REPEAT_DELAY = 250;
+constexpr uint32_t DEFAULT_REPEAT_INTERVAL = 75;
+void
+EnableKeyRepeat(uint32_t delay, uint32_t interval);
 
 constexpr uint32_t SRCCOLORKEY = 0x184abcd;
-void SetColorKey(Surface *, uint32_t srce, uint32_t mapRGBresult);
+void
+SetColorKey(Surface *, uint32_t srce, uint32_t mapRGBresult);
 constexpr uint32_t INIT_EVERYTHING = 0x4284bead;
-uint32_t Init(uint32_t what);
-uint8_t *GetKeyState(char *);
+uint32_t
+Init(uint32_t what);
+uint8_t *
+GetKeyState(char *);
 }  // namespace SDL
 
 using Uint8 = uint8_t;
