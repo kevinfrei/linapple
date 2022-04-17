@@ -39,18 +39,18 @@
    NOTE:  This function is not safe to call from multiple threads!
 */
 
-int SDL_SoftStretchMy(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect);
+int SDL_SoftStretchMy(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect);
 
 
-/*  SDL_SoftStretchOr  - the same as SDL_SoftStretch, but ORed with destination
+/*  SDL_SoftStretchOr  - the same as SDL::SoftStretch, but ORed with destination
   NOTE: 24bpp does not support  -- beom beotiger 2007 November
 */
 /* Perform a stretch blit between two surfaces of the same format.
    NOTE:  This function is not safe to call from multiple threads!
 */
-int SDL_SoftStretchOr(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect);
+int SDL_SoftStretchOr(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect);
 
-int SDL_SoftStretchMono8(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, SDL_Rect *dstrect, Uint8 fgbrush, Uint8 bgbrush);
+int SDL_SoftStretchMono8(SDL::Surface *src, SDL::Rect *srcrect, SDL::Surface *dst, SDL::Rect *dstrect, Uint8 fgbrush, Uint8 bgbrush);
 
 
 #if SDL_BYTEORDER == SDL_BIG_ENDIAN
@@ -83,21 +83,21 @@ int SDL_SoftStretchMono8(SDL_Surface *src, SDL_Rect *srcrect, SDL_Surface *dst, 
 #define FONT_SIZE_Y  8
 // chars in row in font bitmap
 #define CHARS_IN_ROW  45
-extern SDL_Surface *font_sfc;
+extern SDL::Surface *font_sfc;
 
 bool fonts_initialization(void);
 
 void fonts_termination(void);
 
-void font_print(int x, int y, const char *text, SDL_Surface *surface, double kx, double ky);
+void font_print(int x, int y, const char *text, SDL::Surface *surface, double kx, double ky);
 
-void font_print_right(int x, int y, const char *text, SDL_Surface *surface, double kx, double ky);
+void font_print_right(int x, int y, const char *text, SDL::Surface *surface, double kx, double ky);
 
-void font_print_centered(int x, int y, const char *text, SDL_Surface *surface, double kx, double ky);
+void font_print_centered(int x, int y, const char *text, SDL::Surface *surface, double kx, double ky);
 
 // Some auxiliary functions
-void surface_fader(SDL_Surface *surface, float r_factor, float g_factor, float b_factor, float a_factor, SDL_Rect *r);
+void surface_fader(SDL::Surface *surface, float r_factor, float g_factor, float b_factor, float a_factor, SDL::Rect *r);
 
-void putpixel(SDL_Surface *surface, int x, int y, Uint32 pixel);
+void putpixel(SDL::Surface *surface, int x, int y, Uint32 pixel);
 
-void rectangle(SDL_Surface *surface, int x, int y, int w, int h, Uint32 pixel);
+void rectangle(SDL::Surface *surface, int x, int y, int w, int h, Uint32 pixel);

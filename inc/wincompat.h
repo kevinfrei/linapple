@@ -218,7 +218,8 @@ typedef struct tagPOINT {
 #define CopyMemory(Destination, Source, Length) memcpy((Destination),(Source),(Length))
 #define ZeroMemory(Destination, Length) memset((Destination),0,(Length))
 
-#define GetTickCount SDL_GetTicks
+// Arduino
+#define GetTickCount millis
 
 #ifdef _DEBUG
   #define _ASSERT  assert

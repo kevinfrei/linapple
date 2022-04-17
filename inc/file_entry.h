@@ -2,6 +2,7 @@
 
 #include <stdint.h>
 #include <string>
+#include "arduinoshim.h"
 
 struct file_entry_t {
   std::string name;
@@ -53,11 +54,12 @@ private:
         suffix = "G";
       }
 
-      return type_size_cache = std::to_string(size) + suffix;
+      return type_size_cache = ard::to_string(size) + suffix;
     }
 
     default:
-      throw "Bug!";
+      Serial.println("Bug!");
+      return type_size_cache = "<ERR>";
     }
   }
 };

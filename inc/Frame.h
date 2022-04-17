@@ -13,15 +13,15 @@ enum {
 #define SCREEN_WIDTH  560
 #define SCREEN_HEIGHT  384
 #define SCREEN_BPP  8
-extern SDL_Surface *screen;
+extern SDL::Surface *screen;
 
 #define SHOW_CYCLES  15
 
 extern bool fullscreen;
 extern bool g_WindowResized;
 
-extern SDL_Rect origRect;
-extern SDL_Rect newRect;
+extern SDL::Rect origRect;
+extern SDL::Rect newRect;
 
 int InitSDL();
 
@@ -36,7 +36,7 @@ void FrameReleaseDC();
 void FrameReleaseVideoDC();
 
 void DrawFrameWindow();  // draw it!
-void FrameDispatchMessage(SDL_Event *e); // replacement for FrameWndProc.
+void FrameDispatchMessage(SDL::Event *e); // replacement for FrameWndProc.
 
 void SetUsingCursor(bool);
 

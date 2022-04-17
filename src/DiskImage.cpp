@@ -395,8 +395,8 @@ bool AplBoot(imageinfoptr ptr) {
   unsigned short address = 0;
   unsigned short length = 0;
   unsigned int bytesRead;
-  ReadFile(ptr->file, &address, sizeof(unsigned short), &bytesRead, NULL);
-  ReadFile(ptr->file, &length, sizeof(unsigned short), &bytesRead, NULL);
+  ReadFile(ptr->file, &address, sizeof(unsigned short), &bytesRead, nullptr);
+  ReadFile(ptr->file, &length, sizeof(unsigned short), &bytesRead, nullptr);
   if ((((unsigned short)(address + length)) <= address) || (address >= 0xC000) || (address + length - 1 >= 0xC000)) {
     return 0;
   }

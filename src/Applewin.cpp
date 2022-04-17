@@ -315,26 +315,26 @@ void SetCurrentCLK6502()
 void EnterMessageLoop()
 {
   //  MSG message;
-  SDL_Event event;
+  SDL::Event event;
 
   while (true) {
     bool event_was_key_F4 = false;
 
-    if (SDL_PollEvent(&event)) {
-      if (event.type == SDL_QUIT && !event_was_key_F4) {
+    if (SDL::PollEvent(&event)) {
+      if (event.type == SDL::QUIT && !event_was_key_F4) {
         return;
       }
-      event_was_key_F4 = (event.type == SDL_KEYDOWN || event.type == SDL_KEYUP)
-        && event.key.keysym.sym == SDLK_F4;
+      event_was_key_F4 = (event.type == SDL::KEYDOWN || event.type == SDL::KEYUP)
+        && event.key.keycode == SDLK_F4;
       FrameDispatchMessage(&event);
 
       while ((g_nAppMode == MODE_RUNNING) || (g_nAppMode == MODE_STEPPING)) {
-        if (SDL_PollEvent(&event)) {
-          if (event.type == SDL_QUIT && !event_was_key_F4) {
+        if (SDL::PollEvent(&event)) {
+          if (event.type == SDL::QUIT && !event_was_key_F4) {
             return;
           }
-          event_was_key_F4 = (event.type==SDL_KEYDOWN || event.type==SDL_KEYUP)
-            && event.key.keysym.sym == SDLK_F4;
+          event_was_key_F4 = (event.type==SDL::KEYDOWN || event.type==SDL::KEYUP)
+            && event.key.keycode == SDLK_F4;
           FrameDispatchMessage(&event);
         } else if (g_nAppMode == MODE_STEPPING) {
           // DebugContinueStepping();
@@ -351,7 +351,7 @@ void EnterMessageLoop()
       if (g_nAppMode == MODE_DEBUG) {
         // DebuggerUpdate();
       } else if (g_nAppMode == MODE_LOGO || g_nAppMode == MODE_PAUSED) {
-        SDL_Delay(100); // Stop process hogging CPU
+        SDL::Delay(100); // Stop process hogging CPU
       }
     }
   }
@@ -395,10 +395,10 @@ void SetDiskImageDirectory(char *regKey, int driveNumber)
 //Sets the emulator to automatically boot, rather than load the flash screen on startup
 void setAutoBoot()
 {
-  SDL_Event user_ev;
-  user_ev.type = SDL_USEREVENT;
+  SDL::Event user_ev;
+  user_ev.type = SDL::USEREVENT;
   user_ev.user.code = 1;  //restart
-  SDL_PushEvent(&user_ev);
+  SDL::PushEvent(&user_ev);
 }
 
 // Let us load main configuration from config file.  Y_Y  --bb
@@ -676,7 +676,7 @@ void LoadConfiguration()
 
   if (strlen(g_sHDDDir) == 0 || g_sHDDDir[0] != '/') {
     char *tmp = getenv("HOME"); /* we don't have HOME?  ^_^  0_0  $_$  */
-    if (tmp == NULL) 
+    if (tmp == NULL)
 {      strcpy(g_sHDDDir, "/");  //begin from the root, then
     } else {
       strcpy(g_sHDDDir, tmp);
@@ -1081,7 +1081,7 @@ int main(int argc, char *argv[])
     fclose(registry); // close conf file (applino.conf by default)
   }
 
-  SDL_Quit();
+  SDL::Quit();
   Asset_Quit();
   LogDestroy();
   printf("Linapple: successfully exited!\n");

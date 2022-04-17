@@ -130,12 +130,12 @@ extern unsigned int g_uVideoMode;
 // extern pthread_mutex_t video_draw_mutex; // drawing mutex for writing to SDL surface
 
 // Surfaces for drawing
-extern SDL_Surface *g_hLogoBitmap; // our Linux logo!
-extern SDL_Surface *g_hStatusSurface;  // status panel
+extern SDL::Surface *g_hLogoBitmap; // our Linux logo!
+extern SDL::Surface *g_hStatusSurface;  // status panel
 
-extern SDL_Surface *g_hSourceBitmap;
-extern SDL_Surface *g_hDeviceBitmap;
-extern SDL_Surface *g_origscreen; // reserved for stretching
+extern SDL::Surface *g_hSourceBitmap;
+extern SDL::Surface *g_hDeviceBitmap;
+extern SDL::Surface *g_origscreen; // reserved for stretching
 // Prototypes
 
 void CreateColorMixMap();

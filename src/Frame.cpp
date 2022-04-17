@@ -36,18 +36,19 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 // for usleep
 #include <unistd.h>
 // for embedded XPMs
-#include <SDL_image.h>
+// #include <SDL_image.h>
+#include "arduinoshim.h"
 
 #include "stdafx.h"
 #include "asset.h"
 
 #define ENABLE_MENU 0
 
-SDL_Surface *apple_icon;
-SDL_Surface *screen;  // our main screen
+SDL::Surface *apple_icon;
+SDL::Surface *screen;  // our main screen
 // rects for screen stretch if needed
-SDL_Rect origRect;
-SDL_Rect newRect;
+SDL::Rect origRect;
+SDL::Rect newRect;
 
 #define  VIEWPORTCX  560
 #if ENABLE_MENU
@@ -116,9 +117,9 @@ void DrawStatusArea(int drawflags)
     }
   }
 
-  SDL_Rect srect;
-  Uint32 mybluez = SDL_MapRGB(screen->format, 10, 10, 255);  // bluez color, know that?
-  SDL_SetColors(g_hStatusSurface, screen->format->palette->colors, 0, 256);
+  SDL::Rect srect;
+  Uint32 mybluez = SDL::MapRGB(screen->format, 10, 10, 255);  // bluez color, know that?
+  SDL::SetColors(g_hStatusSurface, screen->format->palette->colors, 0, 256);
 
   if (drawflags & DRAW_BACKGROUND) {
     g_iStatusCycle = SHOW_CYCLES;  // start cycle for panel showing
@@ -128,7 +129,7 @@ void DrawStatusArea(int drawflags)
     srect.y = 22;
     srect.w = STATUS_PANEL_W - 8;
     srect.h = STATUS_PANEL_H - 25;
-    SDL_FillRect(g_hStatusSurface, &srect, mybluez);  // clear
+    SDL::FillRect(g_hStatusSurface, &srect, mybluez);  // clear
 
     char leds[2] = "\x64";
     #define LEDS  1
@@ -182,8 +183,8 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
                                         " Scroll Lock - Toggle full speed",
                                         "  Numpad +/-/* - Increase/Decrease/Normal speed"};
 
-  SDL_Surface *my_screen; // for background
-  SDL_Surface *tempSurface = NULL; // temporary surface
+  SDL::Surface *my_screen; // for background
+  SDL::Surface *tempSurface = NULL; // temporary surface
 
   if (font_sfc == NULL) {
     if (!fonts_initialization()) {
@@ -204,16 +205,16 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
   if (tempSurface == NULL) {
     tempSurface = screen;
   } // Use screen, if none available
-  my_screen = SDL_CreateRGBSurface(SDL_SWSURFACE, tempSurface->w, tempSurface->h, tempSurface->format->BitsPerPixel, 0,
+  my_screen = SDL::CreateRGBSurface(SDL::SWSURFACE, tempSurface->w, tempSurface->h, tempSurface->format->BitsPerPixel, 0,
                                    0, 0, 0);
   if (tempSurface->format->palette && my_screen->format->palette) {
-    SDL_SetColors(my_screen, tempSurface->format->palette->colors, 0, tempSurface->format->palette->ncolors);
+    SDL::SetColors(my_screen, tempSurface->format->palette->colors, 0, tempSurface->format->palette->ncolors);
   }
 
   surface_fader(my_screen, 0.2F, 0.2F, 0.2F, -1, 0);  // fade it out to 20% of normal
-  SDL_BlitSurface(tempSurface, NULL, my_screen, NULL);
+  SDL::BlitSurface(tempSurface, NULL, my_screen, NULL);
 
-  SDL_BlitSurface(my_screen, NULL, screen, NULL);    // show background
+  SDL::BlitSurface(my_screen, NULL, screen, NULL);    // show background
 
   double facx = double(g_ScreenWidth) / double(SCREEN_WIDTH);
   double facy = double(g_ScreenHeight) / double(SCREEN_HEIGHT);
@@ -230,12 +231,12 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
   }
 
   // show frames
-  rectangle(screen, 0, Help_TopX - 5, g_ScreenWidth - 1, int(335 * facy), SDL_MapRGB(screen->format, 255, 255, 255));
-  rectangle(screen, 1, Help_TopX - 4, g_ScreenWidth, int(335 * facy), SDL_MapRGB(screen->format, 255, 255, 255));
-  rectangle(screen, 1, 1, g_ScreenWidth - 2, (Help_TopX - 8), SDL_MapRGB(screen->format, 255, 255, 0));
+  rectangle(screen, 0, Help_TopX - 5, g_ScreenWidth - 1, int(335 * facy), SDL::MapRGB(screen->format, 255, 255, 255));
+  rectangle(screen, 1, Help_TopX - 4, g_ScreenWidth, int(335 * facy), SDL::MapRGB(screen->format, 255, 255, 255));
+  rectangle(screen, 1, 1, g_ScreenWidth - 2, (Help_TopX - 8), SDL::MapRGB(screen->format, 255, 255, 0));
 
-  tempSurface = SDL_DisplayFormat(assets->icon);
-  SDL_Rect logo, scrr;
+  tempSurface = SDL::DisplayFormat(assets->icon);
+  SDL::Rect logo, scrr;
   logo.x = logo.y = 0;
   logo.w = tempSurface->w;
   logo.h = tempSurface->h;
@@ -244,16 +245,16 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
   scrr.w = scrr.h = int(100 * facy);
   SDL_SoftStretchOr(tempSurface, &logo, screen, &scrr);
 
-  SDL_Flip(screen); // Show the screen
-  SDL_Delay(1000); // Wait 1 second to be not too fast
+  SDL::Flip(screen); // Show the screen
+  SDL::Delay(1000); // Wait 1 second to be not too fast
 
   // Wait for keypress
-  SDL_Event event;
+  SDL::Event event;
 
-  event.type = SDL_QUIT;
-  while (event.type != SDL_KEYDOWN) { // Wait for ESC-key pressed
+  event.type = SDL::QUIT;
+  while (event.type != SDL::KEYDOWN) { // Wait for ESC-key pressed
     usleep(100);
-    SDL_PollEvent(&event);
+    SDL::PollEvent(&event);
   }
 
   DrawFrameWindow(); // Restore screen
@@ -272,13 +273,13 @@ void FrameQuickState(int num, int mod)
   }
 }
 
-void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
-  int mysym = e->key.keysym.sym; // keycode
-  int mymod = e->key.keysym.mod; // some special keys flags
-  int myscancode = e->key.keysym.scancode; // some special keys flags
+void FrameDispatchMessage(SDL::Event *e) {// process given SDL event
+  int mysym = e->key.keycode; // keycode
+  int mymod = e->key.keymod; // some special keys flags
+  int myscancode = e->key.scancode; // some special keys flags
 
   switch (e->type) {//type of SDL event
-    case SDL_VIDEORESIZE:
+    case SDL::VIDEORESIZE:
       printf("OLD DIMENSIONS: %d  %d\n", g_ScreenWidth, g_ScreenHeight);
       g_ScreenWidth = e->resize.w;
       g_ScreenHeight = (e->resize.h / 96) * 96;
@@ -286,9 +287,9 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
         g_ScreenHeight = 192;
       }
       // Resize the screen
-      screen = SDL_SetVideoMode(e->resize.w, e->resize.h, SCREEN_BPP, SDL_SWSURFACE | SDL_HWPALETTE | SDL_RESIZABLE);
+      screen = SDL::SetVideoMode(e->resize.w, e->resize.h, SCREEN_BPP, SDL::SWSURFACE | SDL::HWPALETTE | SDL::RESIZABLE);
       if (screen == NULL) {
-        SDL_Quit();
+        SDL::Quit();
         return;
       } else {
         // Define if we have resized window
@@ -308,11 +309,11 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
       }
       break;
 
-    case SDL_ACTIVEEVENT:
+    case SDL::ACTIVEEVENT:
       g_bAppActive = e->active.gain; // if gain==1, app is active
       break;
 
-    case SDL_KEYDOWN:
+    case SDL::KEYDOWN:
       if (mysym >= SDLK_0 && mysym <= SDLK_9 && mymod & KMOD_LCTRL) {
         FrameQuickState(mysym - SDLK_0, mymod);
         break;
@@ -396,7 +397,7 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
       }
       break;
 
-    case SDL_KEYUP:
+    case SDL::KEYUP:
       if ((mysym >= SDLK_F1) && (mysym <= SDLK_F12) && (buttondown == mysym - SDLK_F1)) {
         buttondown = -1;
         ProcessButtonClick(mysym - SDLK_F1, mymod); // process function keys - special events
@@ -411,7 +412,7 @@ void FrameDispatchMessage(SDL_Event *e) {// process given SDL event
       }
       break;
 
-    case SDL_USEREVENT:
+    case SDL::USEREVENT:
       if (e->user.code == 1) { // should do restart?
         ProcessButtonClick(BTN_RUN, KMOD_LCTRL);
       }
@@ -488,7 +489,7 @@ void FrameSaveBMP(void) {
   }
 #pragma GCC diagnostic pop
 
-  SDL_SaveBMP(screen, bmpName);  // Save file using SDL inner function
+  SDL::SaveBMP(screen, bmpName);  // Save file using SDL inner function
   printf("File %s saved!\n", bmpName);
   i++;
 }
@@ -497,7 +498,7 @@ void ProcessButtonClick(int button, int mod)
 {
   // button - number of button pressed (starting with 0, which means F1
   // mod - what modifiers been set (like CTRL, ALT etc.)
-  SDL_Event qe;  // for Quitting and Reset
+  SDL::Event qe;  // for Quitting and Reset
 
   SoundCore_SetFade(FADE_OUT); // sound/music off?
 
@@ -522,8 +523,8 @@ void ProcessButtonClick(int button, int mod)
         g_bResetTiming = true;
       } else if (mod & KMOD_SHIFT) {
         restart = 1;  // Keep up flag of restarting
-        qe.type = SDL_QUIT;
-        SDL_PushEvent(&qe); // Push quit event
+        qe.type = SDL::QUIT;
+        SDL::PushEvent(&qe); // Push quit event
       }
       break;
 
@@ -631,8 +632,8 @@ void ProcessButtonClick(int button, int mod)
       }
       break;
     case BTN_QUIT:  // F10 - exit from emulator?
-      qe.type = SDL_QUIT;
-      SDL_PushEvent(&qe); // Push quit event
+      qe.type = SDL::QUIT;
+      SDL::PushEvent(&qe); // Push quit event
       break;  //
     case BTN_SAVEST: // Save state (F11)
       if (mod & KMOD_ALT) { // quick save
@@ -683,9 +684,9 @@ static bool bIamFullScreened;  // for correct fullscreen switching
 void SetFullScreenMode() {
   if (!bIamFullScreened) {
     bIamFullScreened = true;
-    SDL_WM_ToggleFullScreen(screen);
+    SDL::WM_ToggleFullScreen(screen);
     if (g_nAppMode != MODE_DEBUG)
-      SDL_ShowCursor(SDL_DISABLE);
+      SDL::ShowCursor(SDL::DISABLE);
   }
 }
 
@@ -693,29 +694,29 @@ void SetNormalMode()
 {
   if (bIamFullScreened) {
     bIamFullScreened = 0;
-    SDL_WM_ToggleFullScreen(screen);// we should go back anyway!? ^_^  --bb
+    SDL::WM_ToggleFullScreen(screen);// we should go back anyway!? ^_^  --bb
     if (!usingcursor) {
-      SDL_ShowCursor(SDL_ENABLE);
+      SDL::ShowCursor(SDL::ENABLE);
     } // show mouse cursor if not use it
   }
   else
   if (g_nAppMode == MODE_DEBUG)
   {
-    SDL_ShowCursor(SDL_ENABLE);
-    SDL_WM_GrabInput(SDL_GRAB_OFF);
+    SDL::ShowCursor(SDL::ENABLE);
+    SDL::WM_GrabInput(SDL::GRAB_OFF);
   }
 }
 
 void SetUsingCursor(bool newvalue) {
   usingcursor = newvalue;
   if (usingcursor) { // Hide mouse cursor and grab input (mouse and keyboard)
-    SDL_ShowCursor(SDL_DISABLE);
-    SDL_WM_GrabInput(SDL_GRAB_ON);
+    SDL::ShowCursor(SDL::DISABLE);
+    SDL::WM_GrabInput(SDL::GRAB_ON);
   } else { // On the contrary - show mouse cursor and ungrab input
     if ((!bIamFullScreened)||(g_nAppMode == MODE_DEBUG)) {
-      SDL_ShowCursor(SDL_ENABLE);
+      SDL::ShowCursor(SDL::ENABLE);
     }  // Show cursor if not in fullscreen mode
-    SDL_WM_GrabInput(SDL_GRAB_OFF);
+    SDL::WM_GrabInput(SDL::GRAB_OFF);
   }
 }
 
@@ -723,13 +724,13 @@ int FrameCreateWindow()
 {
   // Init SDL and create window screen
   static char sdlCmd[] = "SDL_VIDEO_CENTERED=center";
-  SDL_putenv(sdlCmd); // Center our window
+  SDL::putenv(sdlCmd); // Center our window
 
   bIamFullScreened = false; // At startup not in fullscreen mode
-  screen = SDL_SetVideoMode(g_ScreenWidth, g_ScreenHeight, SCREEN_BPP, SDL_SWSURFACE | SDL_HWPALETTE);
+  screen = SDL::SetVideoMode(g_ScreenWidth, g_ScreenHeight, SCREEN_BPP, SDL::SWSURFACE | SDL::HWPALETTE);
   if (screen == NULL) {
-    fprintf(stderr, "Could not set SDL video mode: %s\n", SDL_GetError());
-    SDL_Quit();
+    fprintf(stderr, "Could not set SDL video mode: %s\n", SDL::GetError());
+    SDL::Quit();
     return 1;
   }
 
@@ -744,7 +745,7 @@ int FrameCreateWindow()
     newRect.w = g_ScreenWidth;
     newRect.h = g_ScreenHeight;
   }
-  SDL_EnableKeyRepeat(SDL_DEFAULT_REPEAT_DELAY, SDL_DEFAULT_REPEAT_INTERVAL);
+  SDL::EnableKeyRepeat(SDL::DEFAULT_REPEAT_DELAY, SDL::DEFAULT_REPEAT_INTERVAL);
   return 0;
 }
 
@@ -752,22 +753,22 @@ void SetIcon()
 {
   /* Black is the transparency colour.
      Part of the logo seems to use it !? */
-  Uint32 colorkey = SDL_MapRGB(assets->icon->format, 0, 0, 0);
-  SDL_SetColorKey(assets->icon, SDL_SRCCOLORKEY, colorkey);
+  Uint32 colorkey = SDL::MapRGB(assets->icon->format, 0, 0, 0);
+  SDL::SetColorKey(assets->icon, SDL::SRCCOLORKEY, colorkey);
 
   /* No need to pass a mask given the above. */
-  SDL_WM_SetIcon(assets->icon, NULL);
+  SDL::WM_SetIcon(assets->icon, NULL);
 }
 
 int InitSDL()
 {
   // initialize SDL subsystems, return 0 if all OK, else return 1
-  if (SDL_Init(SDL_INIT_EVERYTHING) != 0) {
-    fprintf(stderr, "Could not initialize SDL: %s\n", SDL_GetError());
+  if (SDL::Init(SDL::INIT_EVERYTHING) != 0) {
+    fprintf(stderr, "Could not initialize SDL: %s\n", SDL::GetError());
     return 1;
   }
 
-  // SDL ref: Icon should be set *before* the first call to SDL_SetVideoMode.
+  // SDL ref: Icon should be set *before* the first call to SDL::SetVideoMode.
   SetIcon();
   return 0;
 }

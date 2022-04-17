@@ -21,9 +21,9 @@
 #define __asset_h
 
 typedef struct {
-  SDL_Surface *icon;
-  SDL_Surface *font;
-  SDL_Surface *splash;
+  SDL::Surface *icon;
+  SDL::Surface *font;
+  SDL::Surface *splash;
 } assets_t;
 
 extern assets_t *assets;

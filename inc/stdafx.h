@@ -12,7 +12,9 @@
 #  include <windows.h>
 #endif
 
-#include <SDL.h>
+// #include <SDL.h>
+#include "Arduino.h"
+#include "arduinoshim.h"
 
 #include "Common.h"
 #include "Structs.h"

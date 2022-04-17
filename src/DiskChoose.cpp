@@ -10,6 +10,8 @@
 // Brain Games crew creates brilliant retro-remakes! Please visit their site to find out more.
 //
 */
+// TODO: Make a version of this for Arduino...
+#if 0
 #ifdef _WIN32
 #include "windows.h"
 #else
@@ -17,9 +19,10 @@
 #include <stddef.h>
 #include <sys/types.h>
 #include <sys/stat.h>
-#include <dirent.h>
 #include "ctype.h"
-
+// No dirent.h on Arduino...
+#include "SdFat.h"
+#include "sdios.h"
 #endif
 
 
@@ -74,10 +77,12 @@ int getstat(const char *catalog, const char *fname, uintmax_t *size)
 
 #endif
 
+#if 0
 int compareNames(const void *const A, const void *const B)
 {
     return strcasecmp((*(struct dirent **) A)->d_name, (*(struct dirent **) B)->d_name);
 }
+#endif
 
 // get_sorted_directory
 // Read and sort the current directory, subdirectories at top followed by
@@ -478,3 +483,4 @@ bool ChooseImageDialog(int sx, int sy, const string& dir, int slot, file_list_ge
   }
   return false;
 }
+#endif

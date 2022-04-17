@@ -1341,7 +1341,7 @@ enum {
   NO_SOURCE_LINE = -1
 };
 
-typedef map<unsigned short, int> SourceAssembly_t; // Address -> Line #  &  FileName
+typedef std::map<unsigned short, int> SourceAssembly_t; // Address -> Line #  &  FileName
 
 // Symbols
 
@@ -1380,7 +1380,7 @@ enum SymbolTable_Masks_e // SymbolTable_e ->
   SYMBOL_TABLE_PRODOS    = (1 << 8),
 };
 
-typedef map <unsigned short, string> SymbolTable_t;
+typedef std::map <unsigned short, std::string> SymbolTable_t;
 
 // Watches
 enum {
