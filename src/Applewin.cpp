@@ -861,7 +861,7 @@ void PrintHelp()
          "\n");
 }
 
-int main(int argc, char *argv[])
+int moduleMain(int argc, char *argv[])
 {
   bool bLog = false;
   bool bSetFullScreen = false;
