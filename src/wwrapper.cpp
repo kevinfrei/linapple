@@ -9,52 +9,69 @@
 unsigned int SetFilePointer(HANDLE hFile, int lDistanceToMove, PLONG lpDistanceToMoveHigh, unsigned int dwMoveMethod)
 {
   /* ummm,fseek in Russian */
+  /*
   fseek((FILE *) hFile, lDistanceToMove, dwMoveMethod);
   return ftell((FILE *) hFile);
+  */
+ return 0;
 }
 
 bool ReadFile(HANDLE hFile, LPVOID lpBuffer, unsigned int nNumberOfBytesToRead, LPDWORD lpNumberOfBytesRead,
               LPOVERLAPPED lpOverlapped)
 {
-
   /* read something from file */
+  /*
   unsigned int bytesread = fread(lpBuffer, 1, nNumberOfBytesToRead, (FILE *) hFile);
   *lpNumberOfBytesRead = bytesread;
   return (nNumberOfBytesToRead == bytesread);
+  */
+ return false;
 }
 
 bool WriteFile(HANDLE hFile, LPCVOID lpBuffer, unsigned int nNumberOfBytesToWrite, LPDWORD lpNumberOfBytesWritten,
                LPOVERLAPPED lpOverlapped)
 {
   /* write something to file */
+  /*
   unsigned int byteswritten = fwrite(lpBuffer, 1, nNumberOfBytesToWrite, (FILE *) hFile);
   *lpNumberOfBytesWritten = byteswritten;
   return (nNumberOfBytesToWrite == byteswritten);
+  */
+ return false;
 }
 
 /* close handle whatever it has been .... hmmmmm. I just love Microsoft! */
 bool CloseHandle(HANDLE hObject)
 {
+  /*
   return (!fclose((FILE *) hObject));
+  */
+  return false;
 }
 
 bool DeleteFile(LPCTSTR lpFileName)
 {
+  /*
   if (remove(lpFileName) == 0)
     return true;
   else
     return false;
+  */
+  return false;
 }
 
 unsigned int GetFileSize(HANDLE hFile, LPDWORD lpFileSizeHigh)
 {
   /* what is the size of the specified file??? Hmmm, really I donna. ^_^ */
+  /*
   long lcurset = ftell((FILE *) hFile); // remember current file position
 
   fseek((FILE *) hFile, 0, FILE_END);  // go to the end of file
   unsigned int lfilesize = ftell((FILE *) hFile); // that is the real size of file, isn't it??
   fseek((FILE *) hFile, lcurset, FILE_BEGIN); // let the file position be the same as before
   return lfilesize;
+  */
+ return 0;
 }
 
 LPVOID VirtualAlloc(LPVOID lpAddress, size_t dwSize, unsigned int flAllocationType, unsigned int flProtect)

@@ -30,7 +30,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* And KREZ */
 
-#include <iostream>
+// #include <iostream>
 
 #include "arduinoshim.h"
 

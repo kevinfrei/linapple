@@ -40,12 +40,12 @@ By Mark Ormond.
 #include <vector>
 #include "Log.h"
 
-#include <sys/param.h>
+// #include <sys/param.h>
 #include <stdlib.h>
 
-#include <iostream>
-#include <sys/types.h>
-#include <fcntl.h>
+// #include <iostream>
+// #include <sys/types.h>
+// #include <fcntl.h>
 #include <getopt.h>
 
 #include "asset.h"
@@ -739,7 +739,7 @@ void LoadAllConfigurations(const char *userSpecifiedFilename)
     if (!registry) {
       registry = fopen(userSpecifiedFilename, "w+");
       if (!registry) {
-        std::cerr << "WARNING! Failed to open config file: " << userSpecifiedFilename << std::endl;
+        fprintf(stderr, "WARNING! Failed to open config file: %s\n", userSpecifiedFilename);
         exit(EXIT_SUCCESS);
       }
     }
@@ -1068,7 +1068,7 @@ int main(int argc, char *argv[])
   // Release COM
   SysClk_UninitTimer();
 
-  RiffFinishWriteFile();
+  // RiffFinishWriteFile();
   if (registry != NULL) {
     fclose(registry); // close conf file (applino.conf by default)
   }

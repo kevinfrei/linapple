@@ -21,8 +21,8 @@
 #else
 
 #include <stddef.h>
-#include <sys/types.h>
-#include <sys/stat.h>
+// #include <sys/types.h>
+// #include <sys/stat.h>
 #include "ctype.h"
 // No dirent.h on Arduino...
 #include "SdFat.h"
@@ -40,7 +40,7 @@
 // #include <pthread.h>
 
 #include <algorithm>
-#include <iostream>
+// #include <iostream>
 #include <vector>
 
 using namespace std;

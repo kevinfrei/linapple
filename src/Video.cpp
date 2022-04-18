@@ -28,16 +28,16 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 /* Adaptation for SDL and POSIX (l) by beom beotiger, Nov-Dec 2007 */
 
-#include <iostream>
+// #include <iostream>
 #include "stdafx.h"
 #include "asset.h"
 #include "wwrapper.h"
 // #include <pthread.h>
-#include <thread>
+// #include <thread>
 // #include <chrono>
-#include <unistd.h>
-#include <atomic>
-#include <condition_variable>
+// #include <unistd.h>
+// #include <atomic>
+// #include <condition_variable>
 
 // include character set bitmaps
 #include "../res/charset40.xpm" // US/default
@@ -1728,7 +1728,7 @@ bool VideoInitWorker()
   if (true) {
 
     // If failed to start, revert to singlethreaded
-    std::cerr << "FAILED to start video worker; reverting to single-threaded video updating..." << std::endl;
+    fprintf(stderr, "FAILED to start video worker; reverting to single-threaded video updating...\n");
     // g_singlethreaded = false;
     video_worker_active_ = false;
   }

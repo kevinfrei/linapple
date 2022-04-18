@@ -1,15 +1,10 @@
 #include <math.h>
 #include <stdlib.h>
 #include <string.h>
-// #include <time.h>
 #include <inttypes.h>
 #include <stdint.h>
 
-#ifndef _WIN32
 #  include "wincompat.h"
-#else
-#  include <windows.h>
-#endif
 
 // #include <SDL.h>
 #include "Arduino.h"
@@ -35,7 +30,7 @@
 #include "ParallelPrinter.h"
 #include "Registry.h"
 
-#include "Riff.h"
+// #include "Riff.h"
 #include "SaveState.h"
 #include "Speaker.h"
 
