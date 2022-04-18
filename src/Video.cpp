@@ -34,7 +34,7 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 #include "wwrapper.h"
 // #include <pthread.h>
 #include <thread>
-#include <chrono>
+// #include <chrono>
 #include <unistd.h>
 #include <atomic>
 #include <condition_variable>
@@ -1683,7 +1683,7 @@ void VideoInitialize() {
 
 // VideoSetNextScheduledUpdate
 // Sets
-auto video_next_scheduled_update_ = std::chrono::system_clock::now();
+// auto video_next_scheduled_update_ = std::chrono::system_clock::now();
 void VideoSetNextScheduledUpdate()
 {
   // if (!g_singlethreaded) {

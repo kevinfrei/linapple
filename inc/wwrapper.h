@@ -1,13 +1,15 @@
 #include "wincompat.h"
 
-#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 #include <ctype.h>
 
-#define FILE_BEGIN   SEEK_SET
-#define FILE_CURRENT  SEEK_CUR
-#define FILE_END  SEEK_END
+#define FILE_BEGIN  0x0
+//  SEEK_SET
+#define FILE_CURRENT 0x1
+//  SEEK_CUR
+#define FILE_END 0xFFFFFFFF
+// SEEK_END
 #define INVALID_HANDLE_VALUE NULL
 
 #define MEM_COMMIT  0x1000

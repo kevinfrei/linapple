@@ -28,13 +28,9 @@
 /* System dependent filesystem routines                                */
 
 #include <errno.h>
-#include <stdio.h>
-// #include <unistd.h>
 #include <stdlib.h>
-// #include <sys/stat.h>
 #include <sys/types.h>
 #include <limits.h>
-// #include <fcntl.h>
 
 #include "arduinoshim.h"
 

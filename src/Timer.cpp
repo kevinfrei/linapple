@@ -37,8 +37,8 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 
 #ifndef _WIN32
 //for Timers try to use POSIX compliant timers
-#include <signal.h>
-#include <sys/time.h>
+// #include <signal.h>
+// #include <sys/time.h>
 #endif
 
 // for Assertion

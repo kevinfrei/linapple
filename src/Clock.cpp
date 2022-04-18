@@ -34,8 +34,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
  * http://www.apple2.org.za/mirrors/ftp.gno.org/prodos/system/pdosclockup.shk
  */
 
-#include <time.h>
-#include <stdio.h>
 #include <assert.h>
 #include "stdafx.h"
 #include "Clock.h"
@@ -90,7 +88,7 @@ I/O map: (please add an offset of Slot#*16 to the address below)
   the command line buffer won't be trashed by the ROM routine before
   it is processed.
 */
-
+#if 0
 
 unsigned char Clock_ROM[] =
 /*
@@ -237,6 +235,9 @@ void Clock_Insert(int slot) {
 		    NULL, NULL,
 		    NULL, NULL);
 }
-
+#endif
+void Clock_Insert(int slot) {
+  // Don't do anything for Arduino, cuz I don't have a clock...
+}
 
 //end

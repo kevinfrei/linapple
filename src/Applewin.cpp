@@ -359,6 +359,7 @@ int DoDiskInsert(int nDrive, LPSTR szFileName)
 bool ValidateDirectory(char *dir)
 {
   bool ret = false;
+  /*
   if (dir && *dir) {
     struct stat st;
     if (stat("/tmp", &st) == 0) {
@@ -367,6 +368,8 @@ bool ValidateDirectory(char *dir)
       }
     }
   }
+  */
+  // TODO
   LogOutput(" ---> %s is dir? %d\n", dir, ret);
   return ret;
 }

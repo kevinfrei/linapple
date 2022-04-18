@@ -11,6 +11,10 @@
 //
 */
 // TODO: Make a version of this for Arduino...
+#include "DiskChoose.h"
+#include <cstdint>
+#include <string>
+
 #if 0
 #ifdef _WIN32
 #include "windows.h"
@@ -175,7 +179,8 @@ const std::vector<file_entry_t> disk_file_list_generator_t::generate_file_list()
   return file_list;
 }
 
-
+#endif
+// KBFTODO: Maybe do what GPH meant to do for Arduino?
 // GPH TODO: This entire thing needs to be refactored from a massive spinloop
 // to an event-driven state model incorporated into Frame.
 // Currently, everyhing here is handled inside an event handler.
@@ -195,13 +200,10 @@ bool ChooseAnImage(int sx, int sy, const std::string& incoming_dir, int slot,
   */
 
   //printf("Diskchoose! We are here: %s\n", incoming_dir);
-
-  disk_file_list_generator_t file_list_generator(incoming_dir);
-  return ChooseImageDialog(sx, sy, incoming_dir, slot, &file_list_generator,
-                           filename, isdir, index_file);
+  return false;
 }
 
-
+#if 0
 bool ChooseImageDialog(int sx, int sy, const string& dir, int slot, file_list_generator_t* file_list_generator,
                        std::string& filename, bool& isdir, size_t& index_file)
 {

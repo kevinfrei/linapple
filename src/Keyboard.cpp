@@ -438,6 +438,7 @@ int KeybDecodeKeyFR(int key)
 
   return key;
 }
+#endif
 
 // decode keycode for selected keyboard
 int KeybDecodeKey(int key)
@@ -446,7 +447,7 @@ int KeybDecodeKey(int key)
 
   // language dependent keyboard mappings
   switch(g_KeyboardLanguage)
-  {
+  {/*
     case English_UK:
       key = KeybDecodeKeyUK(key);
       break;
@@ -456,6 +457,7 @@ int KeybDecodeKey(int key)
     case German_DE:
       key = KeybDecodeKeyDE(key);
       break;
+      */
     case English_US:
     default:
       key = KeybDecodeKeyUS(key);
@@ -465,7 +467,6 @@ int KeybDecodeKey(int key)
   return key;
 }
 
-#endif
 
 void KeybQueueKeypress(int key, bool bASCII)
 {

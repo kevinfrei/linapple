@@ -31,7 +31,6 @@ Foundation, Inc., 59 Temple Place, Suite 330, Boston, MA  02111-1307  USA
 /* And KREZ */
 
 #include <iostream>
-#include <sys/stat.h>
 
 #include "arduinoshim.h"
 
@@ -474,6 +473,9 @@ bool PSP_SaveStateSelectImage(bool saveit)
 }
 
 void FrameSaveBMP(void) {
+#if 0
+  // I don't care about this capability on Arduino
+
   // Save current screen as a .bmp file in current directory
   struct stat bufp;
   static int i = 1;  // index
@@ -491,6 +493,7 @@ void FrameSaveBMP(void) {
   SDL::SaveBMP(screen, bmpName);  // Save file using SDL inner function
   printf("File %s saved!\n", bmpName);
   i++;
+#endif
 }
 
 void ProcessButtonClick(int button, int mod)

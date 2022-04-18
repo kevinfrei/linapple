@@ -114,8 +114,6 @@ Surface *
 SetVideoMode(uint32_t w, uint32_t h, uint8_t bpp, SurfaceType st);
 
 void
-SaveBMP(Surface *, const char *name);
-void
 putenv(const char *);
 char *
 getenv(const char *);
@@ -174,12 +172,10 @@ size_t
 strlen(const char *);
 char *
 GetBasePath(void);
-/*char *
-GetPrefPath(const char *org, const char *app);
-*/
 int
 snprintf(char *buf, size_t sz, const char *str, ...);
-void GetClipRect(Surface *, Rect *);
+void
+GetClipRect(Surface *, Rect *);
 }  // namespace SDL
 
 constexpr uint16_t KMOD_LCTRL = 0x80;
@@ -219,6 +215,16 @@ constexpr uint16_t SDLK_PAUSE = 0x92;
 SDL::Surface *
 IMG_ReadXPMFromArray(const char **);
 
+void
+MyPrintf(const char *, ...);
+void
+MyFPrintf(void *, const char *, ...);
+void *
+MyFOpen(const char *fn, const char *perms);
+
+#define printf MyPrintf
+#define fprintf MyFPrintf
+#define fopen MyFOpen
 #define DECLSPEC
 #define SDLCALL
 //
