@@ -43,10 +43,13 @@ TARGETDIR   := build/$(BINDIR)
 
 #Flags, Libraries and Includes
 
-SDL_CONFIG ?= sdl-config
-SDL_CFLAGS = $(shell $(SDL_CONFIG) --cflags)
-SDL_LIBS = $(shell $(SDL_CONFIG) --libs)
-SDL_LIBS +=  $(shell pkg-config SDL_image --libs)
+#SDL_CONFIG ?= sdl-config
+SDL_CFLAGS = -O0
+#$(shell $(SDL_CONFIG) --cflags)
+SDL_LIBS =
+#$(shell $(SDL_CONFIG) --libs)
+SDL_LIBS +=
+#  $(shell pkg-config SDL_image --libs)
 
 #By default, optimize the executable.
 CFLAGS := -Wall -flto -Os -ansi -c -std=c++11
@@ -88,10 +91,10 @@ export COMPILED
 #   /usr/local/bin/applino
 #   /usr/local/etc/applino.conf
 #   /usr/local/share/Master.dsk
-size1 := $(shell du -s ./build/bin 2>&1 | cut -f 1)
-size2 := $(shell du -s ./build/etc/ 2>&1 | cut -f 1)
-size3 := $(shell du -s ./build/share/ 2>&1 | cut -f 1)
-SIZE  := $(shell echo `expr $(size1) + $(size2) + $(size3) 2>&1` )
+#size1 := $(shell du -s ./build/bin 2>&1 | cut -f 1)
+#size2 := $(shell du -s ./build/etc/ 2>&1 | cut -f 1)
+#size3 := $(shell du -s ./build/share/ 2>&1 | cut -f 1)
+#SIZE  := $(shell echo `expr $(size1) + $(size2) + $(size3) 2>&1` )
 
 # DEBIAN/conffiles
 define CONFFILES
@@ -222,4 +225,7 @@ deb:
 	@mv $(PKGDIR)_$(VERSION)_$(ARCH).deb .
 
 #Non-File Targets
-.PHONY: all clean deb directories distclean images install remake resources symbolfiles uninstall
+.PHONY: all clean deb directories distclean images install remake resources symbolfiles uninstall format
+
+format:
+	clang-format -i ${SOURCES} ${INCDIR}/*.h
