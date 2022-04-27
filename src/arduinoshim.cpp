@@ -20,37 +20,45 @@ namespace SDL {
 
 bool
 PollEvent(Event *evt) {
-    return false;
+  // TODO: Check the keyboard here?
+  return false;
 }
 
 void
 PushEvent(Event *evt) {
-    return;
+  // Stuff this in an event queue
+  return;
 }
 
 void
 WM_SetCaption(const char *title, const char *appTitle) {
+  // I can set this on the display at the bottom/top
 }
 
 void
 WM_ToggleFullScreen(Surface *) {
+  // I don't think this doesn't anything
 }
 
 void
 WM_GrabInput(uint32_t) {
+  // Do nothing
 }
 
 // Not sure about the second arg type just yet...
 void
 WM_SetIcon(Surface *, char *) {
+  // Do nothing
 }
 
 void
 ShowCursor(uint32_t) {
+  // Mouse? I think so, so do nothing
 }
 
 void
 Quit() {
+  // Go back to the normal Keyboard mode...
 }
 
 uint32_t
@@ -89,11 +97,7 @@ Flip(Surface *) {
 
 Surface *
 SetVideoMode(uint32_t w, uint32_t h, uint8_t bpp, SurfaceType st) {
-    return nullptr;
-}
-
-void
-putenv(const char *) {
+  return nullptr;
 }
 
 char *
@@ -216,7 +220,8 @@ IMG_ReadXPMFromArray(const char **) {
 }
 
 void
-MyPrintf(const char *, ...) {
+MyPrintf(const char *fmt, ...) {
+  // Serial.printf(fmt,)
 }
 
 void

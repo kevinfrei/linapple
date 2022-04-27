@@ -725,9 +725,6 @@ void SetUsingCursor(bool newvalue) {
 int FrameCreateWindow()
 {
   // Init SDL and create window screen
-  static char sdlCmd[] = "SDL_VIDEO_CENTERED=center";
-  SDL::putenv(sdlCmd); // Center our window
-
   bIamFullScreened = false; // At startup not in fullscreen mode
   screen = SDL::SetVideoMode(g_ScreenWidth, g_ScreenHeight, SCREEN_BPP, SDL::SWSURFACE | SDL::HWPALETTE);
   if (screen == NULL) {

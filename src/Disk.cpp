@@ -474,27 +474,6 @@ int DiskInsert(int drive, LPCTSTR imageFileName, bool writeProtected, bool creat
   }
   ZeroMemory(fptr, sizeof(Disk_t));
 
-#if 0
-  // Let us deal with .gz files
-  int lf = strlen(imageFileName);
-  char tempDisk[12];
-  if (lf > 3 && imageFileName[lf - 1] == 'z' && imageFileName[lf - 2] == 'g' && imageFileName[lf - 3] == '.') {
-    snprintf(tempDisk, 12, "drive%d.dsk", drive);
-    if (DiskUnGzip((char *) imageFileName, tempDisk)) {
-      writeProtected = 1;
-      createIfNecessary = 0;
-      tmp = tempDisk;
-    }
-  } else if (lf > 4 && imageFileName[lf - 1] == 'p' && imageFileName[lf - 2] == 'i' && imageFileName[lf - 3] == 'z' &&
-             imageFileName[lf - 4] == '.') {
-    snprintf(tempDisk, 12, "drive%d.dsk", drive);
-    if (DiskUnZip((char *) imageFileName, tempDisk)) {
-      writeProtected = 1;
-      createIfNecessary = 0;
-      tmp = tempDisk;
-    }
-  }
-#endif
   fptr->writeProtected = writeProtected;
   int error = ImageOpen(tmp, &fptr->imagehandle, &fptr->writeProtected, createIfNecessary);
   if (error == IMAGE_ERROR_NONE) {

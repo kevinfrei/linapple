@@ -113,8 +113,6 @@ Flip(Surface *);
 Surface *
 SetVideoMode(uint32_t w, uint32_t h, uint8_t bpp, SurfaceType st);
 
-void
-putenv(const char *);
 char *
 getenv(const char *);
 const char *
