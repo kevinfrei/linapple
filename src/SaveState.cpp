@@ -114,7 +114,7 @@ void Snapshot_LoadState() {
     fail = false;
   } while (false);
   if (fail) {
-    fprintf(stderr, "%s\n", szMessage); // instead of wndzoooe messagebox let's use powerful stderr
+    ErrDumpln(szMessage); // instead of wndzoooe messagebox let's use powerful stderr
   }
 
   delete[] pSS;

@@ -44,17 +44,12 @@ constexpr size_t PATH_MAX=240;
 SDL::Surface *Asset_LoadBMP(const char *filename)
 {
   SDL::Surface *surf;
-  char *path = (char *) SDL::malloc(sizeof(char[PATH_MAX]));
-  if (NULL == path) {
-    ErrDumpln("Asset_LoadBMP: Allocating path: ", SDL::GetError());
-    return NULL;
-  }
 
-  snprintf(path, PATH_MAX, "%s%s", system_assets, filename);
-  surf = SDL::LoadBMP(path);
+  std::string path = SPrintf(system_assets, filename);
+  surf = SDL::LoadBMP(path.c_str());
   if (NULL == surf) {
-    snprintf(path, PATH_MAX, "%s%s", system_exedir, filename);
-    surf = SDL::LoadBMP(path);
+    path = SPrintf(system_exedir, filename);
+    surf = SDL::LoadBMP(path.c_str());
   }
 
   if (NULL != surf) {
@@ -63,7 +58,6 @@ SDL::Surface *Asset_LoadBMP(const char *filename)
     ErrDump("Asset_LoadBMP: Couldn't load ", filename, " in either ",system_assets," or ",system_exedir,"!");
   }
 
-  SDL::free(path);
   return surf;
 }
 
@@ -152,12 +146,12 @@ int Asset_FindMasterDisk(char *path_out)
   strcpy(paths[4], "/usr/share/applino");
 
   for (auto p: paths) {
-    sprintf(path, "%s/%s", p, ASSET_MASTER_DSK);
+    std::string path = SPrintf(p, "/", ASSET_MASTER_DSK);
     ErrDumpln("[debug] Searching: ", p, " for ", ASSET_MASTER_DSK);
-    FILE *fp = fopen(path, "r");
+    FILE *fp = fopen(path.c_str(), "r");
     if (fp) {
       fclose(fp);
-      strcpy(path_out, path);
+      strcpy(path_out, path.c_str());
       err = 0;
       break;
     }

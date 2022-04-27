@@ -202,7 +202,7 @@ int KeybDecodeKeyUK(int key)
 // decode keys for German keyboard to Apple characters
 int KeybDecodeKeyDE(int key)
 {
-  //printf("German key: %i\n", key);
+  //p_rintf("German key: %i\n", key);
 
   if (!g_KeyboardRockerSwitch)
   {
@@ -321,7 +321,7 @@ int KeybDecodeKeyDE(int key)
 // decode keys for French keyboard to Apple characters
 int KeybDecodeKeyFR(int key)
 {
-  //printf("French key: %i\n", key);
+  //p_rintf("French key: %i\n", key);
   if (!g_KeyboardRockerSwitch)
   {
     /* Rocker switch in US-character-set mode: do a 'reverse' keyboard mapping, assuming the host PC's

@@ -258,9 +258,8 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 void FrameQuickState(int num, int mod)
 {
   // quick load or save state with number num, if Shift is pressed, state is being saved, otherwise - being loaded
-  char fpath[MAX_PATH];
-  snprintf(fpath, MAX_PATH, "%.*s/SaveState%d.aws", int(strlen(g_sSaveStateDir)), g_sSaveStateDir, num); // prepare file name
-  Snapshot_SetFilename(fpath);  // set it as a working name
+  std::string fpath = SPrintf(g_sSaveStateDir, "/SaveState", num, ".aws", num); // prepare file name
+  Snapshot_SetFilename(fpath.c_str());  // set it as a working name
   if (mod & KMOD_SHIFT) {
     Snapshot_SaveState();
   } else {
@@ -483,10 +482,10 @@ void FrameSaveBMP(void) {
 
 #pragma GCC diagnostic push
 #pragma GCC diagnostic ignored "-Wformat-truncation"
-  snprintf(bmpName, 20, "applino%7d.bmp", i);
+  snp_rintf(bmpName, 20, "applino%7d.bmp", i);
   while (!stat(bmpName, &bufp)) { // Find first absent file
     i++;
-    snprintf(bmpName, 20, "applino%7d.bmp", i);
+    snp_rintf(bmpName, 20, "applino%7d.bmp", i);
   }
 #pragma GCC diagnostic pop
 

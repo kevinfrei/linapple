@@ -183,7 +183,7 @@ void RegSaveKeyValue(char *NKey, char *NValue) {
   if(!tempf) {
     return;
   }
-  snprintf(MyStr, BUFSIZE, "\t%s =\t%s\n", NKey, NValue);  // prepare string
+  snp_rintf(MyStr, BUFSIZE, "\t%s =\t%s\n", NKey, NValue);  // prepare string
   fseek(registry, 0, SEEK_SET);  //
   bool found = false;
 
@@ -222,8 +222,7 @@ void RegSaveString(LPCTSTR section, LPCTSTR key, bool peruser, LPCTSTR buffer) {
 
 void RegSaveValue(LPCTSTR section, LPCTSTR key, bool peruser, unsigned int value)
 {
-  char buffer[33] = TEXT("");
-  snprintf(buffer, 32, "%d", value);
+  std::string buffer = SPrintf(value);
 
-  RegSaveString(section, key, peruser, buffer);
+  RegSaveString(section, key, peruser, buffer.c_str());
 }

@@ -205,14 +205,6 @@ strlen(const char *str) {
     return ::strlen(str);
 }
 
-int
-snprintf(char *buf, size_t sz, const char *str, ...) {
-  std::ostringstream os;
-  os << sz << str;
-  strcpy(buf, os.str().c_str());
-  return 0;
-}
-
 void
 GetClipRect(Surface *, Rect *) {
 }

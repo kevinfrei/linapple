@@ -204,7 +204,7 @@ static void GetImageTitle(LPCTSTR imageFileName, PHDD pHardDrive)
 
 static void NotifyInvalidImage(char *filename)
 {
-  printf("HDD: Could not load %s\n", filename);
+  ErrDumpln("HDD: Could not load ", filename);
 }
 
 static void HD_CleanupDrive(int nDrive)
@@ -385,7 +385,7 @@ void HD_Select(int nDrive)
     } else {
       RegSaveString(TEXT("Preferences"), REGVALUE_HDD_IMAGE1, 1, fullPath.c_str());
     }
-    printf("HDD disk image %s inserted\n", fullPath.c_str());
+    ErrDumpln("HDD disk image ", fullPath, " inserted");
   }
   backdx = fileIndex; // Store cursor position
   DrawFrameWindow();

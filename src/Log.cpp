@@ -40,7 +40,7 @@ void LogInitialize() {
   ptm = localtime(&tv.tv_sec);
   strftime(time_str, sizeof(time_str), "%Y-%m-%d %H:%M:%S", ptm);
   // end of Unix(tm) specific code
-  fprintf(g_fh, "*** Logging started: %s\n", time_str);
+  fp_rintf(g_fh, "*** Logging started: %s\n", time_str);
   */
 }
 
@@ -55,15 +55,15 @@ void LogOutput(LPCTSTR format, ...) {
 
   char output[512];
 
-  vsnprintf(output, sizeof(output) - 1, format, args);
-  fprintf(g_fh, "%s", output);
+  vsnp_rintf(output, sizeof(output) - 1, format, args);
+  fp_rintf(g_fh, "%s", output);
   */
 }
 
 void LogDestroy() {
   /*
   if (g_fh) {
-    fprintf(g_fh, "*** Logging ended\n\n");
+    fp_rintf(g_fh, "*** Logging ended\n\n");
     fclose(g_fh);
   }
   */

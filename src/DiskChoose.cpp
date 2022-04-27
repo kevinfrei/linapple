@@ -62,7 +62,7 @@ int getstat(const char *catalog, const char *fname, uintmax_t *size)
   struct stat info;
   char tempname[MAX_PATH];
 
-  snprintf(tempname, MAX_PATH, "%s/%s", catalog, fname);  // get full path for the file
+  snp_rintf(tempname, MAX_PATH, "%s/%s", catalog, fname);  // get full path for the file
   if (stat(tempname, &info) == -1) {
     return 0;
   }
@@ -103,7 +103,7 @@ bool get_sorted_directory(const char *incoming_dir, vector<file_entry_t> &file_l
   dp = opendir(incoming_dir);
   if (dp == NULL)
   {
-      fprintf(stderr, "cannot open `%s'\n", incoming_dir);
+      fp_rintf(stderr, "cannot open `%s'\n", incoming_dir);
       return false;
   }
 
@@ -199,7 +199,7 @@ bool ChooseAnImage(int sx, int sy, const std::string& incoming_dir, int slot,
     isdir    - if chosen name is a directory
   */
 
-  //printf("Diskchoose! We are here: %s\n", incoming_dir);
+  //p_rintf("Diskchoose! We are here: %s\n", incoming_dir);
   return false;
 }
 
@@ -255,7 +255,7 @@ bool ChooseImageDialog(int sx, int sy, const string& dir, int slot, file_list_ge
 
   auto file_list = file_list_generator->generate_file_list();
   if (file_list.size() < 1) {
-    printf("%s\n", file_list_generator->get_failure_message().c_str());
+    p_rintf("%s\n", file_list_generator->get_failure_message().c_str());
 
     font_print_centered(sx / 2, 30 * facy, "Failure. Press any key!", screen, 1.4 * facx, 1.1 * facy);
     SDL_Flip(screen);  // show the screen

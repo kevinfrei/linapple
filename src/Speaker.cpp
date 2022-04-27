@@ -80,7 +80,7 @@ static void DisplayBenchmarkResults () {
   unsigned int totaltime = GetTickCount() - extbench;
   VideoRedrawScreen();
   char buffer[64];
-  sprintf(buffer,
+  sp_rintf(buffer,
            TEXT("This benchmark took %u.%02u seconds."),
            (unsigned)(totaltime / 1000),
            (unsigned)((totaltime / 10) % 100));

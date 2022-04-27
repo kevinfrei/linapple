@@ -6,6 +6,7 @@
 
 #include "Arduino.h"
 
+#include <sstream>
 #include <string>
 #include <cstdint>
 
@@ -170,8 +171,6 @@ size_t
 strlen(const char *);
 char *
 GetBasePath(void);
-int
-snprintf(char *buf, size_t sz, const char *str, ...);
 void
 GetClipRect(Surface *, Rect *);
 }  // namespace SDL
@@ -222,26 +221,61 @@ MyFOpen(const char *fn, const char *perms);
 //
 constexpr uint32_t KMOD_SHIFT = 0x80;
 
-template <typename T>
-void ErrDump(T v) {
-  Serial.print(v);
+inline void ErrDumpln(const std::string &s) {
+  Serial.println(s.c_str());
 }
 
-template <typename T, typename... R>
-void ErrDump(T v, R... args) {
-  Serial.print(v);
-  ErrDump(args...);
+inline void ErrDump(const std::string &s) {
+  Serial.print(s.c_str());
 }
 
 template <typename T>
-void ErrDumpln(T v) {
-  Serial.println(v);
+void
+ErrDump(T v) {
+    Serial.print(v);
 }
 
 template <typename T, typename... R>
-void ErrDumpln(T v, R... args) {
-  Serial.print(v);
-  ErrDumpln(args...);
+void
+ErrDump(T v, R... args) {
+    ErrDump(v);
+    ErrDump(args...);
 }
 
-#endif // include-guard
+template <typename T>
+void
+ErrDumpln(T v) {
+    Serial.println(v);
+}
+
+template <typename T, typename... R>
+void
+ErrDumpln(T v, R... args) {
+    ErrDump(v);
+    ErrDumpln(args...);
+}
+
+template <typename T>
+std::string
+_SPrintf_helper(const std::string &thusFar, T v) {
+    std::ostringstream os(thusFar);
+    os << v;
+    return os.str();
+}
+
+template <typename T, typename... R>
+std::string
+_SPrintf_helper(const std::string &thusFar, T v, R... rest) {
+    std::ostringstream os{thusFar};
+    os << v;
+    return _SPrintf_helper(os.str(), rest...);
+}
+
+template <typename T, typename... R>
+std::string
+SPrintf(T v, R... rest) {
+    std::string tmp;
+    return _SPrintf_helper(tmp, v, rest...);
+}
+
+#endif  // include-guard

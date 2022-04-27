@@ -466,7 +466,7 @@ bool DiskUnZip(char *gzname, char *fname)
 int DiskInsert(int drive, LPCTSTR imageFileName, bool writeProtected, bool createIfNecessary)
 {
   Disk_t *fptr = &g_aFloppyDisk[drive];
-  char s_title[MAX_DISK_IMAGE_NAME + 32];
+  // char s_title[MAX_DISK_IMAGE_NAME + 32];
   char *tmp = (char *) imageFileName;
 
   if (fptr->imagehandle) {
@@ -478,9 +478,9 @@ int DiskInsert(int drive, LPCTSTR imageFileName, bool writeProtected, bool creat
   int error = ImageOpen(tmp, &fptr->imagehandle, &fptr->writeProtected, createIfNecessary);
   if (error == IMAGE_ERROR_NONE) {
     tmp = GetImageTitle(imageFileName, fptr);
-    snprintf(s_title, MAX_DISK_IMAGE_NAME + 32, "%.*s - %.*s", int(strlen(g_pAppTitle)), g_pAppTitle, int(strlen(tmp)), tmp);
+    std::string s_title = SPrintf(g_pAppTitle, " - ", tmp);
     if (drive == 0) {
-      SDL::WM_SetCaption(s_title, g_pAppTitle);// change caption just for drive 0 (leading)
+      SDL::WM_SetCaption(s_title.c_str(), g_pAppTitle);// change caption just for drive 0 (leading)
     }
     ErrDumpln("Disk is inserted. Full name = ", imageFileName);
   } else {
@@ -694,7 +694,7 @@ void DiskUpdatePosition(unsigned int cycles)
 
 bool DiskDriveSwap()
 {
-  char s_title[MAX_DISK_IMAGE_NAME + 32];  // for title changing
+  // char s_title[MAX_DISK_IMAGE_NAME + 32];  // for title changing
   // Refuse to swap if either Disk][ is active
   if (g_aFloppyDisk[0].spinning || g_aFloppyDisk[1].spinning)
     return false;
@@ -708,8 +708,8 @@ bool DiskDriveSwap()
   memcpy(&g_aFloppyDisk[0], &g_aFloppyDisk[1], sizeof(Disk_t));
   memcpy(&g_aFloppyDisk[1], &temp, sizeof(Disk_t));
   // change title
-  snprintf(s_title, MAX_DISK_IMAGE_NAME + 32, "%.*s - %.*s", int(strlen(g_pAppTitle)), g_pAppTitle, int(strlen(g_aFloppyDisk[0].imagename)), g_aFloppyDisk[0].imagename);
-  SDL::WM_SetCaption(s_title, g_pAppTitle);// change caption just for drive 0 (leading)
+  std::string s_title = SPrintf(g_pAppTitle, " - ", g_aFloppyDisk[0].imagename);
+  SDL::WM_SetCaption(s_title.c_str(), g_pAppTitle);// change caption just for drive 0 (leading)
 
   FrameRefreshStatus(DRAW_LEDS | DRAW_BUTTON_DRIVES);
 

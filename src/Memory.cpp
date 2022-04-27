@@ -599,19 +599,19 @@ void SetMemMode(unsigned int uNewMemMode)
     dwOldDiff = dwDiff;
     char szStr[100];
     char* psz = szStr;
-    psz += sprintf(psz, "diff = %08X ", dwDiff);
-    psz += sprintf(psz, "80=%d "   , SW_80STORE   ? 1 : 0);
-    psz += sprintf(psz, "ALTZP=%d ", SW_ALTZP     ? 1 : 0);
-    psz += sprintf(psz, "AUXR=%d " , SW_AUXREAD   ? 1 : 0);
-    psz += sprintf(psz, "AUXW=%d " , SW_AUXWRITE  ? 1 : 0);
-    psz += sprintf(psz, "BANK2=%d ", SW_BANK2     ? 1 : 0);
-    psz += sprintf(psz, "HIRAM=%d ", SW_HIGHRAM   ? 1 : 0);
-    psz += sprintf(psz, "HIRES=%d ", SW_HIRES     ? 1 : 0);
-    psz += sprintf(psz, "PAGE2=%d ", SW_PAGE2     ? 1 : 0);
-    psz += sprintf(psz, "C3=%d "   , SW_SLOTC3ROM ? 1 : 0);
-    psz += sprintf(psz, "CX=%d "   , SW_INTCXROM  ? 1 : 0);
-    psz += sprintf(psz, "WRAM=%d " , SW_WRITERAM  ? 1 : 0);
-    psz += sprintf(psz, "\n");
+    psz += sp_rintf(psz, "diff = %08X ", dwDiff);
+    psz += sp_rintf(psz, "80=%d "   , SW_80STORE   ? 1 : 0);
+    psz += sp_rintf(psz, "ALTZP=%d ", SW_ALTZP     ? 1 : 0);
+    psz += sp_rintf(psz, "AUXR=%d " , SW_AUXREAD   ? 1 : 0);
+    psz += sp_rintf(psz, "AUXW=%d " , SW_AUXWRITE  ? 1 : 0);
+    psz += sp_rintf(psz, "BANK2=%d ", SW_BANK2     ? 1 : 0);
+    psz += sp_rintf(psz, "HIRAM=%d ", SW_HIGHRAM   ? 1 : 0);
+    psz += sp_rintf(psz, "HIRES=%d ", SW_HIRES     ? 1 : 0);
+    psz += sp_rintf(psz, "PAGE2=%d ", SW_PAGE2     ? 1 : 0);
+    psz += sp_rintf(psz, "C3=%d "   , SW_SLOTC3ROM ? 1 : 0);
+    psz += sp_rintf(psz, "CX=%d "   , SW_INTCXROM  ? 1 : 0);
+    psz += sp_rintf(psz, "WRAM=%d " , SW_WRITERAM  ? 1 : 0);
+    psz += sp_rintf(psz, "\n");
     OutputDebugString(szStr);
   }
 #endif
