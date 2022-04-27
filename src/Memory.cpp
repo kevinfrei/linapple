@@ -980,7 +980,7 @@ int MemInitialize() // returns -1 if any error during initialization
   pCxRomPeripheral = (LPBYTE) VirtualAlloc(NULL, CxRomSize, MEM_COMMIT, PAGE_READWRITE);
 
   if (!memaux || !memdirty || !memimage || !memmain || !memrom || !pCxRomInternal || !pCxRomPeripheral) {
-    fprintf(stderr, "Unable to allocate required memory. Sorry.\n");
+    ErrDumpln("Unable to allocate required memory. Sorry.");
     return -1;
   }
 
@@ -1025,7 +1025,7 @@ int MemInitialize() // returns -1 if any error during initialization
   }
 
   if (RomFileName == NULL) {
-    fprintf(stderr, "Unable to find rom for specified computer type! Sorry\n");
+    ErrDumpln("Unable to find rom for specified computer type! Sorry");
     return -1;
   }
 

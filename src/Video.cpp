@@ -365,7 +365,7 @@ void CreateDIBSections() {
   g_origscreen = SDL::CreateRGBSurface(SDL::SWSURFACE, g_ScreenWidth, g_ScreenHeight, 8, 0, 0, 0, 0);
 
   if (g_hDeviceBitmap == NULL) {
-    fprintf(stderr, "g_hDeviceBitmap was not created!\n");
+    ErrDumpln("g_hDeviceBitmap was not created!");
   }
   framebufferbits = (LPBYTE) g_hDeviceBitmap->pixels;
   SDL::SetColors(g_hDeviceBitmap, g_pSourceHeader, 0, 256);
@@ -401,7 +401,7 @@ void CreateDIBSections() {
   }
   g_hSourceBitmap = SDL::CreateRGBSurface(SDL::SWSURFACE, SRCOFFS_TOTAL, MAX_SOURCE_Y, 8, 0, 0, 0, 0);
   if (g_hSourceBitmap == NULL) {
-    fprintf(stderr, "g_hSourceBitmap was not created!\n");
+    ErrDumpln("g_hSourceBitmap was not created!");
   }
 
   g_pSourcePixels = (LPBYTE) g_hSourceBitmap->pixels;
@@ -1299,12 +1299,12 @@ SDL::Surface* LoadCharset() {
     if (((result->h != 128)&&(result->h != 256))||
         (result->w != 128))
     {
-      printf("ERROR: loaded character set has an unexpected size: %ix%i\n", result->w, result->h);
+      ErrDumpln("ERROR: loaded character set has an unexpected size: ", result->w, "x", result->h);
     }
 
     // enable second language support when charset has the double height (256 instead of 128 pixels)
     g_MultiLanguageCharset = (result->h == 256);
-    printf("Charset supports a second language: %s\n", (g_MultiLanguageCharset)?"YES":"NO");
+    ErrDumpln("Charset supports a second language: ", (g_MultiLanguageCharset)?"YES":"NO");
     return result;
   }
 
@@ -1427,7 +1427,7 @@ void VideoBenchmark() {
   // If the program counter is not in the expected range at the end of the
   // CPU benchmark, report an error and optionally track it down
   if ((regs.pc < 0x300) || (regs.pc > 0x400)) {
-    printf("The emulator has detected a problem while running the CPU benchmark.\n");
+    ErrDumpln("The emulator has detected a problem while running the CPU benchmark.");
 
     bool error = 0;
     unsigned short lastpc = 0x300;
@@ -1443,13 +1443,13 @@ void VideoBenchmark() {
       }
     }
     if (error) {
-      printf("The emulator experienced an error %u clock cycles into the CPU benchmark.\n", (unsigned) loop);
-      printf("Prior to the error, the program counter was at $%04X.\n", (unsigned) lastpc);
-      printf(" After the error, it had jumped to $%04X.\n", (unsigned) regs.pc);
+      ErrDumpln("The emulator experienced an error ", (unsigned) loop, " clock cycles into the CPU benchmark.");
+      ErrDumpln("Prior to the error, the program counter was at $<TODO: Convert to hex>", (unsigned) lastpc);
+      ErrDumpln(" After the error, it had jumped to $<TODO: Convert to hex>", (unsigned) regs.pc);
     } else {
-      printf("The emulator was unable to locate the exact point of the error.\n");
-      printf("This probably means that the problem is external to the emulator, happening asynchronously,\n");
-      printf("such as a problem in a timer interrupt handler.\n");
+      ErrDumpln("The emulator was unable to locate the exact point of the error.");
+      ErrDumpln("This probably means that the problem is external to the emulator, happening asynchronously,");
+      ErrDumpln("such as a problem in a timer interrupt handler.");
     }
   }
 
@@ -1483,10 +1483,9 @@ void VideoBenchmark() {
     }
     realisticfps++;
   } while (GetTickCount() - milliseconds < 1000);
-  printf("Pure Video FPS:\t%u hires, %u text\n", (unsigned) totalhiresfps, (unsigned) totaltextfps);
-  printf("Pure CPU MHz:\t%u.%u%s\n\n", (unsigned) (totalmhz10 / 10), (unsigned) (totalmhz10 % 10),
-         (LPCTSTR)(IS_APPLE2 ? TEXT(" (6502)") : TEXT("")));
-  printf("EXPECTED AVERAGE VIDEO GAME PERFORMANCE:\t%u FPS\n\n", (unsigned) realisticfps);
+  ErrDumpln("Pure Video FPS:\t", (unsigned) totalhiresfps, " hires, ",(unsigned) totaltextfps," text");
+  ErrDumpln("Pure CPU MHz:\t", (unsigned) (totalmhz10 / 10), ".", (unsigned) (totalmhz10 % 10), IS_APPLE2 ? " (6502)" : "");
+  ErrDumpln("EXPECTED AVERAGE VIDEO GAME PERFORMANCE:\t",(unsigned) realisticfps ," FPS");
   SDL::Delay(1500);
 }
 
@@ -1728,7 +1727,7 @@ bool VideoInitWorker()
   if (true) {
 
     // If failed to start, revert to singlethreaded
-    fprintf(stderr, "FAILED to start video worker; reverting to single-threaded video updating...\n");
+    ErrDumpln("FAILED to start video worker; reverting to single-threaded video updating...");
     // g_singlethreaded = false;
     video_worker_active_ = false;
   }

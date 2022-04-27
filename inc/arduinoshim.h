@@ -227,4 +227,27 @@ MyFOpen(const char *fn, const char *perms);
 #define SDLCALL
 //
 constexpr uint32_t KMOD_SHIFT = 0x80;
-#endif
+
+template <typename T>
+void ErrDump(T v) {
+  Serial.print(v);
+}
+
+template <typename T, typename... R>
+void ErrDump(T v, R... args) {
+  Serial.print(v);
+  ErrDump(args...);
+}
+
+template <typename T>
+void ErrDumpln(T v) {
+  Serial.println(v);
+}
+
+template <typename T, typename... R>
+void ErrDumpln(T v, R... args) {
+  Serial.print(v);
+  ErrDumpln(args...);
+}
+
+#endif // include-guard

@@ -84,7 +84,7 @@ static void DisplayBenchmarkResults () {
            TEXT("This benchmark took %u.%02u seconds."),
            (unsigned)(totaltime / 1000),
            (unsigned)((totaltime / 10) % 100));
-  printf("This benchmark took %u.%02u seconds.",
+  p_rintf("This benchmark took %u.%02u seconds.",
      (unsigned)(totaltime / 1000), (unsigned)((totaltime / 10) % 100));
 
 }
@@ -124,7 +124,7 @@ bool SpkrSetEmulationType (unsigned int newtype) {
   if (soundtype != newtype)
     switch (newtype) {  // some fault occured
       case SOUND_WAVE:
-        fprintf(stderr, "Unable to initialize a waveform output device.\n");
+        fp_rintf(stderr, "Unable to initialize a waveform output device.\n");
         return 0;
     }
   return 1;

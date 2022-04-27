@@ -2,6 +2,7 @@
 // & running on arduino
 
 #include "arduinoshim.h"
+#include <sstream>
 #include <string>
 #include <cstdint>
 
@@ -206,7 +207,10 @@ strlen(const char *str) {
 
 int
 snprintf(char *buf, size_t sz, const char *str, ...) {
-    return 0;
+  std::ostringstream os;
+  os << sz << str;
+  strcpy(buf, os.str().c_str());
+  return 0;
 }
 
 void

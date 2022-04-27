@@ -113,13 +113,13 @@ static unsigned int g_dwLastUsecPeriod = 0;
 bool SysClk_InitTimer() {
   g_hSemaphore = CreateSemaphore(NULL, 0, 1, NULL);    // Max count = 1
   if (g_hSemaphore == NULL) {
-    fprintf(stderr, "Error creating semaphore\n");
+    fp_rintf(stderr, "Error creating semaphore\n");
     return false;
   }
 
   if (CoCreateInstance(CLSID_SystemClock, NULL, CLSCTX_INPROC,
                        IID_IReferenceClock, (LPVOID*)&g_pRefClock) != S_OK) {
-    fprintf(stderr, "Error initialising COM\n");
+    fp_rintf(stderr, "Error initialising COM\n");
     return false;  // Fails for Win95!
   }
 
@@ -130,7 +130,7 @@ void SysClk_UninitTimer() {
   SysClk_StopTimer();
   SAFE_RELEASE(g_pRefClock);
   if (CloseHandle(g_hSemaphore) == 0) {
-    fprintf(stderr, "Error closing semaphore handle\n");
+    fp_rintf(stderr, "Error closing semaphore handle\n");
   }
 }
 
@@ -153,13 +153,13 @@ void SysClk_StartTimerUsec(unsigned int dwUsecPeriod) {
   HRESULT hr = g_pRefClock->GetTime(&rtNow);
 
   if ((hr != S_OK) && (hr != S_FALSE)) {
-    fprintf(stderr, "Error creating timer (GetTime failed)\n");
+    fp_rintf(stderr, "Error creating timer (GetTime failed)\n");
     _ASSERT(0);
     return;
   }
 
   if (g_pRefClock->AdvisePeriodic(rtNow, rtPeriod, g_hSemaphore, &g_dwAdviseToken) != S_OK) {
-    fprintf(stderr, "Error creating timer (AdvisePeriodic failed)\n");
+    fp_rintf(stderr, "Error creating timer (AdvisePeriodic failed)\n");
     _ASSERT(0);
     return;
   }
@@ -174,7 +174,7 @@ void SysClk_StopTimer() {
   }
 
   if (g_pRefClock->Unadvise(g_dwAdviseToken) != S_OK) {
-    fprintf(stderr, "Error deleting timer\n");
+    fp_rintf(stderr, "Error deleting timer\n");
     _ASSERT(0);
     return;
   }

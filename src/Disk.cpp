@@ -482,9 +482,9 @@ int DiskInsert(int drive, LPCTSTR imageFileName, bool writeProtected, bool creat
     if (drive == 0) {
       SDL::WM_SetCaption(s_title, g_pAppTitle);// change caption just for drive 0 (leading)
     }
-    printf("Disk is inserted. Full name = %s\n", imageFileName);
+    ErrDumpln("Disk is inserted. Full name = ", imageFileName);
   } else {
-    printf("Error %d when inserting disk %s\n", error, imageFileName);
+    ErrDumpln("Error ", error, " when inserting disk ", imageFileName);
   }
   return error;
 }
@@ -496,23 +496,18 @@ bool DiskIsSpinning()
 
 void DiskNotifyInvalidImage(LPCTSTR imageFileName, int error)
 {
-  char buffer[MAX_PATH + 128];
-
+  ErrDump("Inserting disk failure: ");
   switch (error) {
-
     case 1:
-      sprintf(buffer, TEXT("Unable to open the file %s."), (LPCTSTR) imageFileName);
+      ErrDumpln("Unable to open the file", imageFileName);
       break;
     case 2:
-      sprintf(buffer, TEXT("Unable to use the file %s\nbecause the ")
-      TEXT("disk image format is not recognized."), (LPCTSTR) imageFileName);
+      ErrDumpln("Unable to use the file ", imageFileName, "\nbecause the disk image format is not recognized.");
       break;
     default:
       // IGNORE OTHER ERRORS SILENTLY
-      return;
+      ErrDumpln("<unknown: ", error, ">");
   }
-
-  fprintf(stderr, "Inserting disk failure: %s\n", buffer);
 }
 
 

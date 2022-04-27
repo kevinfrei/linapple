@@ -739,7 +739,7 @@ void LoadAllConfigurations(const char *userSpecifiedFilename)
     if (!registry) {
       registry = fopen(userSpecifiedFilename, "w+");
       if (!registry) {
-        fprintf(stderr, "WARNING! Failed to open config file: %s\n", userSpecifiedFilename);
+        ErrDumpln("WARNING! Failed to open config file: ", userSpecifiedFilename);
         exit(EXIT_SUCCESS);
       }
     }
@@ -820,11 +820,10 @@ void LoadAllConfigurations(const char *userSpecifiedFilename)
   }
 
   if (xdgConfigHome.length() == 0) {
-    std::cerr << "WARNING!"
-        << " Neither XDG_CONFIG_HOME nor HOME is set and no user config"
-        << " files were found."
-        << " This can lead to unexpected behavior, even program crashes."
-        << std::endl;
+    ErrDumpln("WARNING!"
+         " Neither XDG_CONFIG_HOME nor HOME is set and no user config"
+         " files were found."
+         " This can lead to unexpected behavior, even program crashes.");
     return;
   }
 
@@ -962,7 +961,7 @@ int moduleMain(int argc, char *argv[])
 
   #if DBG_CALC_FREQ
   g_nPerfFreq = 1000;//milliseconds?
-  if(g_fh) fprintf(g_fh, "Performance frequency = %d\n",g_nPerfFreq);
+  if(g_fh) fp_rintf(g_fh, "Performance frequency = %d\n",g_nPerfFreq);
   #endif
 
   // Initialize COM

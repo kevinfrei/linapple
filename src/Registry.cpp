@@ -212,7 +212,7 @@ void RegSaveKeyValue(char *NKey, char *NValue) {
   fclose(tempf);
   // do not close registry, it should be open while emu working...
   #else
-  printf("Attempt to set '%s' to '%s' ignored (registry is read-only)\n", NKey, NValue);
+  ErrDumpln("Attempt to set '", NKey, "' to '", NValue, "' ignored (registry is read-only)");
   #endif /* REGISTRY_WRITEABLE */
 }
 

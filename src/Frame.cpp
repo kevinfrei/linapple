@@ -107,7 +107,7 @@ void DrawStatusArea(int drawflags)
 {
   if (font_sfc == NULL) {
     if (!fonts_initialization()) {
-      fprintf(stderr, "Font file was not loaded.\n");
+      ErrDumpln("Font file was not loaded.");
       return; // if we don't have a font, we just can do none
     }
   }
@@ -183,7 +183,7 @@ void FrameShowHelpScreen(int sx, int sy) // sx, sy - sizes of current window (sc
 
   if (font_sfc == NULL) {
     if (!fonts_initialization()) {
-      fprintf(stderr, "Font file was not loaded.\n");
+      ErrDumpln("Font file was not loaded.");
       return; // If we don't have a font, we just can do none
     }
   }
@@ -275,7 +275,7 @@ void FrameDispatchMessage(SDL::Event *e) {// process given SDL event
 
   switch (e->type) {//type of SDL event
     case SDL::VIDEORESIZE:
-      printf("OLD DIMENSIONS: %d  %d\n", g_ScreenWidth, g_ScreenHeight);
+      ErrDumpln("OLD DIMENSIONS: ", g_ScreenWidth, "x", g_ScreenHeight);
       g_ScreenWidth = e->resize.w;
       g_ScreenHeight = (e->resize.h / 96) * 96;
       if (g_ScreenHeight < 192) {
@@ -289,7 +289,7 @@ void FrameDispatchMessage(SDL::Event *e) {// process given SDL event
       } else {
         // Define if we have resized window
         g_WindowResized = (g_ScreenWidth != SCREEN_WIDTH) | (g_ScreenHeight != SCREEN_HEIGHT);
-        printf("Screen size is %dx%d\n", g_ScreenWidth, g_ScreenHeight);
+        ErrDumpln("Screen size is ", g_ScreenWidth,"x", g_ScreenHeight);
         if (g_WindowResized) {
           // create rects for screen stretching
           origRect.x = origRect.y = newRect.x = newRect.y = 0;
@@ -322,17 +322,17 @@ void FrameDispatchMessage(SDL::Event *e) {// process given SDL event
         if (g_dwSpeed > SPEED_MAX) {
           g_dwSpeed = SPEED_MAX;
         } // no Maximum trespassing!
-        printf("Now speed=%d\n", (int) g_dwSpeed);
+        ErrDumpln("Now speed=", (int) g_dwSpeed);
         SetCurrentCLK6502();
       } else if (mysym == SDLK_KP_MINUS) { // Gray + - speed up the emulator!
         if (g_dwSpeed > SPEED_MIN) {
           g_dwSpeed = g_dwSpeed - 1;
         }// dw is unsigned value!
-        printf("Now speed=%d\n", (int) g_dwSpeed);
+        ErrDumpln("Now speed=", (int) g_dwSpeed);
         SetCurrentCLK6502();
       } else if (mysym == SDLK_KP_MULTIPLY) { // Gray * - normal speed!
         g_dwSpeed = 10;// dw is unsigned value!
-        printf("Now speed=%d\n", (int) g_dwSpeed);
+        ErrDumpln("Now speed=", (int) g_dwSpeed);
         SetCurrentCLK6502();
       } else if (mysym == SDLK_CAPSLOCK) {
         KeybToggleCapsLock();
@@ -491,7 +491,7 @@ void FrameSaveBMP(void) {
 #pragma GCC diagnostic pop
 
   SDL::SaveBMP(screen, bmpName);  // Save file using SDL inner function
-  printf("File %s saved!\n", bmpName);
+  p_rintf("File %s saved!\n", bmpName);
   i++;
 #endif
 }
@@ -561,7 +561,7 @@ void ProcessButtonClick(int button, int mod)
              ((g_Apple2Type == A2TYPE_APPLE2E)||(g_Apple2Type == A2TYPE_APPLE2EEHANCED)))
          {
            g_KeyboardRockerSwitch = !g_KeyboardRockerSwitch;
-           printf("Toggling keyboard rocker switch. Selected character set: %s...\n", (g_KeyboardRockerSwitch) ? "local" : "standard/US");
+           ErrDumpln("Toggling keyboard rocker switch. Selected character set: ", (g_KeyboardRockerSwitch) ? "local" : "standard/US");
          }
       }
       else
@@ -728,14 +728,14 @@ int FrameCreateWindow()
   bIamFullScreened = false; // At startup not in fullscreen mode
   screen = SDL::SetVideoMode(g_ScreenWidth, g_ScreenHeight, SCREEN_BPP, SDL::SWSURFACE | SDL::HWPALETTE);
   if (screen == NULL) {
-    fprintf(stderr, "Could not set SDL video mode: %s\n", SDL::GetError());
+    ErrDumpln("Could not set SDL video mode:", SDL::GetError());
     SDL::Quit();
     return 1;
   }
 
   // define if we have resized window
   g_WindowResized = (g_ScreenWidth != SCREEN_WIDTH) | (g_ScreenHeight != SCREEN_HEIGHT);
-  printf("Screen size is %dx%d\n", g_ScreenWidth, g_ScreenHeight);
+  ErrDumpln("Screen size is ", g_ScreenWidth, "x", g_ScreenHeight);
   if (g_WindowResized) {
     // create rects for screen stretching
     origRect.x = origRect.y = newRect.x = newRect.y = 0;
@@ -763,7 +763,7 @@ int InitSDL()
 {
   // initialize SDL subsystems, return 0 if all OK, else return 1
   if (SDL::Init(SDL::INIT_EVERYTHING) != 0) {
-    fprintf(stderr, "Could not initialize SDL: %s\n", SDL::GetError());
+    ErrDumpln("Could not initialize SDL: ", SDL::GetError());
     return 1;
   }
 

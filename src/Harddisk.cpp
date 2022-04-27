@@ -521,7 +521,7 @@ static unsigned char HD_IO_EMUL(unsigned short pc, unsigned short addr, unsigned
       }
         break;
       default:
-        printf("Unknow coomand: bWrite=0\n");
+        ErrDumpln("Unknown command: bWrite=0");
         return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     }
   } else { // write
@@ -554,7 +554,7 @@ static unsigned char HD_IO_EMUL(unsigned short pc, unsigned short addr, unsigned
       }
         break;
       default:
-        printf("Unknow coomand: bWrite=1\n");
+        ErrDumpln("Unknown command: bWrite=1");
         return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     }
   }
