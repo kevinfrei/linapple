@@ -60,7 +60,7 @@ MapRGB(Surface::Format *fmt, uint8_t r, uint8_t g, uint8_t b) {
 
 void
 SetColors(Surface *, Color *c, uint32_t lo, uint32_t hi) {
-    return 0;
+    return;
 }
 
 void
@@ -144,7 +144,7 @@ LockSurface(Surface *) {
 
 void
 UnlockSurface(Surface *) {
-    return 0;
+    return;
 }
 
 int

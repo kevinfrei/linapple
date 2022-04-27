@@ -56,30 +56,19 @@ static const unsigned short g_nSPKR_NumChannels = 1;
 // provide headroom for mixing Mockingboard sound without causing peak clipping.
 const short SPKR_DATA_INIT = (short) 0x2000;  // data written to speakers buffer
 
-static short g_nSpeakerData = 0x0000;   //SPKR_DATA_INIT;
-static short *g_pSpeakerBuffer = NULL;
-static unsigned int g_nBufferIdx = 0;
-
-static short *g_pStereoBuffer = NULL;  // buffer for stereo samples
-
-static short *g_pRemainderBuffer = NULL;  // Remainder buffer
-static unsigned int g_nRemainderBufferSize;    // Setup in SpkrInitialize()
-static unsigned int g_nRemainderBufferIdx;    // Setup in SpkrInitialize()
-
 // Application-wide globals:
 unsigned int soundtype = SOUND_WAVE; //default
 double g_fClksPerSpkrSample;    // Setup in SetClksPerSpkrSample()
 
 // Globals
 static UINT64 g_nSpkrQuietCycleCount = 0;
-static UINT64 g_nSpkrLastCycle = 0;
 static bool g_bSpkrToggleFlag = false;
 
 static bool g_bSpkrAvailable = false;
 static bool g_bSpkrRecentlyActive = false;
 
 // Forward refs:
-static ULONG Spkr_SubmitWaveBuffer(short *pSpeakerBuffer, ULONG nNumSamples);
+// static ULONG Spkr_SubmitWaveBuffer(short *pSpeakerBuffer, ULONG nNumSamples);
 
 static void Spkr_SetActive(bool bActive);
 void Spkr_FlipSpeaker();
@@ -100,7 +89,7 @@ static void DisplayBenchmarkResults () {
 
 }
 #endif
-
+/*
 static void SetClksPerSpkrSample() {
   // 23.191 clks for 44.1Khz (when 6502 CLK=1.0Mhz)
   //  g_fClksPerSpkrSample = g_fCurrentCLK6502 / (double)SPKR_SAMPLE_RATE;
@@ -109,7 +98,7 @@ static void SetClksPerSpkrSample() {
   // . 23 clks @ 1.023MHz    SPKR_SAMPLE_RATE = 44100Hz!?
   g_fClksPerSpkrSample = (double) (unsigned int)(g_fCurrentCLK6502 / (double) SPKR_SAMPLE_RATE);
 }
-
+*/
 //=============================================================================
 
 void SpkrInitialize() {

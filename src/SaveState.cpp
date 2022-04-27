@@ -68,7 +68,7 @@ void Snapshot_LoadState() {
       break;
     }
 
-    unsigned int dwBytesRead;
+    DWORD dwBytesRead;
     bool bRes = ReadFile(hFile, pSS, sizeof(APPLEWIN_SNAPSHOT), &dwBytesRead, NULL);
 
     CloseHandle(hFile);
@@ -167,7 +167,7 @@ void Snapshot_SaveState() {
   HANDLE hFile = fopen(g_szSaveStateFilename, "wb");
 
   if (hFile != INVALID_HANDLE_VALUE) {
-    unsigned int dwBytesWritten;
+    DWORD dwBytesWritten;
     WriteFile(hFile, pSS, sizeof(APPLEWIN_SNAPSHOT), &dwBytesWritten, NULL);
     CloseHandle(hFile);
   }

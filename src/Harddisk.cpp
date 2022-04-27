@@ -164,7 +164,7 @@ void HD_ResetStatus(void)
 static void GetImageTitle(LPCTSTR imageFileName, PHDD pHardDrive)
 {
 #pragma GCC diagnostic push
-#pragma GCC diagnostic ignored "-Wstringop-truncation"
+// #pragma GCC diagnostic ignored "-Wstringop-truncation"
   char imagetitle[128];
   LPCTSTR startpos = imageFileName;
 
@@ -422,7 +422,7 @@ static unsigned char HD_IO_EMUL(unsigned short pc, unsigned short addr, unsigned
             case 0x01: //read
             {
               HDDStatus = DISK_STATUS_READ;
-              unsigned int br = GetFileSize(pHDD->hd_file, NULL);
+              DWORD br = GetFileSize(pHDD->hd_file, NULL);
               if ((unsigned int)(pHDD->hd_diskblock * 512) <= br) { // seek to block
                 SetFilePointer(pHDD->hd_file, pHDD->hd_diskblock * 512, NULL, FILE_BEGIN);  // seek to block
                 if (ReadFile(pHDD->hd_file, pHDD->hd_buf, 512, &br, NULL)) { // read block into buffer
@@ -442,7 +442,7 @@ static unsigned char HD_IO_EMUL(unsigned short pc, unsigned short addr, unsigned
             case 0x02: //write
             {
               HDDStatus = DISK_STATUS_WRITE;
-              unsigned int bw = GetFileSize(pHDD->hd_file, NULL);
+              DWORD bw = GetFileSize(pHDD->hd_file, NULL);
               if ((unsigned int)(pHDD->hd_diskblock * 512) <= bw) {
                 MoveMemory(pHDD->hd_buf, mem + pHDD->hd_memblock, 512);
                 SetFilePointer(pHDD->hd_file, pHDD->hd_diskblock * 512, NULL, FILE_BEGIN);  // seek to block
@@ -458,7 +458,7 @@ static unsigned char HD_IO_EMUL(unsigned short pc, unsigned short addr, unsigned
                 unsigned int addblocks = pHDD->hd_diskblock - (fsize / 512);
                 FillMemory(pHDD->hd_buf, 512, 0);
                 while (addblocks--) {
-                  unsigned int bw;
+                  DWORD bw;
                   WriteFile(pHDD->hd_file, pHDD->hd_buf, 512, &bw, NULL);
                 }
                 if (SetFilePointer(pHDD->hd_file, pHDD->hd_diskblock * 512, NULL, FILE_BEGIN) != 0xFFFFFFFF) {
