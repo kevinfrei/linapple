@@ -46,7 +46,7 @@ SDL::Surface *Asset_LoadBMP(const char *filename)
   SDL::Surface *surf;
   char *path = (char *) SDL::malloc(sizeof(char[PATH_MAX]));
   if (NULL == path) {
-    fprintf(stderr, "Asset_LoadBMP: Allocating path: %s\n", SDL::GetError());
+    ErrDumpln("Asset_LoadBMP: Allocating path: ", SDL::GetError());
     return NULL;
   }
 
@@ -58,9 +58,9 @@ SDL::Surface *Asset_LoadBMP(const char *filename)
   }
 
   if (NULL != surf) {
-    fprintf(stderr, "Asset_LoadBMP: Loaded %s from %s\n", filename, path);
+    ErrDumpln("Asset_LoadBMP: Loaded ", filename, " from ", path);
   } else {
-    fprintf(stderr, "Asset_LoadBMP: Couldn't load %s in either %s or %s!\n", filename, system_assets, system_exedir);
+    ErrDump("Asset_LoadBMP: Couldn't load ", filename, " in either ",system_assets," or ",system_exedir,"!");
   }
 
   SDL::free(path);
@@ -71,13 +71,13 @@ bool Asset_Init(void)
 {
   system_exedir = SDL::GetBasePath();
   if (NULL == system_exedir) {
-    fprintf(stderr, "Asset_Init: Warning: SDL::GetBasePath() returned NULL, using \"./\"\n");
+    ErrDumpln("Asset_Init: Warning: SDL::GetBasePath() returned NULL, using \"./\"");
     system_exedir = SDL::strdup("./");
   }
 
   assets = (assets_t *) SDL::calloc(1, sizeof(assets_t));
   if (NULL == assets) {
-    fprintf(stderr, "Asset_Init: Allocating assets: %s\n", SDL::GetError());
+    ErrDumpln("Asset_Init: Allocating assets: ", SDL::GetError());
     return false;
   }
 
@@ -153,7 +153,7 @@ int Asset_FindMasterDisk(char *path_out)
 
   for (auto p: paths) {
     sprintf(path, "%s/%s", p, ASSET_MASTER_DSK);
-    printf("[debug] Searching: %s for %s\n", p, ASSET_MASTER_DSK);
+    ErrDumpln("[debug] Searching: ", p, " for ", ASSET_MASTER_DSK);
     FILE *fp = fopen(path, "r");
     if (fp) {
       fclose(fp);
@@ -165,13 +165,13 @@ int Asset_FindMasterDisk(char *path_out)
 
   if (err)
   {
-    printf("[warn ] could not find %s at any of:\n", ASSET_MASTER_DSK);
+    ErrDumpln("[warn ] could not find ",ASSET_MASTER_DSK," at any of:");
     for (auto i=0; i<count; i++)
-      printf("[warn ] %s\n", paths[i]);
+      ErrDumpln("[warn ] ", paths[i]);
   }
   else
   {
-    printf("[info ] Master disk: %s\n", path);
+    ErrDumpln("[info ] Master disk: ", path);
   }
 
   // Deallocate.

@@ -223,15 +223,6 @@ IMG_ReadXPMFromArray(const char **) {
     return nullptr;
 }
 
-void
-MyPrintf(const char *fmt, ...) {
-  // Serial.printf(fmt,)
-}
-
-void
-MyFPrintf(void *, const char *, ...) {
-}
-
 void *
 MyFOpen(const char *fn, const char *perms) {
     return nullptr;

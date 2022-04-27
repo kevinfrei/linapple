@@ -213,15 +213,9 @@ constexpr uint16_t SDLK_PAUSE = 0x92;
 SDL::Surface *
 IMG_ReadXPMFromArray(const char **);
 
-void
-MyPrintf(const char *, ...);
-void
-MyFPrintf(void *, const char *, ...);
 void *
 MyFOpen(const char *fn, const char *perms);
 
-#define printf MyPrintf
-#define fprintf MyFPrintf
 #define fopen MyFOpen
 #define DECLSPEC
 #define SDLCALL
