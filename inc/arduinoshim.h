@@ -258,7 +258,7 @@ ErrDumpln(T v, R... args) {
 template <typename T>
 std::string
 _SPrintf_helper(const std::string &thusFar, T v) {
-    std::ostringstream os(thusFar);
+    std::ostringstream os{thusFar};
     os << v;
     return os.str();
 }
