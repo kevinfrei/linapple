@@ -106,7 +106,28 @@ static unsigned char IOWrite_C00x(unsigned short pc, unsigned short addr, unsign
   }
 }
 
+static constexpr iofunction C01x_readers[16] = {
+  KeybReadFlag,
+  MemCheckPaging,
+  MemCheckPaging,
+  MemCheckPaging,
+  MemCheckPaging,
+  MemCheckPaging,
+  MemCheckPaging,
+  MemCheckPaging,
+  MemCheckPaging,
+  VideoCheckVbl,
+  VideoCheckMode,
+  VideoCheckMode,
+  MemCheckPaging,
+  MemCheckPaging,
+  VideoCheckMode,
+  VideoCheckMode,
+};
+
 static unsigned char IORead_C01x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
+  return (C01x_readers[addr & 0xF])(pc, addr, bWrite, d, nCyclesLeft);
+  /*
   switch (addr & 0xf) {
     case 0x0:
       return KeybReadFlag(pc, addr, bWrite, d, nCyclesLeft);
@@ -142,7 +163,7 @@ static unsigned char IORead_C01x(unsigned short pc, unsigned short addr, unsigne
       return VideoCheckMode(pc, addr, bWrite, d, nCyclesLeft);
   }
 
-  return 0;
+  return 0;*/
 }
 
 static unsigned char IOWrite_C01x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
@@ -173,7 +194,28 @@ static unsigned char IOWrite_C04x(unsigned short pc, unsigned short addr, unsign
   return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
+static constexpr iofunction C05X_readers_writers[16] = {
+  VideoSetMode,
+  VideoSetMode,
+  VideoSetMode,
+  VideoSetMode,
+  MemSetPaging,
+  MemSetPaging,
+  MemSetPaging,
+  MemSetPaging,
+  IO_Annunciator,
+  IO_Annunciator,
+  IO_Annunciator,
+  IO_Annunciator,
+  IO_Annunciator,
+  IO_Annunciator,
+  VideoSetMode,
+  VideoSetMode,
+};
+
 static unsigned char IORead_C05x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
+  return (C05X_readers_writers[addr & 0xf])(pc, addr, bWrite, d, nCyclesLeft);
+  /*
   switch (addr & 0xf) {
     case 0x0:
       return VideoSetMode(pc, addr, bWrite, d, nCyclesLeft);
@@ -210,9 +252,12 @@ static unsigned char IORead_C05x(unsigned short pc, unsigned short addr, unsigne
   }
 
   return 0;
+  */
 }
 
 static unsigned char IOWrite_C05x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
+  return (C05X_readers_writers[addr & 0xf])(pc, addr, bWrite, d, nCyclesLeft);
+/*
   switch (addr & 0xf) {
     case 0x0:
       return VideoSetMode(pc, addr, bWrite, d, nCyclesLeft);
@@ -249,9 +294,12 @@ static unsigned char IOWrite_C05x(unsigned short pc, unsigned short addr, unsign
   }
 
   return 0;
+  */
 }
 
 static unsigned char IORead_C06x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
+  return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
+/*
   switch (addr & 0xf) {
     case 0x0:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
@@ -288,6 +336,7 @@ static unsigned char IORead_C06x(unsigned short pc, unsigned short addr, unsigne
   }
 
   return 0;
+  */
 }
 
 static unsigned char IOWrite_C06x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
@@ -295,60 +344,20 @@ static unsigned char IOWrite_C06x(unsigned short pc, unsigned short addr, unsign
 }
 
 static unsigned char IORead_C07x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
-  switch (addr & 0xf) {
-    case 0x0:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x1:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x2:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x3:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x4:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x5:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x6:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x7:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x8:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x9:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0xA:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0xB:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0xC:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0xD:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0xE:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0xF:
-      return VideoCheckMode(pc, addr, bWrite, d, nCyclesLeft);
-  }
-
-  return 0;
+  return ((addr & 0xf) != 0xf) ? IO_Null(pc, addr, bWrite, d, nCyclesLeft) : VideoCheckMode(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 static unsigned char IOWrite_C07x(unsigned short pc, unsigned short addr, unsigned char bWrite, unsigned char d, ULONG nCyclesLeft) {
+  #ifdef RAMWORKS
   switch (addr & 0xf) {
     case 0x0:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    #ifdef RAMWORKS
-    case 0x1:  return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);  // extended memory card set page
-    case 0x2:  return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    case 0x3:  return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);  // Ramworks III set page
-    #else
     case 0x1:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
+      return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);  // extended memory card set page
     case 0x2:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x3:
-      return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
-    #endif
+      return MemSetPaging(pc, addr, bWrite, d, nCyclesLeft);  // Ramworks III set page
     case 0x4:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
     case 0x5:
@@ -374,8 +383,8 @@ static unsigned char IOWrite_C07x(unsigned short pc, unsigned short addr, unsign
     case 0xF:
       return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
   }
-
-  return 0;
+#endif
+  return IO_Null(pc, addr, bWrite, d, nCyclesLeft);
 }
 
 static iofunction IORead_C0xx[8] = {IORead_C00x,    // Keyboard
